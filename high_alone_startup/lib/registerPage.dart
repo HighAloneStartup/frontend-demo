@@ -2,10 +2,8 @@
 
 import 'package:flutter/material.dart';
 
-import './registerPage.dart';
-
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class registerPage extends StatelessWidget {
+  const registerPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 alignment: Alignment(-1.0, 0.0),
                 child: Text(
-                  'LOGIN',
+                  'REGISTER',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 30,
@@ -40,7 +38,7 @@ class LoginPage extends StatelessWidget {
                 margin: EdgeInsets.only(left: 10),
                 alignment: Alignment(-1.0, 0.0),
                 child: Text(
-                  '로그인',
+                  '회원가입',
                   style: TextStyle(
                     color: Colors.black,
                   ),
@@ -58,7 +56,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: 'Email Address',
+                    labelText: 'ID / Nickname',
                     labelStyle: TextStyle(
                       fontSize: 14,
                     ),
@@ -87,7 +85,33 @@ class LoginPage extends StatelessWidget {
                 ),
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'Email address',
+                    labelStyle: TextStyle(
+                      fontSize: 14,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 2,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 50,
+                // width: 300,
+                margin: EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                  bottom: 10,
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Create Password',
                     labelStyle: TextStyle(
                       fontSize: 14,
                     ),
@@ -114,37 +138,30 @@ class LoginPage extends StatelessWidget {
                 child: RaisedButton(
                   color: Colors.black,
                   textColor: Colors.white,
-                  child: Text('Login'),
+                  child: Text('Register'),
                   // name instead of the actual result! : without parentheses
                   onPressed: () =>
-                      {print('[Login Screen] Clicked Login Button')},
+                      {print('[Register Screen] Clicked Register Button')},
                 ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FlatButton(
-                    textColor: Colors.lightBlue,
-                    child: Text(
-                      '회원가입',
-                      textAlign: TextAlign.center,
-                    ),
-                    // name instead of the actual result! : without parentheses
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => registerPage()),
-                      );
-                    },
+                  Text(
+                    '계정이 이미 있으신가요?',
+                    style: TextStyle(color: Colors.blueGrey),
+                    textAlign: TextAlign.center,
                   ),
                   FlatButton(
                     textColor: Colors.lightBlue,
                     child: Text(
-                      '비밀번호 찾기',
+                      '로그인',
                       textAlign: TextAlign.center,
                     ),
                     // name instead of the actual result! : without parentheses
-                    onPressed: () => {print('Clicked FIND PASSWORD')},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
                 ],
               ),
