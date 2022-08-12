@@ -23,7 +23,7 @@ class PostWritePage extends StatelessWidget {
     child: Column(
       children: [
         Container(
-          height: 500,
+          height: 100,
           margin: EdgeInsets.all(10),
           color: Colors.white,
           child: const TextField(

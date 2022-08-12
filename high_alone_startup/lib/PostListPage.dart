@@ -156,14 +156,11 @@ class PostListPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
-        width: double.infinity,
-        child: Container(
-          child: Column(
-            children: [
-              _title,
-              _body,
-            ],
-          ),
+        child: Column(
+          children: [
+            _title,
+            _body,
+          ],
         ),
       ),
     );
@@ -193,8 +190,7 @@ class _Post extends StatelessWidget {
           ? Image.asset('images/default.jpg')
           : Image.asset(_photo as String),
     );
-    var contents = Container(
-      //width: double.infinity,
+    var contents = Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -234,10 +230,9 @@ class _Post extends StatelessWidget {
     );
 
     return Container(
+      padding: const EdgeInsets.all(5),
       width: double.infinity,
-      padding: EdgeInsets.all(5),
       height: 70,
-      color: Colors.black,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [photo, contents, activate],
