@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './PostWritePage.dart';
 import './component/MainTitle.dart';
 import './component/SubTitle.dart';
 
@@ -108,46 +109,7 @@ class PostListPage extends StatelessWidget {
     ),
   );
 
-  final Widget _body = Expanded(
-    //height: double.infinity,
-    child: Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          child: ListView.separated(
-            itemCount: _postList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _postList[index];
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return const Divider(
-                thickness: 1,
-                height: 1,
-                color: Colors.white,
-              );
-            },
-          ),
-        ),
-        Positioned(
-          bottom: 40,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(148, 34),
-              primary: Colors.black,
-              side: const BorderSide(
-                color: Colors.white,
-                width: 0.5,
-              ),
-            ),
-            onPressed: () {
-              return print("글쓰기로 이동");
-            },
-            child: Text("글쓰기"),
-          ),
-        ),
-      ],
-    ),
-  );
+  //final Widget _body =
 
   PostListPage({Key? key}) : super(key: key);
 
@@ -159,7 +121,50 @@ class PostListPage extends StatelessWidget {
         child: Column(
           children: [
             _title,
-            _body,
+            Expanded(
+              //height: double.infinity,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    child: ListView.separated(
+                      itemCount: _postList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _postList[index];
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const Divider(
+                          thickness: 1,
+                          height: 1,
+                          color: Colors.white,
+                        );
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(148, 34),
+                        primary: Colors.black,
+                        side: const BorderSide(
+                          color: Colors.white,
+                          width: 0.5,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PostWritePage()),
+                        );
+                      },
+                      child: Text("글쓰기"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
