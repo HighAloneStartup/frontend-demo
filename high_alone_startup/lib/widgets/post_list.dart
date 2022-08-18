@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 import '../models/post.dart';
+import '../post_page.dart';
 import './sub_title_text.dart';
 
 class PostList extends StatelessWidget {
   /// 테스트용 데이터
   final List<Post> postList;
 
-  PostList(this.postList, {Key? key}) : super(key: key);
+  const PostList(this.postList, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView.separated(
-        itemCount: postList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return _PostWidget(postList[index]);
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return const Divider(
-            thickness: 1,
-            height: 1,
-            color: Colors.white,
-          );
-        },
-      ),
+    return ListView.separated(
+      itemCount: postList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _PostWidget(postList[index]);
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return const Divider(
+          thickness: 1,
+          height: 1,
+          color: Colors.white,
+        );
+      },
     );
   }
 }
@@ -39,7 +38,7 @@ class _PostWidget extends StatelessWidget {
       width: 60,
       margin: const EdgeInsets.only(right: 5),
       height: 60,
-      child: (post.image == null)
+      child: post.image == null
           ? Image.asset('images/default.jpg')
           : Image.asset(post.image as String),
     );
@@ -86,9 +85,17 @@ class _PostWidget extends StatelessWidget {
       padding: const EdgeInsets.all(5),
       width: double.infinity,
       height: 70,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [photo, contents, activate],
+      child: TextButton(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [photo, contents, activate],
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PostPage(post)),
+          );
+        },
       ),
     );
   }

@@ -24,7 +24,7 @@ class NewPostPage extends StatelessWidget {
 
   Widget _title() {
     return Container(
-      padding: const EdgeInsets.only(top: 35, bottom: 35),
+      padding: const EdgeInsets.symmetric(vertical: 35),
       child: Column(
         children: const [
           MainTitle(
@@ -61,13 +61,11 @@ class NewPostPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Container(
-        child: Column(
-          children: [
-            _title(),
-            _body(context),
-          ],
-        ),
+      body: Column(
+        children: [
+          _title(),
+          _body(context),
+        ],
       ),
     );
   }
