@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'loginPage.dart';
-import './PostListPage.dart';
-import './PostWritePage.dart';
+import 'post_list_page.dart';
+import 'new_post_page.dart';
 
 void main() {
   runApp(const MyApp());
