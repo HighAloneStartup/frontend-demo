@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'loginPage.dart';
 import 'post_list_page.dart';
 import 'new_post_page.dart';
+import 'student_list_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: PostListPage(), //LoginPage(),
+      home: StudentListPage(), // PostListPage(),  //LoginPage(),
     );
   }
 }

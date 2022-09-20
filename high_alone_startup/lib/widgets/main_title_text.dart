@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 
 class MainTitle extends StatelessWidget {
   final String _title;
+  final double _size;
   final Color _theme;
 
   const MainTitle(
-      {Key? key, String title = "DEFAULT", Color theme = Colors.black})
+      {Key? key,
+      String title = "DEFAULT",
+      double size = 36,
+      Color theme = Colors.black})
       : _title = title,
+        _size = size,
         _theme = theme,
         super(key: key);
 
@@ -16,7 +21,7 @@ class MainTitle extends StatelessWidget {
       _title,
       style: TextStyle(
         color: _theme,
-        fontSize: 30,
+        fontSize: _size,
         fontWeight: FontWeight.bold,
       ),
     );
