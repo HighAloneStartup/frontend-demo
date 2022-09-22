@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './widgets/main_title_text.dart';
-import './widgets/sub_title_text.dart';
+import './styles/main_title_text.dart';
+import './styles/sub_title_text.dart';
 import './models/post.dart';
 
 class PostPage extends StatelessWidget {

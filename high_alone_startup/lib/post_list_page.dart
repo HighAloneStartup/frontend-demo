@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'new_post_page.dart';
-import 'widgets/main_title_text.dart';
-import 'widgets/sub_title_text.dart';
-import 'widgets/post_list.dart';
+import 'styles/main_title_text.dart';
+import 'styles/sub_title_text.dart';
+import 'post_list.dart';
 import 'models/post.dart';
 import 'models/user.dart';
 

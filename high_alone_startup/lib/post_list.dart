@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/post.dart';
-import '../post_page.dart';
-import './sub_title_text.dart';
+import 'models/post.dart';
+import 'post_page.dart';
+import 'styles/sub_title_text.dart';
+import 'styles/list_block.dart';
 
 class PostList extends StatelessWidget {
   /// 테스트용 데이터
@@ -39,23 +40,21 @@ class _PostWidget extends StatelessWidget {
       margin: const EdgeInsets.only(right: 5),
       height: 60,
       child: post.image == null
-          ? Image.asset('images/default.jpg')
+          ? Image.asset('assets/images/default.jpg')
           : Image.asset(post.image as String),
     );
-    var contents = Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SubTitle(
-            title: post.isAnonymous ? "익명" : post.user.name,
-            theme: Colors.white,
-          ),
-          SubTitle(
-            title: post.content,
-            theme: Colors.white,
-          ),
-        ],
-      ),
+    var contents = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SubTitle(
+          title: post.isAnonymous ? "익명" : post.user.name,
+          theme: Colors.white,
+        ),
+        SubTitle(
+          title: post.content,
+          theme: Colors.white,
+        ),
+      ],
     );
 
     var activate = Container(
@@ -86,9 +85,10 @@ class _PostWidget extends StatelessWidget {
       width: double.infinity,
       height: 70,
       child: TextButton(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [photo, contents, activate],
+        child: ListBlock(
+          start: photo,
+          center: contents,
+          end: activate,
         ),
         onPressed: () {
           Navigator.push(
