@@ -1,11 +1,76 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, deprecated_member_use
+// import 'dart:async';
+// import 'dart:convert';
+
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:jwt_decode/jwt_decode.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import './registerPage.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  // const LoginPage({Key? key}) : super(key: key);
+  String userIdValue = "";
+  String userPwdValue = "";
+  var responseValue;
+  var loginID;
+
+  static final storage =
+      FlutterSecureStorage(); // 토큰 값과 로그인 유지 정보를 저장, SecureStorage 사용
+
+  void _loginRequest(userIdValue, userPwdValue) async {
+    String url =
+        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/auth/signin';
+
+    var data = jsonEncode({"email": userIdValue, "password": userPwdValue});
+
+    http.Response response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    );
+
+    if (response.statusCode == 200) {
+      print("Login Success !");
+
+      responseValue = jsonDecode(response.body);
+      String token = responseValue["accessToken"];
+      Map<String, dynamic> id = responseValue["id"];
+
+      print("TOKEN : " + token);
+      print(id);
+
+      /*
+      Map<String, dynamic> payload = Jwt.parseJwt(token);
+      loginID = payload['user_id'];
+      print(payload);
+      print(loginID.runtimeType);
+      print(loginID);
+
+      await storage.write(
+          key: 'login', value: 'id' + loginID + '' + 'token' + token);
+      print(responseValue);
+      */
+    } else if (response.statusCode == 404) {
+      print('LOGIN FAIL');
+      throw Exception('LOGIN FAIL');
+    } else {
+      print("NON RESPONDED");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +122,12 @@ class LoginPage extends StatelessWidget {
                   right: 10,
                 ),
                 child: TextField(
+                  onChanged: (text) {
+                    setState(() {
+                      userIdValue = text;
+                    });
+                  },
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     labelStyle: TextStyle(
@@ -86,6 +157,14 @@ class LoginPage extends StatelessWidget {
                   bottom: 10,
                 ),
                 child: TextField(
+                  onChanged: (text) {
+                    setState(() {
+                      userPwdValue = text;
+                    });
+                  },
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(
@@ -116,8 +195,12 @@ class LoginPage extends StatelessWidget {
                   textColor: Colors.white,
                   child: Text('Login'),
                   // name instead of the actual result! : without parentheses
-                  onPressed: () =>
-                      {print('[Login Screen] Clicked Login Button')},
+                  onPressed: () => {
+                    _loginRequest(userIdValue, userPwdValue),
+                    print('[Login Screen] Clicked Login Button'),
+                    print('userIdValue' + userIdValue),
+                    print('userPwdValue' + userPwdValue)
+                  },
                 ),
               ),
               Row(
@@ -133,7 +216,7 @@ class LoginPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => registerPage()),
+                        MaterialPageRoute(builder: (context) => RegisterPage()),
                       );
                     },
                   ),
