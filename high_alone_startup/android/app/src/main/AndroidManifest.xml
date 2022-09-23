@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.high_alone_startup">
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="high_alone_startup"
         android:name="${applicationName}"
@@ -32,3 +33,4 @@
             android:value="2" />
     </application>
 </manifest>
+
