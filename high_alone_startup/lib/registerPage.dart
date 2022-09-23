@@ -1,9 +1,50 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, deprecated_member_use
+// import 'dart:async';
+// import 'dart:convert';
+
+// import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class registerPage extends StatelessWidget {
-  const registerPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  String userIdValue = "";
+  String userEmailValue = "";
+  String userPwdValue = "";
+
+  void _registerRequest(userIdValue, userEmailValue, userPwdValue) async {
+    String url =
+        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/auth/signup';
+
+    var data = jsonEncode({
+      "name": userIdValue,
+      "email": userEmailValue,
+      "password": userPwdValue
+    });
+
+    http.Response response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    );
+
+    if (response.statusCode == 200) {
+      print("Register Success !");
+    } else if (response.statusCode == 400) {
+      print('Register FAIL');
+      throw Exception('Register FAIL');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +96,11 @@ class registerPage extends StatelessWidget {
                   right: 10,
                 ),
                 child: TextField(
+                  onChanged: (text) {
+                    setState(() {
+                      userIdValue = text;
+                    });
+                  },
                   decoration: InputDecoration(
                     labelText: 'ID / Nickname',
                     labelStyle: TextStyle(
@@ -84,6 +130,12 @@ class registerPage extends StatelessWidget {
                   bottom: 10,
                 ),
                 child: TextField(
+                  onChanged: (text) {
+                    setState(() {
+                      userEmailValue = text;
+                    });
+                  },
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email address',
                     labelStyle: TextStyle(
@@ -110,6 +162,14 @@ class registerPage extends StatelessWidget {
                   bottom: 10,
                 ),
                 child: TextField(
+                  onChanged: (text) {
+                    setState(() {
+                      userPwdValue = text;
+                    });
+                  },
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
                   decoration: InputDecoration(
                     labelText: 'Create Password',
                     labelStyle: TextStyle(
@@ -140,8 +200,10 @@ class registerPage extends StatelessWidget {
                   textColor: Colors.white,
                   child: Text('Register'),
                   // name instead of the actual result! : without parentheses
-                  onPressed: () =>
-                      {print('[Register Screen] Clicked Register Button')},
+                  onPressed: () => {
+                    _registerRequest(userIdValue, userEmailValue, userPwdValue),
+                    print('[Register Screen] Clicked Register Button')
+                  },
                 ),
               ),
               Row(
