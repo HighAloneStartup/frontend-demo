@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'models/class.dart';
 import 'models/user.dart';
 import 'styles/main_title_text.dart';
@@ -28,9 +29,14 @@ class StudentListPage extends StatelessWidget {
     );
   }
 
+  Future<http.Response> _getStudentList(int gradeYear, int classGroup){
+    return http.get('https://jsonplaceholder.typicode.com/posts/1');
+  }
+
   Widget _body(BuildContext context) {
     void _onChooseClass(Class classInfo) {
       print("${classInfo.grade}학년 ${classInfo.classNum}반 학생 목록페이지로 이동");
+      //_getStudentList(classInfo.grade, classInfo.classNum);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -120,6 +126,10 @@ class _ClassList extends StatelessWidget {
       User(id: "0013", name: "손승표I"),
     ]),
   ];
+
+  void _getStudentList(int gradeYear, int classGroup){
+
+  }
 
   @override
   Widget build(BuildContext context) {

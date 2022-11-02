@@ -10,6 +10,8 @@ class NewPostPage extends StatelessWidget {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
+  bool _isAnonymous = true;
+
   NewPostPage(this.addPost, {required this.user, Key? key}) : super(key: key);
 
   void _transition(BuildContext context) {
@@ -17,7 +19,7 @@ class NewPostPage extends StatelessWidget {
         id: '0000',
         title: _titleController.text,
         content: _contentController.text,
-        isAnonymous: true,
+        isAnonymous: _isAnonymous,
         user: user));
     Navigator.pop(context);
   }
@@ -45,7 +47,7 @@ class NewPostPage extends StatelessWidget {
       child: Column(
         children: [
           // head
-          _NewPostHead(controller: _titleController),
+          _NewPostHead(controller: _titleController, isAnonymous : _isAnonymous),
           //textbox
           _NewPostBody(controller: _contentController),
           //button
@@ -73,8 +75,9 @@ class NewPostPage extends StatelessWidget {
 
 class _NewPostHead extends StatelessWidget {
   final TextEditingController controller;
+  bool isAnonymous;
 
-  const _NewPostHead({required this.controller, Key? key}) : super(key: key);
+  _NewPostHead({required this.controller, required this.isAnonymous, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +85,7 @@ class _NewPostHead extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(5),
       height: 70,
-      color: Colors.white,
+      color: Colors.black,
       child: Row(
         children: [
           Container(
@@ -95,9 +98,19 @@ class _NewPostHead extends StatelessWidget {
               children: [
                 Expanded(
                   child: Container(
-                    margin: const EdgeInsets.all(5),
+                    margin: const EdgeInsets.all(3),
                     child: TextField(
-                      decoration: const InputDecoration(labelText: '제목'),
+                      style: TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: '제목',
+                        hintStyle: TextStyle(fontSize: 15, color: Colors.white),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
                       controller: controller,
                     ),
                   ),
@@ -108,14 +121,17 @@ class _NewPostHead extends StatelessWidget {
                     const Icon(
                       Icons.camera_alt,
                       size: 20,
+                      color: Colors.white,
                     ),
                     Checkbox(
-                      value: false,
+                      value: isAnonymous,
+                      activeColor: Colors.white,
+                      checkColor: Colors.black,
                       onChanged: (bool? value) {
-                        print("ischecked");
+                        isAnonymous = value!;
                       },
                     ),
-                    const Text("익명"),
+                    const Text("익명", style: TextStyle(color: Colors.white)),
                   ],
                 ),
               ],
@@ -137,9 +153,10 @@ class _NewPostBody extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(20),
-        color: Colors.white,
+        color: Colors.black,
         child: TextField(
           controller: controller,
+          style: TextStyle(color: Colors.white),
           maxLines: null,
           decoration: const InputDecoration(
             enabledBorder: InputBorder.none,

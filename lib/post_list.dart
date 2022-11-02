@@ -62,18 +62,18 @@ class _PostWidget extends StatelessWidget {
       child: Row(
         children: const [
           Icon(
-            size: 10,
             Icons.thumb_up,
+            size: 10,
             color: Colors.white,
           ),
           Icon(
-            size: 10,
             Icons.comment,
+            size: 10,
             color: Colors.white,
           ),
           Icon(
-            size: 10,
             Icons.star,
+            size: 10,
             color: Colors.white,
           ),
         ],

@@ -168,13 +168,11 @@ class _PostListPageState extends State<PostListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Expanded(
-        child: Column(
+      body: Column(
           children: [
             _title(),
             _body(context),
           ],
-        ),
       ),
     );
   }
