@@ -7,9 +7,9 @@ import 'models/post.dart';
 import 'models/user.dart';
 
 final Map<String, User> _users = {
-  '손승표': User(id: '0000', name: '손승표'),
-  '정동원': User(id: '0001', name: '정동원'),
-  '황서진': User(id: '0002', name: '황서진'),
+  '손승표': User(name: '손승표', email: 'SSP@gmail.com'),
+  '정동원': User(name: '정동원', email: 'JDW@gmail.com'),
+  '황서진': User(name: '황서진', email: 'HSJ@gmail.com'),
 };
 
 class PostListPage extends StatefulWidget {
@@ -119,7 +119,7 @@ class _PostListPageState extends State<PostListPage> {
       MaterialPageRoute(
           builder: (context) => NewPostPage(
                 _addNewPost,
-                user: User(id: '0000', name: '관리자'),
+                user: User(name: '관리자', email: 'admin@gmail.com'),
               )),
     );
   }

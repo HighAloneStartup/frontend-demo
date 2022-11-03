@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: LoginPage(), // StudentListPage(), // PostListPage(),  
+      home:
+          StudentListPage(), //LoginPage(), // StudentListPage(), // PostListPage(),
     );
   }
 }
