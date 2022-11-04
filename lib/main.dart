@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home:
-          StudentListPage(), //LoginPage(), // StudentListPage(), // PostListPage(),
+        PostListPage(), // StudentListPage(), // PostListPage(), // LoginPage(),
     );
   }
 }
