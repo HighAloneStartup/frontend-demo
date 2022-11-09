@@ -51,7 +51,7 @@ class _PostWidget extends StatelessWidget {
           theme: Colors.white,
         ),
         SubTitle(
-          title: post.content,
+          title: post.title,
           theme: Colors.white,
         ),
       ],
