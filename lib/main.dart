@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'loginPage.dart';
-import 'post_list_page.dart';
+import 'board_list_page.dart';
 import 'class_board_page.dart';
 import 'new_post_page.dart';
 import 'student_list_page.dart';
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home:
-        ClassBoardPage(gradeYear: 2, classGroup: 10,), //PostListPage(), // StudentListPage(), // PostListPage(), // LoginPage(),
+        BoardListPage(), // StudentListPage(), // PostListPage(), // LoginPage(),
     );
   }
 }
