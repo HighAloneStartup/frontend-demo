@@ -21,8 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String userPwdValue = "";
 
   void _registerRequest(userIdValue, userEmailValue, userPwdValue) async {
-    String url =
-        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/auth/signup';
+    // String url = 'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/auth/signup';
 
     var data = jsonEncode({
       "name": userIdValue,
@@ -31,7 +30,12 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     http.Response response = await http.post(
-      url,
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/auth/signup',
+      ),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -195,10 +199,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   right: 10,
                   bottom: 5,
                 ),
-                child: RaisedButton(
-                  color: Colors.black,
-                  textColor: Colors.white,
-                  child: Text('Register'),
+                child: TextButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    // textColor: Colors.white,
+                  ),
+                  child: Text(
+                    'Register',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   // name instead of the actual result! : without parentheses
                   onPressed: () => {
                     _registerRequest(userIdValue, userEmailValue, userPwdValue),
@@ -214,11 +223,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: TextStyle(color: Colors.blueGrey),
                     textAlign: TextAlign.center,
                   ),
-                  FlatButton(
-                    textColor: Colors.lightBlue,
+                  TextButton(
                     child: Text(
                       '로그인',
                       textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.lightBlue),
                     ),
                     // name instead of the actual result! : without parentheses
                     onPressed: () {
