@@ -3,6 +3,7 @@ import 'loginPage.dart';
 import 'post_list_page.dart';
 import 'new_post_page.dart';
 import 'student_list_page.dart';
+import './time_table_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,9 +15,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home:
-        PostListPage(), // StudentListPage(), // PostListPage(), // LoginPage(),
+          TimeTablePage(), // LoginPage(), // StudentListPage(), // PostListPage(),
     );
   }
 }
