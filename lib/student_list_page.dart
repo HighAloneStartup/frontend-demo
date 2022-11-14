@@ -30,10 +30,6 @@ class StudentListPage extends StatelessWidget {
     );
   }
 
-  Future<http.Response> _getStudentList(int gradeYear, int classGroup){
-    return http.get('https://jsonplaceholder.typicode.com/posts/1');
-  }
-
   Widget _body(BuildContext context) {
     void _onChooseClass(int gradeYear, int classGroup) {
       print("${gradeYear}학년 ${classGroup}반 학생 목록페이지로 이동");
@@ -171,7 +167,7 @@ class _StudentList extends StatelessWidget {
   final int gradeYear;
   final int classGroup;
   final String token =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqZHcxMDQyNzEwQGdtYWlsLmNvbSIsImlhdCI6MTY2NzQ2OTAxNywiZXhwIjoxNjY3NTU1NDE3fQ.6Q14qzK0947f3Wfhun4NTOv12GJgjdkt9NoAVP2LZOygxAT9xzeIu2h4iPEXmqZinQ9viV6SeTEH48Ulf9UCNA';
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqZHcxMDQyNzEwQGdtYWlsLmNvbSIsImlhdCI6MTY2ODQxOTcxOCwiZXhwIjoxNjY4NTA2MTE4fQ.AoClVZET9-jzIlJcqDiqurDS-xegQ6qImr6f3Gb16MIfaNK7t1LOGZJ3Mh6SnKLX7j07065cWSoX9InRx-82cQ';
 
   const _StudentList(
       {Key? key, required this.gradeYear, required this.classGroup})
@@ -182,7 +178,16 @@ class _StudentList extends StatelessWidget {
         'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/members/?gradeYear=${gradeYear}&classGroup=${classGroup}';
 
     http.Response response = await http.get(
-      url,
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/members/',
+        queryParameters: {
+          'gradeYear': '${gradeYear}',
+          'classGroup': '${classGroup}',
+        },
+      ),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${token}',
@@ -224,10 +229,8 @@ class _StudentList extends StatelessWidget {
 
   Widget _body() {
     return FutureBuilder(
-      future: _getStudentList(), //future작업을 진행할 함수
-      //snapshot은 getWeather()에서 return해주는 타입에 맞추어 사용한다.
+      future: _getStudentList(),
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
-        //데이터가 만약 들어오지 않았을때는 뱅글뱅글 로딩이 뜬다
         if (snapshot.hasData == false) {
           return CircularProgressIndicator();
         }
@@ -237,7 +240,6 @@ class _StudentList extends StatelessWidget {
           classGroup: classGroup,
           member: snapshot.data as List<User>,
         );
-        //데이터가 제대로 불러와진 경우 현재온도, 최저,최고 온도와 코드에 따른 아이콘을 표시하는 부분
         return Expanded(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),

@@ -30,13 +30,17 @@ class _LoginPageState extends State<LoginPage> {
       FlutterSecureStorage(); // 토큰 값과 로그인 유지 정보를 저장, SecureStorage 사용
 
   void _loginRequest(userIdValue, userPwdValue) async {
-    String url =
-        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/auth/signin';
+    //String url = 'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/auth/signin';
 
     var data = jsonEncode({"email": userIdValue, "password": userPwdValue});
 
     http.Response response = await http.post(
-      url,
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/auth/signin',
+      ),
       headers: {
         'Content-Type': 'application/json',
       },
