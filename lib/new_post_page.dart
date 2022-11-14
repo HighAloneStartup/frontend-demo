@@ -15,6 +15,14 @@ class NewPostPage extends StatelessWidget {
   NewPostPage(this.addPost, {required this.user, Key? key}) : super(key: key);
 
   void _transition(BuildContext context) {
+    if(_titleController.text.isEmpty){
+      _showDialog("제목을 입력해주세요", context: context);
+      return;
+    }
+    if(_contentController.text.isEmpty){
+      _showDialog("내용을 입력해주세요", context: context);
+      return;
+    }
     addPost(Post(
         id: '0000',
         title: _titleController.text,
@@ -22,6 +30,24 @@ class NewPostPage extends StatelessWidget {
         isAnonymous: _isAnonymous,
         user: user));
     Navigator.pop(context);
+  }
+  void _showDialog(String contents, {required context}){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(contents),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("닫기"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _title() {
