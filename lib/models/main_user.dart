@@ -15,10 +15,10 @@ class MainUser extends User {
     return MainUser(
       name: json['name'] as String,
       email: json['email'] as String,
-      token: "$json['tokenType'] $json['accessToken']",
+      token: "${json['tokenType']} ${json['accessToken']}",
       //authorities: json['authorities']?.cast<List<String>>(),
-      gradeYear: json['gradeYear']?.cast<int>(),
-      classGroup: json['classGroup']?.cast<int>(),
+      //gradeYear: json['gradeYear'] as int?,
+      //classGroup: json['classGroup'] as int?,
     );
   }
 }

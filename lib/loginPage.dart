@@ -50,31 +50,14 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) {
-      print("Login Success !");
-
       responseValue = jsonDecode(response.body);
       String token = responseValue["accessToken"];
       Map<String, dynamic> id = responseValue["id"];
 
-      print("TOKEN : " + token);
-      print(id);
       return MainUser.fromJson(responseValue);
-      /*
-      Map<String, dynamic> payload = Jwt.parseJwt(token);
-      loginID = payload['user_id'];
-      print(payload);
-      print(loginID.runtimeType);
-      print(loginID);
-
-      await storage.write(
-          key: 'login', value: 'id' + loginID + '' + 'token' + token);
-      print(responseValue);
-      */
     } else if (response.statusCode == 404) {
-      print('LOGIN FAIL');
       throw Exception('LOGIN FAIL');
     } else {
-      print("NON RESPONDED");
       throw Exception();
     }
   }
@@ -205,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     MainUser user =
                         await _loginRequest(userIdValue, userPwdValue);
-                    print(user);
+                    print(user.token);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
