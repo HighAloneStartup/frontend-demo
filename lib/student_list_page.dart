@@ -195,17 +195,14 @@ class _StudentList extends StatelessWidget {
       ),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${user.token}',
+        'Authorization': user.token,
       },
     );
-
     var statusCode = response.statusCode;
-    var responseBody = utf8.decode(response.bodyBytes);
-
     switch (statusCode) {
       case 200:
+        var responseBody = utf8.decode(response.bodyBytes);
         var parsed = jsonDecode(responseBody) as List;
-        print('결과 : ${parsed.runtimeType}');
         return parsed.map((e) => User.fromJson(e)).toList();
       default:
         throw Exception('$statusCode');
@@ -236,10 +233,9 @@ class _StudentList extends StatelessWidget {
     return FutureBuilder(
       future: _getStudentList(),
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
-        if (snapshot.hasData == false) {
+        if (!snapshot.hasData) {
           return CircularProgressIndicator();
         }
-
         var classInfo = Class(
           gradeYear: gradeYear,
           classGroup: classGroup,
