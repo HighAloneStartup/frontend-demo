@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:high_alone_startup/models/main_user.dart';
 import './styles/main_title_text.dart';
 import './styles/sub_title_text.dart';
 import './models/post.dart';
+import './models/main_user.dart';
 
 class PostPage extends StatelessWidget {
+  final MainUser user;
   final Post post;
 
-  const PostPage(this.post, {Key? key}) : super(key: key);
+  const PostPage(this.post, {Key? key, required this.user}) : super(key: key);
 
   void _transition(BuildContext context) {
     Navigator.pop(context);

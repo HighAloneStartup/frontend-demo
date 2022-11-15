@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:high_alone_startup/models/user.dart';
 import 'models/post.dart';
+import 'models/main_user.dart';
 import 'post_page.dart';
 import 'styles/sub_title_text.dart';
 import 'styles/list_block.dart';
 
 class PostList extends StatelessWidget {
+  final MainUser user;
+
   /// 테스트용 데이터
   final List<Post> postList;
 
-  const PostList(this.postList, {Key? key}) : super(key: key);
+  const PostList(this.postList, {Key? key, required this.user})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: postList.length,
       itemBuilder: (BuildContext context, int index) {
-        return _PostWidget(postList[index]);
+        return _PostWidget(
+          postList[index],
+          user: user,
+        );
       },
       separatorBuilder: (BuildContext context, int index) {
         return const Divider(
@@ -29,9 +37,11 @@ class PostList extends StatelessWidget {
 }
 
 class _PostWidget extends StatelessWidget {
+  final MainUser user;
   final Post post;
 
-  const _PostWidget(Post this.post, {Key? key}) : super(key: key);
+  const _PostWidget(Post this.post, {Key? key, required this.user})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +103,7 @@ class _PostWidget extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PostPage(post)),
+            MaterialPageRoute(builder: (context) => PostPage(post, user: user)),
           );
         },
       ),

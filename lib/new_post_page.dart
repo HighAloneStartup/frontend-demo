@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import './models/post.dart';
-import './models/user.dart';
+import './models/main_user.dart';
 
 class NewPostPage extends StatelessWidget {
-  final User user;
+  final MainUser user;
   final Function addPost;
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
@@ -15,11 +15,11 @@ class NewPostPage extends StatelessWidget {
   NewPostPage(this.addPost, {required this.user, Key? key}) : super(key: key);
 
   void _transition(BuildContext context) {
-    if(_titleController.text.isEmpty){
+    if (_titleController.text.isEmpty) {
       _showDialog("제목을 입력해주세요", context: context);
       return;
     }
-    if(_contentController.text.isEmpty){
+    if (_contentController.text.isEmpty) {
       _showDialog("내용을 입력해주세요", context: context);
       return;
     }
@@ -31,7 +31,8 @@ class NewPostPage extends StatelessWidget {
         user: user));
     Navigator.pop(context);
   }
-  void _showDialog(String contents, {required context}){
+
+  void _showDialog(String contents, {required context}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -73,7 +74,7 @@ class NewPostPage extends StatelessWidget {
       child: Column(
         children: [
           // head
-          _NewPostHead(controller: _titleController, isAnonymous : _isAnonymous),
+          _NewPostHead(controller: _titleController, isAnonymous: _isAnonymous),
           //textbox
           _NewPostBody(controller: _contentController),
           //button
@@ -103,7 +104,8 @@ class _NewPostHead extends StatelessWidget {
   final TextEditingController controller;
   bool isAnonymous;
 
-  _NewPostHead({required this.controller, required this.isAnonymous, Key? key}) : super(key: key);
+  _NewPostHead({required this.controller, required this.isAnonymous, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
