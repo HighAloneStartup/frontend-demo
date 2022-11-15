@@ -5,11 +5,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:high_alone_startup/home_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'models/main_user.dart';
 import './registerPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   static final storage =
       FlutterSecureStorage(); // 토큰 값과 로그인 유지 정보를 저장, SecureStorage 사용
 
-  void _loginRequest(userIdValue, userPwdValue) async {
+  Future<MainUser> _loginRequest(userIdValue, userPwdValue) async {
     //String url = 'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/auth/signin';
 
     var data = jsonEncode({"email": userIdValue, "password": userPwdValue});
@@ -56,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
 
       print("TOKEN : " + token);
       print(id);
-
+      return MainUser.fromJson(responseValue);
       /*
       Map<String, dynamic> payload = Jwt.parseJwt(token);
       loginID = payload['user_id'];
@@ -73,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
       throw Exception('LOGIN FAIL');
     } else {
       print("NON RESPONDED");
+      throw Exception();
     }
   }
 
@@ -204,11 +207,14 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(color: Colors.white),
                   ),
                   // name instead of the actual result! : without parentheses
-                  onPressed: () => {
-                    _loginRequest(userIdValue, userPwdValue),
-                    print('[Login Screen] Clicked Login Button'),
-                    print('userIdValue' + userIdValue),
-                    print('userPwdValue' + userPwdValue)
+                  onPressed: () async {
+                    MainUser user =
+                        await _loginRequest(userIdValue, userPwdValue);
+                    print(user);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HomePage(user: user)));
                   },
                 ),
               ),

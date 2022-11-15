@@ -16,8 +16,8 @@ class User {
       name: json['name'] as String,
       email: json['email'] as String,
       //authorities: json['authorities']?.cast<List<String>>(),
-      gradeYear: json['gradeYear'] as int,
-      classGroup: json['classGroup'] as int,
+      gradeYear: json['gradeYear'] as int?,
+      classGroup: json['classGroup'] as int?,
     );
   }
 }

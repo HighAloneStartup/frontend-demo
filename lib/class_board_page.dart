@@ -5,6 +5,7 @@ import 'styles/sub_title_text.dart';
 import 'class_post_list.dart';
 import 'models/post.dart';
 import 'models/user.dart';
+import 'models/main_user.dart';
 
 final Map<String, User> _users = {
   '손승표': User(name: '손승표', email: 'SSP@gmail.com'),
@@ -13,122 +14,142 @@ final Map<String, User> _users = {
 };
 
 class ClassBoardPage extends StatefulWidget {
+  final MainUser user;
   final int gradeYear;
   final int classGroup;
-  const ClassBoardPage({Key? key, required this.gradeYear, required this.classGroup }) : super(key: key);
+  const ClassBoardPage(
+      {Key? key,
+      required this.user,
+      required this.gradeYear,
+      required this.classGroup})
+      : super(key: key);
 
   @override
-  State<ClassBoardPage> createState() => _PostListPageState(gradeYear : gradeYear, classGroup : classGroup);
+  State<ClassBoardPage> createState() => _PostListPageState(
+      user: user, gradeYear: gradeYear, classGroup: classGroup);
 }
 
 class _PostListPageState extends State<ClassBoardPage> {
+  final MainUser user;
   final int gradeYear;
   final int classGroup;
   final _postList = [
     Post(
-        id: '0000',
-        user: _users['손승표']!,
-        title: '체육복 빌려줄사람?',
-        content: '3학년 1반으로 와주셈',
-        isAnonymous: true,),
+      id: '0000',
+      user: _users['손승표']!,
+      title: '체육복 빌려줄사람?',
+      content: '3학년 1반으로 와주셈',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0001',
-        user: _users['정동원']!,
-        title: '축구하러 갈사람?',
-        content: '10분 뒤 운동장으로 집합 ㄱㄱ',
-        isAnonymous: true,),
+      id: '0001',
+      user: _users['정동원']!,
+      title: '축구하러 갈사람?',
+      content: '10분 뒤 운동장으로 집합 ㄱㄱ',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0002',
-        user: _users['손승표']!,
-        title: '오늘 체육수업',
-        content: '있었나 알려주실분?',
-        isAnonymous: true,),
+      id: '0002',
+      user: _users['손승표']!,
+      title: '오늘 체육수업',
+      content: '있었나 알려주실분?',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0003',
-        user: _users['황서진']!,
-        title: '오늘 3반 생물수업 노트필기 적으신 분?',
-        content: '있다면 보여 주실 천사 구함',
-        isAnonymous: true,),
+      id: '0003',
+      user: _users['황서진']!,
+      title: '오늘 3반 생물수업 노트필기 적으신 분?',
+      content: '있다면 보여 주실 천사 구함',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0004',
-        user: _users['정동원']!,
-        title: '창고 뒤에서 담패핀 넘...',
-        content: '누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐?',
-        isAnonymous: true,),
+      id: '0004',
+      user: _users['정동원']!,
+      title: '창고 뒤에서 담패핀 넘...',
+      content: '누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐?',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0000',
-        user: _users['손승표']!,
-        title: '체육복 빌려줄사람?',
-        content: '3학년 1반으로 와주셈',
-        isAnonymous: true,),
+      id: '0000',
+      user: _users['손승표']!,
+      title: '체육복 빌려줄사람?',
+      content: '3학년 1반으로 와주셈',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0001',
-        user: _users['정동원']!,
-        title: '축구하러 갈사람?',
-        content: '10분 뒤 운동장으로 집합 ㄱㄱ',
-        isAnonymous: true,),
+      id: '0001',
+      user: _users['정동원']!,
+      title: '축구하러 갈사람?',
+      content: '10분 뒤 운동장으로 집합 ㄱㄱ',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0002',
-        user: _users['손승표']!,
-        title: '오늘 체육수업',
-        content: '있었나 알려주실분?',
-        isAnonymous: true,),
+      id: '0002',
+      user: _users['손승표']!,
+      title: '오늘 체육수업',
+      content: '있었나 알려주실분?',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0003',
-        user: _users['황서진']!,
-        title: '오늘 3반 생물수업 노트필기 적으신 분?',
-        content: '있다면 보여 주실 천사 구함',
-        isAnonymous: true,),
+      id: '0003',
+      user: _users['황서진']!,
+      title: '오늘 3반 생물수업 노트필기 적으신 분?',
+      content: '있다면 보여 주실 천사 구함',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0004',
-        user: _users['정동원']!,
-        title: '창고 뒤에서 담패핀 넘...',
-        content: '누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐?',
-        isAnonymous: true,),
+      id: '0004',
+      user: _users['정동원']!,
+      title: '창고 뒤에서 담패핀 넘...',
+      content: '누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐?',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0000',
-        user: _users['손승표']!,
-        title: '체육복 빌려줄사람?',
-        content: '3학년 1반으로 와주셈',
-        isAnonymous: true,),
+      id: '0000',
+      user: _users['손승표']!,
+      title: '체육복 빌려줄사람?',
+      content: '3학년 1반으로 와주셈',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0001',
-        user: _users['정동원']!,
-        title: '축구하러 갈사람?',
-        content: '10분 뒤 운동장으로 집합 ㄱㄱ',
-        isAnonymous: true,),
+      id: '0001',
+      user: _users['정동원']!,
+      title: '축구하러 갈사람?',
+      content: '10분 뒤 운동장으로 집합 ㄱㄱ',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0002',
-        user: _users['손승표']!,
-        title: '오늘 체육수업',
-        content: '있었나 알려주실분?',
-        isAnonymous: true,),
+      id: '0002',
+      user: _users['손승표']!,
+      title: '오늘 체육수업',
+      content: '있었나 알려주실분?',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0003',
-        user: _users['황서진']!,
-        title: '오늘 3반 생물수업 노트필기 적으신 분?',
-        content: '있다면 보여 주실 천사 구함',
-        isAnonymous: true,),
+      id: '0003',
+      user: _users['황서진']!,
+      title: '오늘 3반 생물수업 노트필기 적으신 분?',
+      content: '있다면 보여 주실 천사 구함',
+      isAnonymous: true,
+    ),
     Post(
-        id: '0004',
-        user: _users['정동원']!,
-        title: '창고 뒤에서 담패핀 넘...',
-        content: '누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐?',
-        isAnonymous: true,),
+      id: '0004',
+      user: _users['정동원']!,
+      title: '창고 뒤에서 담패핀 넘...',
+      content: '누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐?',
+      isAnonymous: true,
+    ),
   ];
 
-  _PostListPageState({required this.gradeYear, required this.classGroup});
+  _PostListPageState(
+      {required this.user, required this.gradeYear, required this.classGroup});
 
-  void _transition(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => NewPostPage(
-            _addNewPost,
-            user: User(name: '관리자', email: 'admin@gmail.com'),
-          )),
-    );
-  }
+  void _transition(BuildContext context) => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NewPostPage(_addNewPost, user: user),
+        ),
+      );
 
   void _addNewPost(Post newPost) {
     setState(() {
@@ -167,7 +188,7 @@ class _PostListPageState extends State<ClassBoardPage> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          ClassPostList(_postList),
+          ClassPostList(_postList, user: user),
           Positioned(
             bottom: 40,
             child: _TransitionButton(() => _transition(context)),

@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'post_list_page.dart';
 import 'class_board_page.dart';
+import 'models/main_user.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 
 class BoardListPage extends StatelessWidget {
-  const BoardListPage({Key? key}) : super(key: key);
+  final MainUser user;
+
+  const BoardListPage({Key? key, required this.user}) : super(key: key);
 
   Widget _title() {
     return Container(
@@ -37,12 +40,12 @@ class BoardListPage extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  ClassBoardPage(gradeYear: 2, classGroup: 10)),
+                  ClassBoardPage(user: user, gradeYear: 2, classGroup: 10)),
         );
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PostListPage()),
+          MaterialPageRoute(builder: (context) => PostListPage(user: user)),
         );
       }
     }

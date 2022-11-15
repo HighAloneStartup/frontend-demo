@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'models/class.dart';
 import 'models/user.dart';
+import 'models/main_user.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import 'styles/list_block.dart';
 
 class StudentListPage extends StatelessWidget {
-  const StudentListPage({Key? key}) : super(key: key);
+  final MainUser user;
+  const StudentListPage({Key? key, required this.user}) : super(key: key);
 
   Widget _title() {
     return Container(
@@ -37,6 +39,7 @@ class StudentListPage extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) => _StudentList(
+                  user: user,
                   gradeYear: gradeYear,
                   classGroup: classGroup,
                 )),
@@ -45,6 +48,7 @@ class StudentListPage extends StatelessWidget {
 
     return Expanded(
       child: _ClassList(
+        user: user,
         onChooseClass: _onChooseClass,
       ),
     );
@@ -65,9 +69,11 @@ class StudentListPage extends StatelessWidget {
 }
 
 class _ClassList extends StatelessWidget {
+  final MainUser user;
   _ClassList({
     Key? key,
-    required Function this.onChooseClass,
+    required this.user,
+    required this.onChooseClass,
   }) : super(key: key);
 
   final Function onChooseClass;
@@ -164,19 +170,18 @@ class _ClassList extends StatelessWidget {
 }
 
 class _StudentList extends StatelessWidget {
+  final MainUser user;
   final int gradeYear;
   final int classGroup;
-  final String token =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqZHcxMDQyNzEwQGdtYWlsLmNvbSIsImlhdCI6MTY2ODQxOTcxOCwiZXhwIjoxNjY4NTA2MTE4fQ.AoClVZET9-jzIlJcqDiqurDS-xegQ6qImr6f3Gb16MIfaNK7t1LOGZJ3Mh6SnKLX7j07065cWSoX9InRx-82cQ';
 
   const _StudentList(
-      {Key? key, required this.gradeYear, required this.classGroup})
+      {Key? key,
+      required this.user,
+      required this.gradeYear,
+      required this.classGroup})
       : super(key: key);
 
   Future<List<User>> _getStudentList() async {
-    String url =
-        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/members/?gradeYear=${gradeYear}&classGroup=${classGroup}';
-
     http.Response response = await http.get(
       Uri(
         scheme: 'http',
@@ -184,13 +189,13 @@ class _StudentList extends StatelessWidget {
         port: 9090,
         path: 'api/members/',
         queryParameters: {
-          'gradeYear': '${gradeYear}',
-          'classGroup': '${classGroup}',
+          'gradeYear': '$gradeYear',
+          'classGroup': '$classGroup',
         },
       ),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${token}',
+        'Authorization': 'Bearer ${user.token}',
       },
     );
 

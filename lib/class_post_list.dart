@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:high_alone_startup/models/main_user.dart';
 import 'models/post.dart';
 import 'post_page.dart';
-import 'styles/sub_title_text.dart';
-import 'styles/list_block.dart';
+import 'models/main_user.dart';
 
 class ClassPostList extends StatelessWidget {
+  final MainUser user;
+
   /// 테스트용 데이터
   final List<Post> postList;
 
-  const ClassPostList(this.postList, {Key? key}) : super(key: key);
+  const ClassPostList(this.postList, {Key? key, required this.user})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +21,20 @@ class ClassPostList extends StatelessWidget {
       ),
       padding: EdgeInsets.zero,
       itemCount: postList.length,
-      itemBuilder: (context, index) => _PostWidget(postList[index]),
+      itemBuilder: (context, index) => _PostWidget(
+        postList[index],
+        user: user,
+      ),
     );
   }
 }
 
 class _PostWidget extends StatelessWidget {
+  final MainUser user;
   final Post post;
 
-  const _PostWidget(this.post, {Key? key}) : super(key: key);
+  const _PostWidget(this.post, {Key? key, required this.user})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +49,7 @@ class _PostWidget extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PostPage(post)),
+          MaterialPageRoute(builder: (context) => PostPage(post, user: user)),
         );
       },
     );
