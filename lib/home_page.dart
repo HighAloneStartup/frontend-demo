@@ -12,22 +12,16 @@ class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState(user: user);
 }
 
 class _HomePageState extends State<HomePage> {
-  // final MainUser user;
+  final MainUser user;
   int screenIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  final List<Widget> _widgetOptions = <Widget>[
-    LoginPage(),
-    TimeTablePage(),
-    RegisterPage(),
-    MyPage(),
-  ];
-
+  _HomePageState({required this.user});
   void _onItemTapped(int index) {
     setState(() {
       screenIndex = index;
@@ -37,6 +31,14 @@ class _HomePageState extends State<HomePage> {
   // 메인 위젯
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetOptions = <Widget>[
+      MainPage(
+        user: user,
+      ),
+      TimeTablePage(),
+      BoardListPage(user: user),
+      MyPage(),
+    ];
     return Scaffold(
       body: SafeArea(
         child: _widgetOptions.elementAt(screenIndex),
@@ -76,66 +78,37 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-  /*
+class MainPage extends StatefulWidget {
+  final MainUser user;
+  MainPage({Key? key, required this.user}) : super(key: key);
 
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // backgroundColor: Colors.black,
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: TextButton(
-                child: Text("학생부"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StudentListPage(user: widget.user),
-                    ),
-                  );
-                },
-              ),
+      // backgroundColor: Colors.black,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: TextButton(
+              child: Text("학생부"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StudentListPage(user: widget.user),
+                  ),
+                );
+              },
             ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          // backgroundColor: Colors.black,
-          currentIndex: screenIndex,
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  color: Colors.blue,
-                ),
-                label: 'home'),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.punch_clock_outlined,
-                  color: Colors.blue,
-                ),
-                label: 'timeTable'),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.list,
-                  color: Colors.blue,
-                ),
-                label: 'list'),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.people,
-                  color: Colors.blue,
-                ),
-                label: 'my')
-          ],
-          onTap: (value) {
-            setState(() {
-              //상태 갱신이 되지 않으면 동작을 하지 않음
-              screenIndex = value;
-            });
-          },
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
-*/
