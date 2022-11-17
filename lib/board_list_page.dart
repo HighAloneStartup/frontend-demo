@@ -80,31 +80,29 @@ class _BoardList extends StatelessWidget {
   final Function onChooseBoard;
 
   Widget _makeSection(String title, List<Widget> children) {
-    return Expanded(
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            child: MainTitle(
-              title: title,
-              size: 25,
-              theme: Colors.white,
-            ),
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          child: MainTitle(
+            title: title,
+            size: 25,
+            theme: Colors.white,
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            padding: const EdgeInsets.all(10),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Column(
-              children: children,
-            ),
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.all(10),
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
-        ],
-      ),
+          child: Column(
+            children: children,
+          ),
+        ),
+      ],
     );
   }
 
