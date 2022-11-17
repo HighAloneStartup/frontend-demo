@@ -23,6 +23,7 @@ class MainTitle extends StatelessWidget {
         color: _theme,
         fontSize: _size,
         fontWeight: FontWeight.bold,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

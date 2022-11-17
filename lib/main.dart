@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'loginPage.dart';
-import 'post_list_page.dart';
+import 'board_list_page.dart';
+import 'class_board_page.dart';
 import 'new_post_page.dart';
 import 'student_list_page.dart';
+import './time_table_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,8 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home:
-        PostListPage(), // StudentListPage(), // PostListPage(), // LoginPage(),
+      home: LoginPage(),
     );
   }
 }

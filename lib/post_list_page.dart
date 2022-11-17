@@ -5,6 +5,7 @@ import 'styles/sub_title_text.dart';
 import 'post_list.dart';
 import 'models/post.dart';
 import 'models/user.dart';
+import 'models/main_user.dart';
 
 final Map<String, User> _users = {
   '손승표': User(name: '손승표', email: 'SSP@gmail.com'),
@@ -13,13 +14,16 @@ final Map<String, User> _users = {
 };
 
 class PostListPage extends StatefulWidget {
-  const PostListPage({Key? key}) : super(key: key);
+  final MainUser user;
+
+  const PostListPage({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<PostListPage> createState() => _PostListPageState();
+  State<PostListPage> createState() => _PostListPageState(user: user);
 }
 
 class _PostListPageState extends State<PostListPage> {
+  final MainUser user;
   final _postList = [
     Post(
         id: '0000',
@@ -113,13 +117,15 @@ class _PostListPageState extends State<PostListPage> {
         isAnonymous: true),
   ];
 
+  _PostListPageState({required this.user});
+
   void _transition(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => NewPostPage(
                 _addNewPost,
-                user: User(name: '관리자', email: 'admin@gmail.com'),
+                user: user,
               )),
     );
   }
@@ -154,7 +160,7 @@ class _PostListPageState extends State<PostListPage> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          PostList(_postList),
+          PostList(_postList, user: user),
           Positioned(
             bottom: 40,
             child: _TransitionButton(() => _transition(context)),
@@ -168,13 +174,11 @@ class _PostListPageState extends State<PostListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Expanded(
-        child: Column(
-          children: [
-            _title(),
-            _body(context),
-          ],
-        ),
+      body: Column(
+        children: [
+          _title(),
+          _body(context),
+        ],
       ),
     );
   }

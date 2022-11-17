@@ -5,11 +5,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:high_alone_startup/home_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'models/main_user.dart';
 import './registerPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,14 +31,18 @@ class _LoginPageState extends State<LoginPage> {
   static final storage =
       FlutterSecureStorage(); // 토큰 값과 로그인 유지 정보를 저장, SecureStorage 사용
 
-  void _loginRequest(userIdValue, userPwdValue) async {
-    String url =
-        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/auth/signin';
+  Future<MainUser> _loginRequest(userIdValue, userPwdValue) async {
+    //String url = 'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/auth/signin';
 
     var data = jsonEncode({"email": userIdValue, "password": userPwdValue});
 
     http.Response response = await http.post(
-      url,
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/auth/signin',
+      ),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -44,31 +50,15 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) {
-      print("Login Success !");
-
       responseValue = jsonDecode(response.body);
       String token = responseValue["accessToken"];
       Map<String, dynamic> id = responseValue["id"];
 
-      print("TOKEN : " + token);
-      print(id);
-
-      /*
-      Map<String, dynamic> payload = Jwt.parseJwt(token);
-      loginID = payload['user_id'];
-      print(payload);
-      print(loginID.runtimeType);
-      print(loginID);
-
-      await storage.write(
-          key: 'login', value: 'id' + loginID + '' + 'token' + token);
-      print(responseValue);
-      */
+      return MainUser.fromJson(responseValue);
     } else if (response.statusCode == 404) {
-      print('LOGIN FAIL');
       throw Exception('LOGIN FAIL');
     } else {
-      print("NON RESPONDED");
+      throw Exception();
     }
   }
 
@@ -190,27 +180,37 @@ class _LoginPageState extends State<LoginPage> {
                   right: 10,
                   bottom: 5,
                 ),
-                child: RaisedButton(
-                  color: Colors.black,
-                  textColor: Colors.white,
-                  child: Text('Login'),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    // textColor: Colors.white,
+                  ),
+                  child: Text(
+                    'Login',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   // name instead of the actual result! : without parentheses
-                  onPressed: () => {
-                    _loginRequest(userIdValue, userPwdValue),
-                    print('[Login Screen] Clicked Login Button'),
-                    print('userIdValue' + userIdValue),
-                    print('userPwdValue' + userPwdValue)
+                  onPressed: () async {
+                    MainUser user =
+                        await _loginRequest(userIdValue, userPwdValue);
+                    print(user.token);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HomePage(user: user)));
                   },
                 ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FlatButton(
-                    textColor: Colors.lightBlue,
+                  TextButton(
                     child: Text(
                       '회원가입',
                       textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.lightBlue,
+                      ),
                     ),
                     // name instead of the actual result! : without parentheses
                     onPressed: () {
@@ -220,11 +220,13 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                   ),
-                  FlatButton(
-                    textColor: Colors.lightBlue,
+                  TextButton(
                     child: Text(
                       '비밀번호 찾기',
                       textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.lightBlue,
+                      ),
                     ),
                     // name instead of the actual result! : without parentheses
                     onPressed: () => {print('Clicked FIND PASSWORD')},
