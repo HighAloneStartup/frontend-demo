@@ -57,7 +57,7 @@ class _PostWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SubTitle(
-          title: post.isAnonymous ? "익명" : post.user.name,
+          title: "익명",
           theme: Colors.white,
         ),
         SubTitle(

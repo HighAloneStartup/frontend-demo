@@ -75,57 +75,6 @@ class _ClassList extends StatelessWidget {
   }) : super(key: key);
 
   final Function onChooseClass;
-  final List<Class> _firstGrade = [
-    Class(gradeYear: 1, classGroup: 1, member: [
-      User(name: '정동원A', email: 'JDWA@gmail.com'),
-      User(name: "정동원B", email: 'JDWB@gmail.com'),
-      User(name: "정동원C", email: 'JDWC@gmail.com'),
-    ]),
-    Class(gradeYear: 1, classGroup: 2, member: [
-      User(name: '정동원D', email: 'JDWD@gmail.com'),
-      User(name: "정동원E", email: 'JDWE@gmail.com'),
-      User(name: "정동원F", email: 'JDWF@gmail.com'),
-    ]),
-    Class(gradeYear: 1, classGroup: 3, member: [
-      User(name: '정동원G', email: 'JDWG@gmail.com'),
-      User(name: "정동원H", email: 'JDWH@gmail.com'),
-      User(name: "정동원I", email: 'JDWI@gmail.com'),
-    ]),
-  ];
-  final List<Class> _secondGrade = [
-    Class(gradeYear: 2, classGroup: 1, member: [
-      User(name: '황서진A', email: 'HSJA@gmail.com'),
-      User(name: "황서진B", email: 'HSJB@gmail.com'),
-      User(name: "황서진C", email: 'HSJC@gmail.com'),
-    ]),
-    Class(gradeYear: 2, classGroup: 2, member: [
-      User(name: '황서진D', email: 'HSJD@gmail.com'),
-      User(name: "황서진E", email: 'HSJE@gmail.com'),
-      User(name: "황서진F", email: 'HSJF@gmail.com'),
-    ]),
-    Class(gradeYear: 2, classGroup: 3, member: [
-      User(name: '황서진G', email: 'HSJG@gmail.com'),
-      User(name: "황서진H", email: 'HSJH@gmail.com'),
-      User(name: "황서진I", email: 'HSJI@gmail.com'),
-    ]),
-  ];
-  final List<Class> _thirdGrade = [
-    Class(gradeYear: 3, classGroup: 1, member: [
-      User(name: '손승표A', email: 'SSPA@gmail.com'),
-      User(name: "손승표B", email: 'SSPB@gmail.com'),
-      User(name: "손승표C", email: 'SSPC@gmail.com'),
-    ]),
-    Class(gradeYear: 3, classGroup: 2, member: [
-      User(name: '손승표D', email: 'SSPD@gmail.com'),
-      User(name: "손승표E", email: 'SSPE@gmail.com'),
-      User(name: "손승표F", email: 'SSPF@gmail.com'),
-    ]),
-    Class(gradeYear: 3, classGroup: 3, member: [
-      User(name: '손승표G', email: 'SSPG@gmail.com'),
-      User(name: "손승표H", email: 'SSPH@gmail.com'),
-      User(name: "손승표I", email: 'SSPI@gmail.com'),
-    ]),
-  ];
 
   List<Widget> _makeButtons(int gradeYear, int classGroup) {
     List<Widget> result = [];
@@ -226,9 +175,6 @@ class _StudentList extends StatelessWidget {
       : super(key: key);
 
   Future<List<User>> _getStudentList() async {
-    String url =
-        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/members/?gradeYear=${gradeYear}&classGroup=${classGroup}';
-
     http.Response response = await http.get(
       Uri(
         scheme: 'http',
