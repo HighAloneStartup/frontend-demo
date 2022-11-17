@@ -10,6 +10,7 @@ import 'styles/list_block.dart';
 
 class StudentListPage extends StatelessWidget {
   final MainUser user;
+
   const StudentListPage({Key? key, required this.user}) : super(key: key);
 
   Widget _title() {
@@ -48,7 +49,6 @@ class StudentListPage extends StatelessWidget {
 
     return Expanded(
       child: _ClassList(
-        user: user,
         onChooseClass: _onChooseClass,
       ),
     );
@@ -69,14 +69,63 @@ class StudentListPage extends StatelessWidget {
 }
 
 class _ClassList extends StatelessWidget {
-  final MainUser user;
   _ClassList({
     Key? key,
-    required this.user,
-    required this.onChooseClass,
+    required Function this.onChooseClass,
   }) : super(key: key);
 
   final Function onChooseClass;
+  final List<Class> _firstGrade = [
+    Class(gradeYear: 1, classGroup: 1, member: [
+      User(name: '정동원A', email: 'JDWA@gmail.com'),
+      User(name: "정동원B", email: 'JDWB@gmail.com'),
+      User(name: "정동원C", email: 'JDWC@gmail.com'),
+    ]),
+    Class(gradeYear: 1, classGroup: 2, member: [
+      User(name: '정동원D', email: 'JDWD@gmail.com'),
+      User(name: "정동원E", email: 'JDWE@gmail.com'),
+      User(name: "정동원F", email: 'JDWF@gmail.com'),
+    ]),
+    Class(gradeYear: 1, classGroup: 3, member: [
+      User(name: '정동원G', email: 'JDWG@gmail.com'),
+      User(name: "정동원H", email: 'JDWH@gmail.com'),
+      User(name: "정동원I", email: 'JDWI@gmail.com'),
+    ]),
+  ];
+  final List<Class> _secondGrade = [
+    Class(gradeYear: 2, classGroup: 1, member: [
+      User(name: '황서진A', email: 'HSJA@gmail.com'),
+      User(name: "황서진B", email: 'HSJB@gmail.com'),
+      User(name: "황서진C", email: 'HSJC@gmail.com'),
+    ]),
+    Class(gradeYear: 2, classGroup: 2, member: [
+      User(name: '황서진D', email: 'HSJD@gmail.com'),
+      User(name: "황서진E", email: 'HSJE@gmail.com'),
+      User(name: "황서진F", email: 'HSJF@gmail.com'),
+    ]),
+    Class(gradeYear: 2, classGroup: 3, member: [
+      User(name: '황서진G', email: 'HSJG@gmail.com'),
+      User(name: "황서진H", email: 'HSJH@gmail.com'),
+      User(name: "황서진I", email: 'HSJI@gmail.com'),
+    ]),
+  ];
+  final List<Class> _thirdGrade = [
+    Class(gradeYear: 3, classGroup: 1, member: [
+      User(name: '손승표A', email: 'SSPA@gmail.com'),
+      User(name: "손승표B", email: 'SSPB@gmail.com'),
+      User(name: "손승표C", email: 'SSPC@gmail.com'),
+    ]),
+    Class(gradeYear: 3, classGroup: 2, member: [
+      User(name: '손승표D', email: 'SSPD@gmail.com'),
+      User(name: "손승표E", email: 'SSPE@gmail.com'),
+      User(name: "손승표F", email: 'SSPF@gmail.com'),
+    ]),
+    Class(gradeYear: 3, classGroup: 3, member: [
+      User(name: '손승표G', email: 'SSPG@gmail.com'),
+      User(name: "손승표H", email: 'SSPH@gmail.com'),
+      User(name: "손승표I", email: 'SSPI@gmail.com'),
+    ]),
+  ];
 
   List<Widget> _makeButtons(int gradeYear, int classGroup) {
     List<Widget> result = [];
@@ -177,6 +226,9 @@ class _StudentList extends StatelessWidget {
       : super(key: key);
 
   Future<List<User>> _getStudentList() async {
+    String url =
+        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/members/?gradeYear=${gradeYear}&classGroup=${classGroup}';
+
     http.Response response = await http.get(
       Uri(
         scheme: 'http',
@@ -193,11 +245,14 @@ class _StudentList extends StatelessWidget {
         'Authorization': user.token,
       },
     );
+
     var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
     switch (statusCode) {
       case 200:
-        var responseBody = utf8.decode(response.bodyBytes);
         var parsed = jsonDecode(responseBody) as List;
+        print('결과 : ${parsed.runtimeType}');
         return parsed.map((e) => User.fromJson(e)).toList();
       default:
         throw Exception('$statusCode');
@@ -226,16 +281,20 @@ class _StudentList extends StatelessWidget {
 
   Widget _body() {
     return FutureBuilder(
-      future: _getStudentList(),
+      future: _getStudentList(), //future작업을 진행할 함수
+      //snapshot은 getWeather()에서 return해주는 타입에 맞추어 사용한다.
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
-        if (!snapshot.hasData) {
+        //데이터가 만약 들어오지 않았을때는 뱅글뱅글 로딩이 뜬다
+        if (snapshot.hasData == false) {
           return CircularProgressIndicator();
         }
+
         var classInfo = Class(
           gradeYear: gradeYear,
           classGroup: classGroup,
           member: snapshot.data as List<User>,
         );
+        //데이터가 제대로 불러와진 경우 현재온도, 최저,최고 온도와 코드에 따른 아이콘을 표시하는 부분
         return Expanded(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
