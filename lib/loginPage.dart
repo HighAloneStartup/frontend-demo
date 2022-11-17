@@ -180,10 +180,15 @@ class _LoginPageState extends State<LoginPage> {
                   right: 10,
                   bottom: 5,
                 ),
-                child: RaisedButton(
-                  color: Colors.black,
-                  textColor: Colors.white,
-                  child: Text('Login'),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    // textColor: Colors.white,
+                  ),
+                  child: Text(
+                    'Login',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   // name instead of the actual result! : without parentheses
                   onPressed: () async {
                     MainUser user =
@@ -199,11 +204,13 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FlatButton(
-                    textColor: Colors.lightBlue,
+                  TextButton(
                     child: Text(
                       '회원가입',
                       textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.lightBlue,
+                      ),
                     ),
                     // name instead of the actual result! : without parentheses
                     onPressed: () {
@@ -213,11 +220,13 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                   ),
-                  FlatButton(
-                    textColor: Colors.lightBlue,
+                  TextButton(
                     child: Text(
                       '비밀번호 찾기',
                       textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.lightBlue,
+                      ),
                     ),
                     // name instead of the actual result! : without parentheses
                     onPressed: () => {print('Clicked FIND PASSWORD')},
