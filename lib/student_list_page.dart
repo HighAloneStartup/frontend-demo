@@ -123,6 +123,22 @@ class _ClassList extends StatelessWidget {
     ]),
   ];
 
+  List<Widget> _makeButtons(int gradeYear, int classGroup) {
+    List<Widget> result = [];
+    for (int i = 1; i <= classGroup; i++) {
+      result.add(TextButton(
+        child: SubTitle(
+          title: "$gradeYear학년 $i반",
+          size: 15,
+          theme: Colors.white,
+        ),
+        onPressed: () => onChooseClass(gradeYear, i),
+      ));
+    }
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -145,27 +161,7 @@ class _ClassList extends StatelessWidget {
             ),
             child: Column(
               children: [
-                TextButton(
-                  child: SubTitle(
-                    title: "1학년 10반",
-                    size: 15,
-                    theme: Colors.white,
-                  ),
-                  onPressed: () => onChooseClass(1, 10),
-                )
-                /*
-                ..._firstGrade.map((clas) {
-                  return TextButton(
-                    child: SubTitle(
-                      title: "${clas.gradeYear}학년 ${clas.classGroup}반",
-                      size: 15,
-                      theme: Colors.white,
-                    ),
-                    onPressed: () =>
-                        onChooseClass(clas.gradeYear, clas.classGroup),
-                  );
-                })
-                */
+                ..._makeButtons(1, 13),
               ],
             ),
           ),
@@ -184,27 +180,7 @@ class _ClassList extends StatelessWidget {
             ),
             child: Column(
               children: [
-                TextButton(
-                  child: SubTitle(
-                    title: "2학년 10반",
-                    size: 15,
-                    theme: Colors.white,
-                  ),
-                  onPressed: () => onChooseClass(2, 10),
-                )
-                /*
-                ..._secondGrade.map((clas) {
-                  return TextButton(
-                    onPressed: () =>
-                        onChooseClass(clas.gradeYear, clas.classGroup),
-                    child: SubTitle(
-                      title: "${clas.gradeYear}학년 ${clas.classGroup}반",
-                      size: 15,
-                      theme: Colors.white,
-                    ),
-                  );
-                })
-                */
+                ..._makeButtons(2, 13),
               ],
             ),
           ),
@@ -223,27 +199,7 @@ class _ClassList extends StatelessWidget {
             ),
             child: Column(
               children: [
-                TextButton(
-                  child: SubTitle(
-                    title: "3학년 10반",
-                    size: 15,
-                    theme: Colors.white,
-                  ),
-                  onPressed: () => onChooseClass(3, 10),
-                )
-                /*
-                ..._thirdGrade.map((clas) {
-                  return TextButton(
-                    onPressed: () =>
-                        onChooseClass(clas.gradeYear, clas.classGroup),
-                    child: SubTitle(
-                      title: "${clas.gradeYear}학년 ${clas.classGroup}반",
-                      size: 15,
-                      theme: Colors.white,
-                    ),
-                  );
-                })
-                */
+                ..._makeButtons(3, 13),
               ],
             ),
           ),
