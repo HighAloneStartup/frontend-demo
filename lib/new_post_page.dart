@@ -10,7 +10,7 @@ class NewPostPage extends StatelessWidget {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
-  bool _isAnonymous = true;
+  bool _published = true;
 
   NewPostPage(this.addPost, {required this.user, Key? key}) : super(key: key);
 
@@ -26,8 +26,8 @@ class NewPostPage extends StatelessWidget {
     addPost(Post(
         id: '0000',
         title: _titleController.text,
-        content: _contentController.text,
-        isAnonymous: _isAnonymous,
+        description: _contentController.text,
+        published: _published,
         user: user));
     Navigator.pop(context);
   }
@@ -74,7 +74,7 @@ class NewPostPage extends StatelessWidget {
       child: Column(
         children: [
           // head
-          _NewPostHead(controller: _titleController, isAnonymous: _isAnonymous),
+          _NewPostHead(controller: _titleController, isAnonymous: _published),
           //textbox
           _NewPostBody(controller: _contentController),
           //button
@@ -156,7 +156,7 @@ class _NewPostHead extends StatelessWidget {
                       activeColor: Colors.white,
                       checkColor: Colors.black,
                       onChanged: (bool? value) {
-                        isAnonymous = value!;
+                        //isAnonymous = value!;
                       },
                     ),
                     const Text("익명", style: TextStyle(color: Colors.white)),

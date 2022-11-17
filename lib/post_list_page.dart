@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'new_post_page.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
@@ -6,12 +8,6 @@ import 'post_list.dart';
 import 'models/post.dart';
 import 'models/user.dart';
 import 'models/main_user.dart';
-
-final Map<String, User> _users = {
-  '손승표': User(name: '손승표', email: 'SSP@gmail.com'),
-  '정동원': User(name: '정동원', email: 'JDW@gmail.com'),
-  '황서진': User(name: '황서진', email: 'HSJ@gmail.com'),
-};
 
 class PostListPage extends StatefulWidget {
   final MainUser user;
@@ -24,98 +20,7 @@ class PostListPage extends StatefulWidget {
 
 class _PostListPageState extends State<PostListPage> {
   final MainUser user;
-  final _postList = [
-    Post(
-        id: '0000',
-        user: _users['손승표']!,
-        title: '체육복 빌려줄사람?',
-        content: '3학년 1반으로 와주셈',
-        isAnonymous: true),
-    Post(
-        id: '0001',
-        user: _users['정동원']!,
-        title: '축구하러 갈사람?',
-        content: '10분 뒤 운동장으로 집합 ㄱㄱ',
-        isAnonymous: true),
-    Post(
-        id: '0002',
-        user: _users['손승표']!,
-        title: '오늘 체육수업',
-        content: '있었나 알려주실분?',
-        isAnonymous: true),
-    Post(
-        id: '0003',
-        user: _users['황서진']!,
-        title: '오늘 3반 생물수업 노트필기 적으신 분?',
-        content: '있다면 보여 주실 천사 구함',
-        isAnonymous: true),
-    Post(
-        id: '0004',
-        user: _users['정동원']!,
-        title: '창고 뒤에서 담패핀 넘...',
-        content: '누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐?',
-        isAnonymous: true),
-    Post(
-        id: '0000',
-        user: _users['손승표']!,
-        title: '체육복 빌려줄사람?',
-        content: '3학년 1반으로 와주셈',
-        isAnonymous: true),
-    Post(
-        id: '0001',
-        user: _users['정동원']!,
-        title: '축구하러 갈사람?',
-        content: '10분 뒤 운동장으로 집합 ㄱㄱ',
-        isAnonymous: true),
-    Post(
-        id: '0002',
-        user: _users['손승표']!,
-        title: '오늘 체육수업',
-        content: '있었나 알려주실분?',
-        isAnonymous: true),
-    Post(
-        id: '0003',
-        user: _users['황서진']!,
-        title: '오늘 3반 생물수업 노트필기 적으신 분?',
-        content: '있다면 보여 주실 천사 구함',
-        isAnonymous: true),
-    Post(
-        id: '0004',
-        user: _users['정동원']!,
-        title: '창고 뒤에서 담패핀 넘...',
-        content: '누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐?',
-        isAnonymous: true),
-    Post(
-        id: '0000',
-        user: _users['손승표']!,
-        title: '체육복 빌려줄사람?',
-        content: '3학년 1반으로 와주셈',
-        isAnonymous: true),
-    Post(
-        id: '0001',
-        user: _users['정동원']!,
-        title: '축구하러 갈사람?',
-        content: '10분 뒤 운동장으로 집합 ㄱㄱ',
-        isAnonymous: true),
-    Post(
-        id: '0002',
-        user: _users['손승표']!,
-        title: '오늘 체육수업',
-        content: '있었나 알려주실분?',
-        isAnonymous: true),
-    Post(
-        id: '0003',
-        user: _users['황서진']!,
-        title: '오늘 3반 생물수업 노트필기 적으신 분?',
-        content: '있다면 보여 주실 천사 구함',
-        isAnonymous: true),
-    Post(
-        id: '0004',
-        user: _users['정동원']!,
-        title: '창고 뒤에서 담패핀 넘...',
-        content: '누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐? 누구냐?',
-        isAnonymous: true),
-  ];
+  List<Post> _postList = [];
 
   _PostListPageState({required this.user});
 
@@ -130,10 +35,72 @@ class _PostListPageState extends State<PostListPage> {
     );
   }
 
-  void _addNewPost(Post newPost) {
+  void _addNewPost(Post newPost) async {
+    _postPost(newPost);
+    await _getPostList(null);
     setState(() {
       _postList.add(newPost);
     });
+  }
+
+  Future<List<Post>> _getPostList(String? id) async {
+    id ??= "";
+    http.Response response = await http.get(
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/boards/$id',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user.token,
+      },
+    );
+
+    var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
+    switch (statusCode) {
+      case 200:
+        var parsed = jsonDecode(responseBody) as List;
+        //print('결과 : ${parsed}');
+        return parsed.map((e) => Post.fromJson(e)).toList();
+      default:
+        throw Exception('$statusCode');
+    }
+  }
+
+  void _postPost(Post newPost) async {
+    var data = jsonEncode({
+      'title': newPost.title,
+      'description': newPost.description,
+      'published': newPost.published,
+    });
+    http.Response response = await http.post(
+        Uri(
+          scheme: 'http',
+          host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+          port: 9090,
+          path: 'api/boards/',
+        ),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': user.token,
+        },
+        body: data);
+
+    var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
+    switch (statusCode) {
+      case 200:
+        break;
+      case 201:
+        break;
+      default:
+        throw Exception('$statusCode');
+    }
   }
 
   Widget _title() {
@@ -160,7 +127,20 @@ class _PostListPageState extends State<PostListPage> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          PostList(_postList, user: user),
+          FutureBuilder(
+            future: _getPostList(null),
+            builder: ((context, snapshot) {
+              if (!snapshot.hasData) {
+                //print(snapshot.error);
+                return const SizedBox(
+                  width: double.infinity,
+                  child: CircularProgressIndicator(),
+                );
+              }
+              _postList = snapshot.data as List<Post>;
+              return PostList(_postList, user: user);
+            }),
+          ),
           Positioned(
             bottom: 40,
             child: _TransitionButton(() => _transition(context)),
