@@ -51,7 +51,7 @@ class _MyPageState extends State<MyPage> {
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.black,
+                  primary: const Color(0xff3D5D54),
                   // textColor: Colors.white,
                 ),
                 child: const Text(
@@ -78,7 +78,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'NICKNAME',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -104,7 +104,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'EMAIL',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -130,7 +130,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'PASSWORD',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -156,7 +156,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'ROLES',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -189,7 +189,7 @@ class _MyPageState extends State<MyPage> {
                 enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                     width: 2,
-                    color: Colors.black,
+                    color: Color(0xff3D5D54),
                   ),
                 ),
               ),
@@ -205,7 +205,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'GRADE',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -231,7 +231,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'CLASS',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -257,7 +257,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'ATTENDANCE NUMBER',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -283,7 +283,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'GENERATION NUMBER',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -309,7 +309,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'STUDENT NUMBER',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -335,7 +335,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'BIRTHDAY',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -361,7 +361,7 @@ class _MyPageState extends State<MyPage> {
             child: const Text(
               'PHONE NUMBER',
               style: TextStyle(
-                color: Colors.black,
+                color: Color(0xff3D5D54),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -390,7 +390,7 @@ class _MyPageState extends State<MyPage> {
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.black,
+                primary: const Color(0xff3D5D54),
                 // textColor: Colors.white,
               ),
               child: const Text(
