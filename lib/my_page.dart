@@ -10,16 +10,33 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  String userNickname = "";
-  String userIdValue = "";
+  String name = "seo jin";
+  String email = "swiftie1230@naver.com";
+  String password = "swiftie1230";
+  /* roles 형태 */
+  String roles = "";
+  /* int 형태 이거 맞나 */
+  int gradeYear = 0;
+  int classGroup = 0;
+  int attendanceNumber = 0;
+  int generationNumber = 0;
+  int studentNumber = 0;
+  /* date 형태 ? string 형태 ? */
+  int birthday = 0;
+  String phoneNumber = "010-8891-2306";
+  String photoUrl = "";
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 30.0, left: 30.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: ListView(
+        //mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(
+            height: 20.0,
+          ),
+          // Image.file(userImage),
           Image.asset(
             'assets/images/default.jpg',
             width: 200,
@@ -59,9 +76,10 @@ class _MyPageState extends State<MyPage> {
             margin: const EdgeInsets.only(left: 10),
             alignment: const Alignment(-1.0, 0.0),
             child: const Text(
-              '닉네임',
+              'NICKNAME',
               style: TextStyle(
                 color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -74,15 +92,94 @@ class _MyPageState extends State<MyPage> {
               right: 10,
               bottom: 5,
             ),
+            child: Text(name),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            height: 15,
+            margin: const EdgeInsets.only(left: 10),
+            alignment: const Alignment(-1.0, 0.0),
+            child: const Text(
+              'EMAIL',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 5,
+            ),
+            child: Text(email),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            height: 15,
+            margin: const EdgeInsets.only(left: 10),
+            alignment: const Alignment(-1.0, 0.0),
+            child: const Text(
+              'PASSWORD',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 5,
+            ),
+            child: Text(password),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            height: 15,
+            margin: const EdgeInsets.only(left: 10),
+            alignment: const Alignment(-1.0, 0.0),
+            child: const Text(
+              'ROLES',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            height: 50,
+            // width: 335,
+            margin: const EdgeInsets.only(
+              left: 5,
+              right: 5,
+            ),
             child: TextField(
               onChanged: (text) {
                 setState(() {
-                  userNickname = text;
+                  roles = text;
                 });
               },
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                labelText: 'NickName',
+                labelText: 'Roles',
                 labelStyle: const TextStyle(
                   fontSize: 14,
                 ),
@@ -106,9 +203,10 @@ class _MyPageState extends State<MyPage> {
             margin: const EdgeInsets.only(left: 10),
             alignment: const Alignment(-1.0, 0.0),
             child: const Text(
-              '이메일',
+              'GRADE',
               style: TextStyle(
                 color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -121,29 +219,163 @@ class _MyPageState extends State<MyPage> {
               right: 10,
               bottom: 5,
             ),
-            child: TextField(
-              onChanged: (text) {
-                setState(() {
-                  userIdValue = text;
-                });
-              },
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'Email Address',
-                labelStyle: const TextStyle(
-                  fontSize: 14,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 2,
-                    color: Colors.black,
-                  ),
-                ),
+            child: Text("$gradeYear"),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            height: 15,
+            margin: const EdgeInsets.only(left: 10),
+            alignment: const Alignment(-1.0, 0.0),
+            child: const Text(
+              'CLASS',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
             ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 5,
+            ),
+            child: Text("$classGroup"),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            height: 15,
+            margin: const EdgeInsets.only(left: 10),
+            alignment: const Alignment(-1.0, 0.0),
+            child: const Text(
+              'ATTENDANCE NUMBER',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 5,
+            ),
+            child: Text("$attendanceNumber"),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            height: 15,
+            margin: const EdgeInsets.only(left: 10),
+            alignment: const Alignment(-1.0, 0.0),
+            child: const Text(
+              'GENERATION NUMBER',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 5,
+            ),
+            child: Text("$generationNumber"),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            height: 15,
+            margin: const EdgeInsets.only(left: 10),
+            alignment: const Alignment(-1.0, 0.0),
+            child: const Text(
+              'STUDENT NUMBER',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 5,
+            ),
+            child: Text("$studentNumber"),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            height: 15,
+            margin: const EdgeInsets.only(left: 10),
+            alignment: const Alignment(-1.0, 0.0),
+            child: const Text(
+              'BIRTHDAY',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 5,
+            ),
+            child: Text("$birthday"),
+          ),
+          const SizedBox(
+            height: 30.0,
+          ),
+          Container(
+            height: 15,
+            margin: const EdgeInsets.only(left: 10),
+            alignment: const Alignment(-1.0, 0.0),
+            child: const Text(
+              'PHONE NUMBER',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 5,
+            ),
+            child: Text(phoneNumber),
           ),
           const SizedBox(
             height: 30.0,
