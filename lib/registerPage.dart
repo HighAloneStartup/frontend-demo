@@ -72,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Text(
                   'REGISTER',
                   style: TextStyle(
-                    color: Colors.black,
+                    color: const Color(0xff3D5D54),
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -116,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 2,
-                        color: Colors.black,
+                        color: const Color(0xff3D5D54),
                       ),
                     ),
                   ),
@@ -151,7 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 2,
-                        color: Colors.black,
+                        color: const Color(0xff3D5D54),
                       ),
                     ),
                   ),
@@ -185,7 +185,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 2,
-                        color: Colors.black,
+                        color: const Color(0xff3D5D54),
                       ),
                     ),
                   ),
@@ -201,7 +201,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 child: TextButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.black,
+                    primary: const Color(0xff3D5D54),
                     // textColor: Colors.white,
                   ),
                   child: Text(
