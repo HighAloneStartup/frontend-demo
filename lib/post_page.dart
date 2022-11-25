@@ -64,7 +64,7 @@ class _PostHead extends StatelessWidget {
                 : Image.asset(post.image as String),
           ),
           SubTitle(
-            title: post.isAnonymous ? '익명' : post.user.name,
+            title: '익명',
             theme: Colors.white,
           ),
         ],
@@ -91,7 +91,7 @@ class _PostBody extends StatelessWidget {
               theme: Colors.white,
             ),
             SubTitle(
-              title: post.content,
+              title: post.description,
               theme: Colors.white,
             ),
           ],

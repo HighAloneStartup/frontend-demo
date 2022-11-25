@@ -10,6 +10,7 @@ import 'styles/list_block.dart';
 
 class StudentListPage extends StatelessWidget {
   final MainUser user;
+
   const StudentListPage({Key? key, required this.user}) : super(key: key);
 
   Widget _title() {
@@ -48,7 +49,6 @@ class StudentListPage extends StatelessWidget {
 
     return Expanded(
       child: _ClassList(
-        user: user,
         onChooseClass: _onChooseClass,
       ),
     );
@@ -69,14 +69,28 @@ class StudentListPage extends StatelessWidget {
 }
 
 class _ClassList extends StatelessWidget {
-  final MainUser user;
   _ClassList({
     Key? key,
-    required this.user,
-    required this.onChooseClass,
+    required Function this.onChooseClass,
   }) : super(key: key);
 
   final Function onChooseClass;
+
+  List<Widget> _makeButtons(int gradeYear, int classGroup) {
+    List<Widget> result = [];
+    for (int i = 1; i <= classGroup; i++) {
+      result.add(TextButton(
+        child: SubTitle(
+          title: "$gradeYear학년 $i반",
+          size: 15,
+          theme: Colors.white,
+        ),
+        onPressed: () => onChooseClass(gradeYear, i),
+      ));
+    }
+
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,14 +114,7 @@ class _ClassList extends StatelessWidget {
             ),
             child: Column(
               children: [
-                TextButton(
-                  child: SubTitle(
-                    title: "1학년 10반",
-                    size: 15,
-                    theme: Colors.white,
-                  ),
-                  onPressed: () => onChooseClass(1, 10),
-                )
+                ..._makeButtons(1, 13),
               ],
             ),
           ),
@@ -126,14 +133,7 @@ class _ClassList extends StatelessWidget {
             ),
             child: Column(
               children: [
-                TextButton(
-                  child: SubTitle(
-                    title: "2학년 10반",
-                    size: 15,
-                    theme: Colors.white,
-                  ),
-                  onPressed: () => onChooseClass(2, 10),
-                )
+                ..._makeButtons(2, 13),
               ],
             ),
           ),
@@ -152,14 +152,7 @@ class _ClassList extends StatelessWidget {
             ),
             child: Column(
               children: [
-                TextButton(
-                  child: SubTitle(
-                    title: "3학년 10반",
-                    size: 15,
-                    theme: Colors.white,
-                  ),
-                  onPressed: () => onChooseClass(3, 10),
-                )
+                ..._makeButtons(3, 13),
               ],
             ),
           ),
@@ -198,11 +191,14 @@ class _StudentList extends StatelessWidget {
         'Authorization': user.token,
       },
     );
+
     var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
     switch (statusCode) {
       case 200:
-        var responseBody = utf8.decode(response.bodyBytes);
         var parsed = jsonDecode(responseBody) as List;
+        print('결과 : ${parsed.runtimeType}');
         return parsed.map((e) => User.fromJson(e)).toList();
       default:
         throw Exception('$statusCode');
@@ -231,16 +227,20 @@ class _StudentList extends StatelessWidget {
 
   Widget _body() {
     return FutureBuilder(
-      future: _getStudentList(),
+      future: _getStudentList(), //future작업을 진행할 함수
+      //snapshot은 getWeather()에서 return해주는 타입에 맞추어 사용한다.
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
-        if (!snapshot.hasData) {
+        //데이터가 만약 들어오지 않았을때는 뱅글뱅글 로딩이 뜬다
+        if (snapshot.hasData == false) {
           return CircularProgressIndicator();
         }
+
         var classInfo = Class(
           gradeYear: gradeYear,
           classGroup: classGroup,
           member: snapshot.data as List<User>,
         );
+        //데이터가 제대로 불러와진 경우 현재온도, 최저,최고 온도와 코드에 따른 아이콘을 표시하는 부분
         return Expanded(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
