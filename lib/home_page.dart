@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
       ),
       TimeTablePage(),
       BoardListPage(user: user),
-      MyPage(),
+      MyPage(user: user),
     ];
     return Scaffold(
       body: SafeArea(
