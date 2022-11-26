@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'models/class.dart';
@@ -8,10 +9,21 @@ import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import 'styles/list_block.dart';
 
-class StudentListPage extends StatelessWidget {
+class StudentListPage extends StatefulWidget {
   final MainUser user;
 
   const StudentListPage({Key? key, required this.user}) : super(key: key);
+
+  @override
+  State<StudentListPage> createState() => _StudentListPageState(user: user);
+}
+
+class _StudentListPageState extends State<StudentListPage> {
+  final MainUser user;
+  int choosedGradeYear = -1;
+  int choosedClassGroup = -1;
+
+  _StudentListPageState({required this.user});
 
   Widget _title() {
     return Container(
@@ -22,157 +34,29 @@ class StudentListPage extends StatelessWidget {
         children: const [
           MainTitle(
             title: "STUDENT LIST",
-            theme: Colors.white,
+            theme: Color(0xFF3D5D54),
           ),
-          SubTitle(
-            title: "학생부",
-            theme: Colors.white,
-          )
+          SubTitle(title: "학생부")
         ],
       ),
     );
   }
 
   Widget _body(BuildContext context) {
-    void _onChooseClass(int gradeYear, int classGroup) {
-      print("${gradeYear}학년 ${classGroup}반 학생 목록페이지로 이동");
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => _StudentList(
-                  user: user,
-                  gradeYear: gradeYear,
-                  classGroup: classGroup,
-                )),
-      );
-    }
-
     return Expanded(
-      child: _ClassList(
-        onChooseClass: _onChooseClass,
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          _title(),
-          _body(context),
-        ],
-      ),
-    );
-  }
-}
-
-class _ClassList extends StatelessWidget {
-  _ClassList({
-    Key? key,
-    required Function this.onChooseClass,
-  }) : super(key: key);
-
-  final Function onChooseClass;
-
-  List<Widget> _makeButtons(int gradeYear, int classGroup) {
-    List<Widget> result = [];
-    for (int i = 1; i <= classGroup; i++) {
-      result.add(TextButton(
-        child: SubTitle(
-          title: "$gradeYear학년 $i반",
-          size: 15,
-          theme: Colors.white,
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            ..._makeSection("FIRST GRADE", 1),
+            ..._makeSection("SECOND GRADE", 2),
+            ..._makeSection("THIRD GRADE", 3),
+          ],
         ),
-        onPressed: () => onChooseClass(gradeYear, i),
-      ));
-    }
-
-    return result;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ListView(
-        children: <Widget>[
-          const MainTitle(
-            title: "FIRST GRADE",
-            size: 25,
-            theme: Colors.white,
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            padding: const EdgeInsets.all(10),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Column(
-              children: [
-                ..._makeButtons(1, 13),
-              ],
-            ),
-          ),
-          const MainTitle(
-            title: "SECOND GRADE",
-            size: 25,
-            theme: Colors.white,
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Column(
-              children: [
-                ..._makeButtons(2, 13),
-              ],
-            ),
-          ),
-          const MainTitle(
-            title: "THIRD GRADE",
-            size: 25,
-            theme: Colors.white,
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white),
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Column(
-              children: [
-                ..._makeButtons(3, 13),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
-}
-
-class _StudentList extends StatelessWidget {
-  final MainUser user;
-  final int gradeYear;
-  final int classGroup;
-
-  const _StudentList(
-      {Key? key,
-      required this.user,
-      required this.gradeYear,
-      required this.classGroup})
-      : super(key: key);
 
   Future<List<User>> _getStudentList() async {
     http.Response response = await http.get(
@@ -182,8 +66,8 @@ class _StudentList extends StatelessWidget {
         port: 9090,
         path: 'api/members/',
         queryParameters: {
-          'gradeYear': '$gradeYear',
-          'classGroup': '$classGroup',
+          'gradeYear': '$choosedGradeYear',
+          'classGroup': '$choosedClassGroup',
         },
       ),
       headers: {
@@ -205,109 +89,136 @@ class _StudentList extends StatelessWidget {
     }
   }
 
-  Widget _title() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 20),
-      alignment: Alignment.centerLeft,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          MainTitle(
-            title: "STUDENT LIST",
-            theme: Colors.white,
+  List<Widget> _makeButtons(int gradeYear, int classGroup) {
+    List<Widget> result = [];
+    for (int i = 1; i <= classGroup; i++) {
+      result.add(
+        Container(
+          margin: const EdgeInsets.all(5),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SubTitle(
+                  title: "$gradeYear학년 $i반",
+                  size: 15,
+                ),
+                const SubTitle(
+                  title: ">",
+                  size: 15,
+                ),
+              ],
+            ),
+            onPressed: () {
+              setState(() {
+                choosedGradeYear = gradeYear;
+                choosedClassGroup = i;
+              });
+            },
           ),
-          SubTitle(
-            title: "학생부",
-            theme: Colors.white,
-          ),
-        ],
+        ),
+      );
+    }
+
+    return result;
+  }
+
+  SliverGrid _makeGrid(List<Widget> buttons) {
+    return SliverGrid(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 3,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => buttons[index],
+        childCount: buttons.length,
       ),
     );
   }
 
-  Widget _body() {
+  Widget _makeList() {
+    return SliverToBoxAdapter(child: Text("나 여기있고, 너 거기있지"));
     return FutureBuilder(
-      future: _getStudentList(), //future작업을 진행할 함수
-      //snapshot은 getWeather()에서 return해주는 타입에 맞추어 사용한다.
+      future: _getStudentList(),
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
-        //데이터가 만약 들어오지 않았을때는 뱅글뱅글 로딩이 뜬다
-        if (snapshot.hasData == false) {
-          return CircularProgressIndicator();
+        if (!snapshot.hasData == false) {
+          return const SliverToBoxAdapter(
+              child: Center(child: CircularProgressIndicator()));
         }
-
-        var classInfo = Class(
-          gradeYear: gradeYear,
-          classGroup: classGroup,
-          member: snapshot.data as List<User>,
-        );
-        //데이터가 제대로 불러와진 경우 현재온도, 최저,최고 온도와 코드에 따른 아이콘을 표시하는 부분
-        return Expanded(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MainTitle(
-                  title: "${classInfo.gradeYear} - ${classInfo.classGroup}",
-                  size: 25.0,
-                  theme: Colors.white,
+        var students = snapshot.data;
+        return SliverList(
+          delegate: SliverChildListDelegate(students!.map((student) {
+            return ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      ...classInfo.member.map((member) {
-                        return TextButton(
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.white),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                            ),
-                            child: ListBlock(
-                              start: Container(
-                                width: 60,
-                                margin: const EdgeInsets.only(right: 10),
-                                height: 60,
-                                child: Image.asset('assets/images/default.jpg'),
-                              ),
-                              center: SubTitle(
-                                title: member.name,
-                                size: 15,
-                                theme: Colors.white,
-                              ),
-                              end: const Icon(Icons.message,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          onPressed: () => print(member.name),
-                        );
-                      })
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+              child: StudentCard(student),
+              onPressed: () {},
+            );
+          }).toList()),
         );
       },
     );
   }
 
+  List<Widget> _makeSection(String title, int grade) {
+    var buttons = _makeButtons(grade, 13);
+    int divider = (((choosedClassGroup - 1) ~/ 2 + 1) * 2).clamp(0, 13);
+    return [
+      SliverToBoxAdapter(
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: const Color(0xFFE4F0ED),
+          ),
+          child: MainTitle(
+            title: title,
+            size: 25,
+            theme: const Color(0xFF3D5D54),
+          ),
+        ),
+      ),
+      const SliverToBoxAdapter(child: SizedBox(height: 10)),
+      _makeGrid(buttons.sublist(0, divider)),
+      choosedGradeYear == grade ? _makeList() : const SliverToBoxAdapter(),
+      _makeGrid(buttons.sublist(divider)),
+      const SliverToBoxAdapter(child: SizedBox(height: 10)),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Column(
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
           children: [
             _title(),
-            _body(),
+            _body(context),
           ],
         ),
       ),
     );
+  }
+}
+
+class StudentCard extends StatelessWidget {
+  final User user;
+  const StudentCard(this.user, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MainTitle(title: user.name);
   }
 }
