@@ -24,6 +24,7 @@ class MainTitle extends StatelessWidget {
         fontSize: _size,
         fontWeight: FontWeight.bold,
         overflow: TextOverflow.ellipsis,
+        fontFamily: 'Roboto',
       ),
     );
   }

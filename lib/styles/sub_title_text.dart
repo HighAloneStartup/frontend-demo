@@ -22,7 +22,8 @@ class SubTitle extends StatelessWidget {
       style: TextStyle(
         color: _theme,
         fontSize: _size,
-        overflow: TextOverflow.ellipsis,
+        overflow: TextOverflow.clip,
+        fontFamily: 'Aldrich',
       ),
     );
   }

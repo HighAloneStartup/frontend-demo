@@ -93,3 +93,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Aldrich
+      fonts:
+        - asset: assets/fonts/Aldrich/Aldrich-Regular.ttf
+          weight: 400
+    - family: Roboto
+      fonts:        
+        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+          weight: 500
