@@ -70,7 +70,7 @@ class _PostPageState extends State<PostPage> {
       margin: const EdgeInsets.all(5),
       padding: const EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(20, 97, 97, 97),
+        color: const Color.fromARGB(255, 208, 208, 208),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -149,13 +149,12 @@ class _PostPageState extends State<PostPage> {
 class _PostHead extends StatelessWidget {
   final Post post;
 
-  const _PostHead({required this.post, Key? key}) : super(key: key);
+  _PostHead({required this.post, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
-      width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -164,6 +163,18 @@ class _PostHead extends StatelessWidget {
             size: 24,
           ),
           const SizedBox(height: 10),
+          SizedBox(
+            height: 300,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              physics: const ClampingScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Image.network(post.images[index]);
+              },
+              itemCount: post.images.length,
+            ),
+          ),
+          const SizedBox(height: 5),
           SubTitle(
             title: post.title,
             overflow: TextOverflow.clip,
@@ -228,33 +239,34 @@ class _PostBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: comments
-          .map(
-            (comment) => Container(
-              margin: const EdgeInsets.symmetric(vertical: 5),
-              padding: const EdgeInsets.all(10),
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                  color: const Color(0xFFE4F0ED),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const MainTitle(
-                    title: "익명",
-                    size: 15,
-                  ),
-                  const SizedBox(height: 5),
-                  SubTitle(
-                    title: comment,
-                    overflow: TextOverflow.clip,
-                  ),
-                  const SizedBox(height: 5),
-                ],
-              ),
+      children: [
+        ...comments.map(
+          (comment) => Container(
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            padding: const EdgeInsets.all(10),
+            alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+                color: const Color(0xFFE4F0ED),
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const MainTitle(
+                  title: "익명",
+                  size: 15,
+                ),
+                const SizedBox(height: 5),
+                SubTitle(
+                  title: comment,
+                  overflow: TextOverflow.clip,
+                ),
+                const SizedBox(height: 5),
+              ],
             ),
-          )
-          .toList(),
+          ),
+        ),
+        const SizedBox(height: 50),
+      ],
     );
   }
 }

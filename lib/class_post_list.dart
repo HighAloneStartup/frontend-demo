@@ -43,22 +43,25 @@ class _PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var photo = post.image == null
+    var photo = post.images.isEmpty
         ? Image.asset(
             'assets/images/default.jpg',
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
           )
-        : Image.asset(post.image as String);
+        : Image.network(post.images[0]);
 
     return ElevatedButton(
-      child: photo,
-      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0)),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(0),
+        backgroundColor: Colors.white,
+      ),
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => PostPage(post, user: user)),
         );
       },
+      child: photo,
     );
   }
 }

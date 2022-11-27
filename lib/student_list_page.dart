@@ -97,8 +97,9 @@ class _StudentListPageState extends State<StudentListPage> {
           margin: const EdgeInsets.all(5),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  isclicked ? Color.fromARGB(255, 208, 208, 208) : Colors.white,
+              backgroundColor: isclicked
+                  ? const Color.fromARGB(255, 208, 208, 208)
+                  : Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
