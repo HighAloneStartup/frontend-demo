@@ -137,9 +137,7 @@ class _PostListPageState extends State<ClassBoardPage> {
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(
-              image: AssetImage(
-                'assets/images/default.jpg',
-              ),
+              image: AssetImage('assets/images/default.jpg'),
             ),
           ),
         ),

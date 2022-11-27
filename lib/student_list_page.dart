@@ -230,10 +230,15 @@ class StudentCard extends StatelessWidget {
   const StudentCard(this.user, {super.key});
 
   Widget _photo() {
-    return SizedBox(
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
       width: 60,
       height: 60,
-      child: Image.network(user.photoUrl),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: NetworkImage(user.photoUrl), fit: BoxFit.cover),
+        borderRadius: BorderRadius.circular(25),
+      ),
     );
   }
 
@@ -285,7 +290,7 @@ class StudentCard extends StatelessWidget {
     return Row(
       children: [
         _photo(),
-        const SizedBox(width: 5),
+        const SizedBox(width: 10),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
