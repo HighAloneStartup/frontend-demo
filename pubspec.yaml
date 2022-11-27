@@ -38,7 +38,6 @@ dependencies:
   jwt_decode: ^0.3.1
   flutter_secure_storage: ^4.2.1
   firebase_core: ^2.3.0
-  cloud_firestore: ^4.1.0
   # dio: ^4.0.0
 
 dev_dependencies:
@@ -100,7 +99,7 @@ flutter:
         - asset: assets/fonts/Aldrich/Aldrich-Regular.ttf
           weight: 400
     - family: Roboto
-      fonts:        
+      fonts:
         - asset: assets/fonts/Roboto/Roboto-Regular.ttf
           weight: 400
         - asset: assets/fonts/Roboto/Roboto-Medium.ttf

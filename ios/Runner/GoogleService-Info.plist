@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>101473906450-1u89s454htg0fug3sig41ai251ic2i75.apps.googleusercontent.com</string>
+	<string>795601718124-ruf5s18uagvmufds4idfmht94ad2pjke.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.101473906450-1u89s454htg0fug3sig41ai251ic2i75</string>
+	<string>com.googleusercontent.apps.795601718124-ruf5s18uagvmufds4idfmht94ad2pjke</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCWiGGj3m8Sg-wgZpqC1H_qu6Yh_evSQVE</string>
+	<string>AIzaSyDrEdnwC23yTJXzlFzcc3UtShf7OyUDhsA</string>
 	<key>GCM_SENDER_ID</key>
-	<string>101473906450</string>
+	<string>795601718124</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.highAloneStartup</string>
 	<key>PROJECT_ID</key>
-	<string>cau-capston-dm</string>
+	<string>cau-capstone-dm</string>
 	<key>STORAGE_BUCKET</key>
-	<string>cau-capston-dm.appspot.com</string>
+	<string>cau-capstone-dm.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:101473906450:ios:3f59a4b6c227dda7994dcb</string>
+	<string>1:795601718124:ios:4a4bf5384d3656d2b64149</string>
 </dict>
 </plist>

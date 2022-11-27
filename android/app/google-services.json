@@ -1,37 +1,37 @@
 {
   "project_info": {
-    "project_number": "101473906450",
-    "project_id": "cau-capston-dm",
-    "storage_bucket": "cau-capston-dm.appspot.com"
+    "project_number": "795601718124",
+    "project_id": "cau-capstone-dm",
+    "storage_bucket": "cau-capstone-dm.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:101473906450:android:18da5d08c3145c12994dcb",
+        "mobilesdk_app_id": "1:795601718124:android:780fbf42d27c9e31b64149",
         "android_client_info": {
           "package_name": "com.example.high_alone_startup"
         }
       },
       "oauth_client": [
         {
-          "client_id": "101473906450-k07hftnruq3t42cmenc2591of8b98lnk.apps.googleusercontent.com",
+          "client_id": "795601718124-qt308d2tmhrorcvc5998stm3e2r3ssfe.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCSGkiX7Sh9rPNLUWYKd_l1avxjZLJ2dv0"
+          "current_key": "AIzaSyC71A9H9cV9y20h41rZFcqQ7r-hQB6DVMI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "101473906450-k07hftnruq3t42cmenc2591of8b98lnk.apps.googleusercontent.com",
+              "client_id": "795601718124-qt308d2tmhrorcvc5998stm3e2r3ssfe.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "101473906450-1u89s454htg0fug3sig41ai251ic2i75.apps.googleusercontent.com",
+              "client_id": "795601718124-ruf5s18uagvmufds4idfmht94ad2pjke.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.example.highAloneStartup"
