@@ -12,7 +12,10 @@ class User {
   int? studentNumber;
   String? birthday;
   String? phoneNumber;
-  String? photoUrl;
+  final String photoUrl;
+
+  static const String defaultPhotoUrl =
+      'https://www.bcm-institute.org/wp-content/uploads/2020/11/No-Image-Icon.png';
 
   User({
     required this.uid,
@@ -26,14 +29,16 @@ class User {
     this.studentNumber,
     this.birthday,
     this.phoneNumber,
-    this.photoUrl,
+    this.photoUrl = defaultPhotoUrl,
   });
   factory User.fromJson(Map<String, dynamic> json) {
     String timestamp = json['uid'] as String;
-
     List<dynamic> temp1 = json['authorities'] as List<dynamic>;
-
     List<Authority> temp2 = temp1.map((e) => Authority.fromJson(e)).toList();
+
+    var _photoUrl = json['photoUrl'] ?? defaultPhotoUrl;
+    _photoUrl = _photoUrl as String;
+
     return User(
       uid: timestamp,
       name: json['name'] as String,
@@ -46,7 +51,7 @@ class User {
       studentNumber: json['studentNumber'] as int?,
       birthday: json['birthday'] as String?,
       phoneNumber: json['phoneNumber'] as String?,
-      photoUrl: json['photoUrl'] as String?,
+      photoUrl: _photoUrl,
     );
   }
 }

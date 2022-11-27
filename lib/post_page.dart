@@ -166,11 +166,13 @@ class _PostHead extends StatelessWidget {
           const SizedBox(height: 10),
           SubTitle(
             title: post.title,
+            overflow: TextOverflow.clip,
             size: 18,
           ),
           const SizedBox(height: 5),
           SubTitle(
             title: post.description,
+            overflow: TextOverflow.clip,
           ),
           const SizedBox(height: 50),
           Row(
@@ -245,6 +247,7 @@ class _PostBody extends StatelessWidget {
                   const SizedBox(height: 5),
                   SubTitle(
                     title: comment,
+                    overflow: TextOverflow.clip,
                   ),
                   const SizedBox(height: 5),
                 ],

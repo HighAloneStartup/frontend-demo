@@ -82,7 +82,6 @@ class _StudentListPageState extends State<StudentListPage> {
     switch (statusCode) {
       case 200:
         var parsed = jsonDecode(responseBody) as List;
-        print('결과 : ${parsed.runtimeType}');
         return parsed.map((e) => User.fromJson(e)).toList();
       default:
         throw Exception('$statusCode');
@@ -92,12 +91,15 @@ class _StudentListPageState extends State<StudentListPage> {
   List<Widget> _makeButtons(int gradeYear, int classGroup) {
     List<Widget> result = [];
     for (int i = 1; i <= classGroup; i++) {
+      bool isclicked =
+          (gradeYear == choosedGradeYear) && (i == choosedClassGroup);
       result.add(
         Container(
           margin: const EdgeInsets.all(5),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
+              backgroundColor:
+                  isclicked ? Color.fromARGB(255, 208, 208, 208) : Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -109,10 +111,17 @@ class _StudentListPageState extends State<StudentListPage> {
                   title: "$gradeYear학년 $i반",
                   size: 15,
                 ),
-                const SubTitle(
-                  title: ">",
-                  size: 15,
-                ),
+                isclicked
+                    ? const Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 15,
+                        color: Colors.black,
+                      )
+                    : const Icon(
+                        Icons.keyboard_arrow_right,
+                        size: 15,
+                        color: Colors.black,
+                      ),
               ],
             ),
             onPressed: () {
@@ -145,26 +154,30 @@ class _StudentListPageState extends State<StudentListPage> {
   }
 
   Widget _makeList() {
-    return SliverToBoxAdapter(child: Text("나 여기있고, 너 거기있지"));
+    //return SliverToBoxAdapter(child: Text("나 여기있고, 너 거기있지"));
     return FutureBuilder(
       future: _getStudentList(),
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
-        if (!snapshot.hasData == false) {
+        if (!snapshot.hasData) {
           return const SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator()));
+              child: Center(
+                  child: CircularProgressIndicator(color: Color(0xFF3D5D54))));
         }
         var students = snapshot.data;
         return SliverList(
           delegate: SliverChildListDelegate(students!.map((student) {
-            return ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
+                child: StudentCard(student),
+                onPressed: () {},
               ),
-              child: StudentCard(student),
-              onPressed: () {},
             );
           }).toList()),
         );
@@ -217,8 +230,74 @@ class StudentCard extends StatelessWidget {
   final User user;
   const StudentCard(this.user, {super.key});
 
+  Widget _photo() {
+    return SizedBox(
+      width: 60,
+      height: 60,
+      child: Image.network(user.photoUrl),
+    );
+  }
+
+  Widget _badges() {
+    return Row(
+      children: const [
+        Icon(
+          Icons.checkroom,
+          color: Colors.black,
+          size: 12,
+        ),
+      ],
+    );
+  }
+
+  Widget _profile() {
+    return Row(
+      children: [
+        MainTitle(
+          title: user.name,
+          size: 18,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFF3D5D54)),
+                color: const Color.fromARGB(40, 97, 97, 97),
+              ),
+              child: const SubTitle(
+                title: "미친건가 수능 일주일 밖에 안남았네...",
+                size: 13,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MainTitle(title: user.name);
+    //return MainTitle(title: user.name);
+    return Row(
+      children: [
+        _photo(),
+        const SizedBox(width: 5),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _badges(),
+              const SizedBox(height: 3),
+              _profile(),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

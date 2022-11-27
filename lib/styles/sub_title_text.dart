@@ -4,12 +4,14 @@ class SubTitle extends StatelessWidget {
   final String _title;
   final double _size;
   final Color _theme;
+  final TextOverflow overflow;
 
   const SubTitle(
       {Key? key,
       String title = "default",
       double size = 15,
-      Color theme = Colors.black})
+      Color theme = Colors.black,
+      this.overflow = TextOverflow.ellipsis})
       : _title = title,
         _size = size,
         _theme = theme,
@@ -22,7 +24,7 @@ class SubTitle extends StatelessWidget {
       style: TextStyle(
         color: _theme,
         fontSize: _size,
-        overflow: TextOverflow.clip,
+        overflow: overflow,
         fontFamily: 'Aldrich',
       ),
     );
