@@ -111,23 +111,94 @@ class _PostListPageState extends State<ClassBoardPage> {
   Widget _title() {
     return Container(
       alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 20),
+      padding: const EdgeInsets.fromLTRB(20, 35, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const MainTitle(
-            title: "CLASS BOARD",
-            theme: Colors.white,
-          ),
-          const SubTitle(
-            title: "반 게시판",
-            theme: Colors.white,
-          ),
+        children: const [
           MainTitle(
-            title: "${gradeYear} - ${classGroup}",
-            theme: Colors.white,
-            size: 25,
+            title: "CLASS BOARD",
+            theme: Color(0xFF3D5D54),
           ),
+          SubTitle(
+            title: "반 게시판",
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _header() {
+    var classPhoto = Flexible(
+      fit: FlexFit.tight,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          margin: const EdgeInsets.all(20),
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              image: AssetImage('assets/images/default.jpg'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    var classPostsNum = Flexible(
+      fit: FlexFit.tight,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              MainTitle(
+                title: _postList.length.toString(),
+                size: 20,
+                theme: const Color(0xFF3D5D54),
+              ),
+              const Text("Posts"),
+            ],
+          ),
+        ),
+      ),
+    );
+    var classStudentsNum = Flexible(
+      fit: FlexFit.tight,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              MainTitle(
+                title: "30",
+                size: 20,
+                theme: Color(0xFF3D5D54),
+              ),
+              Text("Students"),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    return Container(
+      margin: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          MainTitle(
+            title: "$gradeYear - $classGroup",
+            theme: const Color(0xFF3D5D54),
+            size: 30,
+          ),
+          Row(
+            children: [classPhoto, classPostsNum, classStudentsNum],
+          )
         ],
       ),
     );
@@ -143,14 +214,16 @@ class _PostListPageState extends State<ClassBoardPage> {
             future: _getPostList(null),
             builder: ((context, snapshot) {
               if (!snapshot.hasData) {
-                //print(snapshot.error);
-                return const SizedBox(
-                  width: double.infinity,
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF3D5D54)));
               }
               _postList = snapshot.data as List<Post>;
-              return ClassPostList(_postList, user: user);
+              return Column(
+                children: [
+                  _header(),
+                  Expanded(child: ClassPostList(_postList, user: user)),
+                ],
+              );
             }),
           ),
           Positioned(
@@ -165,12 +238,13 @@ class _PostListPageState extends State<ClassBoardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          _title(),
-          _body(context),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            _title(),
+            _body(context),
+          ],
+        ),
       ),
     );
   }
@@ -186,7 +260,7 @@ class _TransitionButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         fixedSize: const Size(148, 34),
-        primary: Colors.black,
+        backgroundColor: const Color(0xFF3D5D54),
         side: const BorderSide(
           color: Colors.white,
           width: 0.5,

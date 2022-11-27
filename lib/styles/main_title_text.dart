@@ -4,13 +4,15 @@ class MainTitle extends StatelessWidget {
   final String _title;
   final double _size;
   final Color _theme;
+  final TextOverflow overflow;
 
-  const MainTitle(
-      {Key? key,
-      String title = "DEFAULT",
-      double size = 36,
-      Color theme = Colors.black})
-      : _title = title,
+  const MainTitle({
+    Key? key,
+    String title = "DEFAULT",
+    double size = 36,
+    Color theme = Colors.black,
+    this.overflow = TextOverflow.ellipsis,
+  })  : _title = title,
         _size = size,
         _theme = theme,
         super(key: key);
@@ -23,7 +25,8 @@ class MainTitle extends StatelessWidget {
         color: _theme,
         fontSize: _size,
         fontWeight: FontWeight.bold,
-        overflow: TextOverflow.ellipsis,
+        fontFamily: 'Roboto',
+        overflow: overflow,
       ),
     );
   }

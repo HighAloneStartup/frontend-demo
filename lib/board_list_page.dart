@@ -22,11 +22,10 @@ class BoardListPage extends StatelessWidget {
         children: const [
           MainTitle(
             title: "BOARDS",
-            theme: Colors.white,
+            theme: Color(0xFF3D5D54),
           ),
           SubTitle(
             title: "게시판",
-            theme: Colors.white,
           )
         ],
       ),
@@ -34,7 +33,7 @@ class BoardListPage extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    void _onChooseBoard(bool isClassBoard) {
+    void onChooseBoard(bool isClassBoard, String boardName) {
       if (isClassBoard) {
         Navigator.push(
           context,
@@ -45,14 +44,18 @@ class BoardListPage extends StatelessWidget {
       } else {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PostListPage(user: user)),
+          MaterialPageRoute(
+              builder: (context) => PostListPage(
+                    user: user,
+                    boardName: boardName,
+                  )),
         );
       }
     }
 
     return Expanded(
       child: _BoardList(
-        onChooseBoard: _onChooseBoard,
+        onChooseBoard: onChooseBoard,
       ),
     );
   }
@@ -60,7 +63,6 @@ class BoardListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       body: Column(
         children: [
           _title(),
@@ -78,45 +80,101 @@ class _BoardList extends StatelessWidget {
   }) : super(key: key);
 
   final Function onChooseBoard;
+  final List<Map<String, dynamic>> _openBorad = [
+    {
+      "name": "전체 게시판",
+      "isGrid": false,
+    },
+    {
+      "name": "학년별 게시판",
+      "isGrid": false,
+    },
+    {
+      "name": "반별 게시판",
+      "isGrid": false,
+    },
+    {
+      "name": "게임 게시판",
+      "isGrid": false,
+    },
+    {
+      "name": "푸드 게시판",
+      "isGrid": false,
+    },
+  ];
+  final List<Map<String, dynamic>> _closedBoard = [
+    {
+      "name": "2학년 10반",
+      "isGrid": true,
+    },
+    {
+      "name": "독서 동아리",
+      "isGrid": false,
+    },
+  ];
 
-  Widget _makeSection(String title, List<Widget> children) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
+  List<Widget> _makeSection(
+      String title, List<Map<String, dynamic>> boardlist) {
+    return [
+      SliverToBoxAdapter(
+        child: Container(
+          alignment: Alignment.topLeft,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: const Color(0xFFE4F0ED),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: MainTitle(
             title: title,
             size: 25,
-            theme: Colors.white,
+            theme: const Color(0xFF3D5D54),
           ),
         ),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          padding: const EdgeInsets.all(10),
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white),
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Column(
-            children: children,
-          ),
+      ),
+      SliverGrid(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 3,
         ),
-      ],
-    );
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => _makeBoardButton(
+            boardlist[index]["name"] as String,
+            boardlist[index]["isGrid"] as bool,
+          ),
+          childCount: boardlist.length,
+        ),
+      ),
+    ];
   }
 
   Widget _makeBoardButton(String title, bool isClassBoard) {
-    return TextButton(
-      child: Container(
-        alignment: Alignment.centerLeft,
-        child: MainTitle(
-          title: title,
-          size: 18,
-          theme: Colors.white,
+    return Container(
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SubTitle(
+                title: title,
+                size: 18,
+              ),
+              const SubTitle(title: ">"),
+            ],
+          ),
+        ),
+        onPressed: () => onChooseBoard(isClassBoard, title),
       ),
-      onPressed: () => onChooseBoard(isClassBoard),
     );
   }
 
@@ -125,19 +183,14 @@ class _BoardList extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ListView(
-        children: <Widget>[
-          _makeSection("열린 게시판", <Widget>[
-            _makeBoardButton("전체 게시판", false),
-            _makeBoardButton("학년별 게시판", false),
-            _makeBoardButton("반별 게시판", false),
-            _makeBoardButton("게임 게시판", false),
-            _makeBoardButton("푸드 게시판", false),
-          ]),
-          _makeSection("닫힌 게시판", <Widget>[
-            _makeBoardButton("2학년 10반", true),
-            _makeBoardButton("독서 동아리", false),
-          ]),
+      child: CustomScrollView(
+        slivers: [
+          ..._makeSection("열린 게시판", _openBorad),
+          const SliverToBoxAdapter(
+              child: SizedBox(
+            height: 60,
+          )),
+          ..._makeSection("닫힌 게시판", _closedBoard),
         ],
       ),
     );

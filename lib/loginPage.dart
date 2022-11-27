@@ -2,13 +2,10 @@
 // import 'dart:async';
 // import 'dart:convert';
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:high_alone_startup/home_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'models/main_user.dart';

@@ -15,16 +15,21 @@ class ClassPostList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-      ),
-      padding: EdgeInsets.zero,
-      itemCount: postList.length,
-      itemBuilder: (context, index) => _PostWidget(
-        postList[index],
-        user: user,
-      ),
+    return CustomScrollView(
+      slivers: [
+        SliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => _PostWidget(
+              postList[index],
+              user: user,
+            ),
+            childCount: postList.length,
+          ),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+          ),
+        )
+      ],
     );
   }
 }
@@ -38,14 +43,16 @@ class _PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var photo = SizedBox(
-      child: post.image == null
-          ? Image.asset('assets/images/default.jpg')
-          : Image.asset(post.image as String),
-    );
+    var photo = post.image == null
+        ? Image.asset(
+            'assets/images/default.jpg',
+            fit: BoxFit.cover,
+          )
+        : Image.asset(post.image as String);
 
-    return TextButton(
+    return ElevatedButton(
       child: photo,
+      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0)),
       onPressed: () {
         Navigator.push(
           context,

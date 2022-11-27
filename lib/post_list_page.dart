@@ -11,18 +11,22 @@ import 'models/main_user.dart';
 
 class PostListPage extends StatefulWidget {
   final MainUser user;
+  final String boardName;
 
-  const PostListPage({Key? key, required this.user}) : super(key: key);
+  const PostListPage({Key? key, required this.user, required this.boardName})
+      : super(key: key);
 
   @override
-  State<PostListPage> createState() => _PostListPageState(user: user);
+  State<PostListPage> createState() =>
+      _PostListPageState(user: user, boardName: boardName);
 }
 
 class _PostListPageState extends State<PostListPage> {
   final MainUser user;
+  final String boardName;
   List<Post> _postList = [];
 
-  _PostListPageState({required this.user});
+  _PostListPageState({required this.user, required this.boardName});
 
   void _transition(BuildContext context) {
     Navigator.push(
@@ -105,16 +109,18 @@ class _PostListPageState extends State<PostListPage> {
 
   Widget _title() {
     return Container(
-      padding: const EdgeInsets.only(top: 35, bottom: 35),
+      alignment: Alignment.centerLeft,
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 20),
       child: Column(
-        children: const [
-          MainTitle(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const MainTitle(
             title: "FREE BOARD",
-            theme: Colors.white,
+            theme: Color(0xFF3D5D54),
           ),
           SubTitle(
-            title: "자유게시판",
-            theme: Colors.white,
+            title: boardName,
           )
         ],
       ),
@@ -134,7 +140,10 @@ class _PostListPageState extends State<PostListPage> {
                 //print(snapshot.error);
                 return const SizedBox(
                   width: double.infinity,
-                  child: CircularProgressIndicator(),
+                  child: Center(
+                      child: CircularProgressIndicator(
+                    color: Color(0xFF3D5D54),
+                  )),
                 );
               }
               _postList = snapshot.data as List<Post>;
@@ -153,12 +162,13 @@ class _PostListPageState extends State<PostListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          _title(),
-          _body(context),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            _title(),
+            _body(context),
+          ],
+        ),
       ),
     );
   }
@@ -174,7 +184,7 @@ class _TransitionButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         fixedSize: const Size(148, 34),
-        primary: Colors.black,
+        backgroundColor: const Color(0xFF3D5D54),
         side: const BorderSide(
           color: Colors.white,
           width: 0.5,

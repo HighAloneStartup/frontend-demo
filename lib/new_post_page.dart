@@ -24,11 +24,13 @@ class NewPostPage extends StatelessWidget {
       return;
     }
     addPost(Post(
-        id: '0000',
-        title: _titleController.text,
-        description: _contentController.text,
-        published: _published,
-        user: user));
+      id: '0000',
+      title: _titleController.text,
+      description: _contentController.text,
+      published: _published,
+      user: user,
+      createdAt: DateTime.now(),
+    ));
     Navigator.pop(context);
   }
 
@@ -53,16 +55,17 @@ class NewPostPage extends StatelessWidget {
 
   Widget _title() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 35),
+      padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 20),
+      alignment: Alignment.topLeft,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
           MainTitle(
-            title: "FREE BOARD",
-            theme: Colors.white,
+            title: "WRITE POST",
+            theme: Color(0xFF3D5D54),
           ),
           SubTitle(
-            title: "자유게시판",
-            theme: Colors.white,
+            title: "글쓰기",
           ),
         ],
       ),
@@ -76,6 +79,7 @@ class NewPostPage extends StatelessWidget {
           // head
           _NewPostHead(controller: _titleController, isAnonymous: _published),
           //textbox
+          SizedBox(height: 10),
           _NewPostBody(controller: _contentController),
           //button
           Container(
@@ -89,12 +93,13 @@ class NewPostPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          _title(),
-          _body(context),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            _title(),
+            _body(context),
+          ],
+        ),
       ),
     );
   }
@@ -110,33 +115,33 @@ class _NewPostHead extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(5),
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       height: 70,
-      color: Colors.black,
       child: Row(
         children: [
-          Container(
-            height: 60,
-            width: 60,
-            child: Image.asset('images/default.jpg'),
+          SizedBox(
+            height: 70,
+            width: 70,
+            child: Image.network(
+                'https://www.bcm-institute.org/wp-content/uploads/2020/11/No-Image-Icon.png'),
           ),
+          const SizedBox(width: 5),
           Expanded(
             child: Column(
               children: [
                 Expanded(
                   child: Container(
-                    margin: const EdgeInsets.all(3),
                     child: TextField(
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(fontFamily: 'Roboto'),
+                      cursorColor: Colors.black,
                       decoration: const InputDecoration(
                         hintText: '제목',
-                        hintStyle: TextStyle(fontSize: 15, color: Colors.white),
+                        hintStyle: TextStyle(fontFamily: 'Roboto'),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(color: Color(0xFF3D5D54)),
                         ),
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(color: Color(0xFF3D5D54)),
                         ),
                       ),
                       controller: controller,
@@ -146,20 +151,24 @@ class _NewPostHead extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Icon(
-                      Icons.camera_alt,
-                      size: 20,
-                      color: Colors.white,
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.camera_alt,
+                        size: 20,
+                      ),
                     ),
                     Checkbox(
                       value: isAnonymous,
                       activeColor: Colors.white,
-                      checkColor: Colors.black,
-                      onChanged: (bool? value) {
-                        //isAnonymous = value!;
-                      },
+                      checkColor: Colors.grey,
+                      onChanged: (bool? value) {},
                     ),
-                    const Text("익명", style: TextStyle(color: Colors.white)),
+                    const MainTitle(
+                      title: "익명",
+                      size: 15,
+                      theme: Color(0xFF3D5D54),
+                    ),
                   ],
                 ),
               ],
@@ -179,12 +188,15 @@ class _NewPostBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        margin: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         padding: const EdgeInsets.all(20),
-        color: Colors.black,
+        decoration: BoxDecoration(
+          color: Color(0xFFE4F0ED),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: TextField(
           controller: controller,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.black, fontFamily: 'Roboto'),
           maxLines: null,
           decoration: const InputDecoration(
             enabledBorder: InputBorder.none,
@@ -205,15 +217,19 @@ class _TransitionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        fixedSize: Size(148, 34),
-        primary: Colors.black,
+        fixedSize: const Size(148, 34),
+        backgroundColor: const Color(0xFF3D5D54),
         side: const BorderSide(
           color: Colors.white,
           width: 0.5,
         ),
       ),
       onPressed: _callback,
-      child: const Text("글쓰기 완료"),
+      child: const MainTitle(
+        title: "글쓰기",
+        size: 15,
+        theme: Colors.white,
+      ),
     );
   }
 }
