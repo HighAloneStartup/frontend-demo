@@ -220,7 +220,12 @@ class _PostListPageState extends State<ClassBoardPage> {
                     child: CircularProgressIndicator(color: Color(0xFF3D5D54)));
               }
               _postList = snapshot.data as List<Post>;
-              return ClassPostList(_postList, user: user);
+              return Column(
+                children: [
+                  _header(),
+                  Expanded(child: ClassPostList(_postList, user: user)),
+                ],
+              );
             }),
           ),
           Positioned(
@@ -239,7 +244,6 @@ class _PostListPageState extends State<ClassBoardPage> {
         child: Column(
           children: [
             _title(),
-            _header(),
             _body(context),
           ],
         ),

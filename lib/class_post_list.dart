@@ -31,18 +31,6 @@ class ClassPostList extends StatelessWidget {
         )
       ],
     );
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1.0,
-      ),
-      padding: EdgeInsets.zero,
-      itemCount: postList.length,
-      itemBuilder: (context, index) => _PostWidget(
-        postList[index],
-        user: user,
-      ),
-    );
   }
 }
 

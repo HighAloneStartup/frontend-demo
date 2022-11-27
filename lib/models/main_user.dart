@@ -14,7 +14,7 @@ class MainUser extends User {
 
   factory MainUser.fromJson(Map<String, dynamic> json) {
     return MainUser(
-      uid: "temporary uid", //json["uid"] as String,
+      uid: json['email'] as String, //json["uid"] as String,
       name: json['name'] as String,
       email: json['email'] as String,
       token: "${json['tokenType']} ${json['accessToken']}",

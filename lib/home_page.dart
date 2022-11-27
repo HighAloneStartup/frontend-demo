@@ -7,6 +7,8 @@ import 'time_table_page.dart';
 import 'my_page.dart';
 import 'board_list_page.dart';
 
+import 'DMPage.dart';
+
 class HomePage extends StatefulWidget {
   final MainUser user;
   HomePage({Key? key, required this.user}) : super(key: key);
@@ -102,6 +104,20 @@ class _MainPageState extends State<MainPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => StudentListPage(user: widget.user),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: TextButton(
+              child: Text("DM"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DMPage(user: widget.user),
                   ),
                 );
               },
