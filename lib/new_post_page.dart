@@ -30,6 +30,7 @@ class NewPostPage extends StatelessWidget {
       published: _published,
       user: user,
       createdAt: DateTime.now(),
+      images: [],
     ));
     Navigator.pop(context);
   }
