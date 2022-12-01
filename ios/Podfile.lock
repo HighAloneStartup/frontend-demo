@@ -1,6 +1,14 @@
 PODS:
+  - cloud_firestore (4.1.0):
+    - Firebase/Firestore (= 10.2.0)
+    - firebase_core
+    - Flutter
+    - nanopb (< 2.30910.0, >= 2.30908.0)
   - Firebase/CoreOnly (10.2.0):
     - FirebaseCore (= 10.2.0)
+  - Firebase/Firestore (10.2.0):
+    - Firebase/CoreOnly
+    - FirebaseFirestore (~> 10.2.0)
   - firebase_core (2.3.0):
     - Firebase/CoreOnly (= 10.2.0)
     - Flutter
@@ -10,6 +18,14 @@ PODS:
     - GoogleUtilities/Logger (~> 7.8)
   - FirebaseCoreInternal (10.2.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
+  - FirebaseFirestore (10.2.0):
+    - FirebaseFirestore/AutodetectLeveldb (= 10.2.0)
+  - FirebaseFirestore/AutodetectLeveldb (10.2.0):
+    - FirebaseFirestore/Base
+    - FirebaseFirestore/WithLeveldb
+  - FirebaseFirestore/Base (10.2.0)
+  - FirebaseFirestore/WithLeveldb (10.2.0):
+    - FirebaseFirestore/Base
   - Flutter (1.0.0)
   - flutter_secure_storage (3.3.1):
     - Flutter
@@ -18,12 +34,19 @@ PODS:
   - GoogleUtilities/Logger (7.10.0):
     - GoogleUtilities/Environment
   - "GoogleUtilities/NSData+zlib (7.10.0)"
+  - nanopb (2.30909.0):
+    - nanopb/decode (= 2.30909.0)
+    - nanopb/encode (= 2.30909.0)
+  - nanopb/decode (2.30909.0)
+  - nanopb/encode (2.30909.0)
   - PromisesObjC (2.1.1)
   - shared_preferences_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.2.0`)
   - Flutter (from `Flutter`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
@@ -34,11 +57,17 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreInternal
     - GoogleUtilities
+    - nanopb
     - PromisesObjC
 
 EXTERNAL SOURCES:
+  cloud_firestore:
+    :path: ".symlinks/plugins/cloud_firestore/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
+  FirebaseFirestore:
+    :git: https://github.com/invertase/firestore-ios-sdk-frameworks.git
+    :tag: 10.2.0
   Flutter:
     :path: Flutter
   flutter_secure_storage:
@@ -46,17 +75,25 @@ EXTERNAL SOURCES:
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
 
+CHECKOUT OPTIONS:
+  FirebaseFirestore:
+    :git: https://github.com/invertase/firestore-ios-sdk-frameworks.git
+    :tag: 10.2.0
+
 SPEC CHECKSUMS:
+  cloud_firestore: 14451f06cca99dbd56b069624621063150fef3e5
   Firebase: a3ea7eba4382afd83808376edb99acdaff078dcf
   firebase_core: db1432de826785171029b7c1a26e5b22ce1dd477
   FirebaseCore: 813838072b797b64f529f3c2ee35e696e5641dd1
   FirebaseCoreInternal: 091bde13e47bb1c5e9fe397634f3593dc390430f
+  FirebaseFirestore: e122d1d2c9311ada51d8282e0053bb3700f0680e
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   GoogleUtilities: bad72cb363809015b1f7f19beb1f1cd23c589f95
+  nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
 
-PODFILE CHECKSUM: b95e0c370474df3a1db278b722738a6230f01f51
+PODFILE CHECKSUM: 3810c3048d5bc5b2a8fee8a85318877d7c9d379f
 
 COCOAPODS: 1.11.3
