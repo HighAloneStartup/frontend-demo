@@ -48,9 +48,6 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       responseValue = jsonDecode(response.body);
-      String token = responseValue["accessToken"];
-      Map<String, dynamic> id = responseValue["id"];
-
       return MainUser.fromJson(responseValue);
     } else if (response.statusCode == 404) {
       throw Exception('LOGIN FAIL');

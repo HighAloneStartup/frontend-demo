@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:high_alone_startup/models/simple_post.dart';
 import 'package:http/http.dart' as http;
 import 'new_post_page.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import 'class_post_list.dart';
 import 'models/post.dart';
-import 'models/user.dart';
+import 'models/simple_class_post.dart';
 import 'models/main_user.dart';
 
 class ClassBoardPage extends StatefulWidget {
@@ -25,32 +26,35 @@ class ClassBoardPage extends StatefulWidget {
 }
 
 class _PostListPageState extends State<ClassBoardPage> {
-  List<Post> _postList = [];
+  List<SimpleClassPost> _postList = [];
   _PostListPageState();
 
   void _transition(BuildContext context) => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => NewPostPage(_addNewPost, user: widget.user),
+          builder: (context) => NewPostPage(
+            _addNewPost,
+            user: widget.user,
+            post: Post.defaultPost(),
+          ),
         ),
       );
 
   void _addNewPost(Post newPost) async {
     _postPost(newPost);
-    await _getPostList(null);
+    await _getPostList();
     setState(() {
-      _postList.add(newPost);
+      _postList.add(SimpleClassPost.fromPost(newPost));
     });
   }
 
-  Future<List<Post>> _getPostList(String? id) async {
-    id ??= "";
+  Future<List<SimpleClassPost>> _getPostList() async {
     http.Response response = await http.get(
       Uri(
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/$id',
+        path: 'api/boards/',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +69,7 @@ class _PostListPageState extends State<ClassBoardPage> {
       case 200:
         var parsed = jsonDecode(responseBody) as List;
         //print('결과 : ${parsed}');
-        return parsed.map((e) => Post.fromJson(e)).toList();
+        return parsed.map((e) => SimpleClassPost.fromJson(e)).toList();
       default:
         throw Exception('$statusCode');
     }
@@ -76,6 +80,7 @@ class _PostListPageState extends State<ClassBoardPage> {
       'title': newPost.title,
       'description': newPost.description,
       'published': newPost.published,
+      'anonymous': newPost.anonymous,
     });
     http.Response response = await http.post(
         Uri(
@@ -205,13 +210,13 @@ class _PostListPageState extends State<ClassBoardPage> {
         alignment: Alignment.center,
         children: [
           FutureBuilder(
-            future: _getPostList(null),
+            future: _getPostList(),
             builder: ((context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
                     child: CircularProgressIndicator(color: Color(0xFF3D5D54)));
               }
-              _postList = snapshot.data as List<Post>;
+              _postList = snapshot.data as List<SimpleClassPost>;
               return Column(
                 children: [
                   _header(),

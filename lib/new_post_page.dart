@@ -8,13 +8,14 @@ import './models/main_user.dart';
 
 class NewPostPage extends StatefulWidget {
   final MainUser user;
-  final Function addPost;
+  final Function callback;
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final picker = ImagePicker();
-  final bool published = true;
+  final Post post;
 
-  NewPostPage(this.addPost, {required this.user, Key? key}) : super(key: key);
+  NewPostPage(this.callback, {required this.user, required this.post, Key? key})
+      : super(key: key);
 
   @override
   State<NewPostPage> createState() => _NewPostPageState();
@@ -22,6 +23,7 @@ class NewPostPage extends StatefulWidget {
 
 class _NewPostPageState extends State<NewPostPage> {
   bool isAnonymous = true;
+  bool published = true;
   List<Image> images = [];
 
   void _transition(BuildContext context) {
@@ -33,19 +35,24 @@ class _NewPostPageState extends State<NewPostPage> {
       _showDialog("내용을 입력해주세요", context: context);
       return;
     }
-    //print(isAnonymous);
-    widget.addPost(Post(
-      id: 'meaningless id',
-      title: widget._titleController.text,
-      description: widget._contentController.text,
-      published: widget.published,
-      user: widget.user,
-      anonymous: isAnonymous,
-      createdAt: DateTime.now(),
-      likes: [],
-      images: [],
-      comments: [],
-    ));
+
+    widget.callback(
+      Post(
+        id: widget.post.id,
+        title: widget._titleController.text,
+        description: widget._contentController.text,
+        published: published,
+        uid: widget.user.uid,
+        userName: widget.user.name,
+        userPhotoUrl: widget.user.photoUrl,
+        anonymous: isAnonymous,
+        createdAt: DateTime.now(),
+        likes: widget.post.likes,
+        liked: widget.post.liked,
+        images: widget.post.images,
+        comments: widget.post.comments,
+      ),
+    );
     Navigator.pop(context);
   }
 
@@ -135,8 +142,12 @@ class _NewPostPageState extends State<NewPostPage> {
           //button
           Padding(
             padding: const EdgeInsets.all(40),
-            child:
-                SizedBox(child: _TransitionButton(() => _transition(context))),
+            child: SizedBox(
+              child: _TransitionButton(
+                () => _transition(context),
+                isModify: widget.post != null,
+              ),
+            ),
           ),
         ],
       ),
@@ -256,6 +267,13 @@ class _NewPostPageState extends State<NewPostPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.post != Post.defaultPost()) {
+      widget._titleController.text = widget.post.title;
+      widget._contentController.text = widget.post.description;
+      published = widget.post.published;
+      isAnonymous = widget.post.anonymous;
+      images = widget.post.images.map((url) => Image.network(url)).toList();
+    }
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -271,8 +289,10 @@ class _NewPostPageState extends State<NewPostPage> {
 
 class _TransitionButton extends StatelessWidget {
   final VoidCallback _callback;
+  final bool isModify;
 
-  const _TransitionButton(this._callback, {Key? key}) : super(key: key);
+  const _TransitionButton(this._callback, {Key? key, required this.isModify})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -286,8 +306,8 @@ class _TransitionButton extends StatelessWidget {
         ),
       ),
       onPressed: _callback,
-      child: const MainTitle(
-        title: "글쓰기",
+      child: MainTitle(
+        title: isModify ? "수정하기" : "글쓰기",
         size: 15,
         theme: Colors.white,
       ),
