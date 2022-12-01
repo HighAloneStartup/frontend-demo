@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:high_alone_startup/models/user.dart';
+import 'models/simple_post.dart';
 import 'models/post.dart';
 import 'models/main_user.dart';
 import 'post_page.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
-import 'styles/list_block.dart';
 
 class PostList extends StatelessWidget {
   final MainUser user;
 
   /// 테스트용 데이터
-  final List<Post> postList;
+  final List<SimplePost> postList;
 
   const PostList(this.postList, {Key? key, required this.user})
       : super(key: key);
@@ -40,7 +39,7 @@ class PostList extends StatelessWidget {
 
 class _PostWidget extends StatelessWidget {
   final MainUser user;
-  final Post post;
+  final SimplePost post;
 
   const _PostWidget(this.post, {Key? key, required this.user})
       : super(key: key);
@@ -67,8 +66,7 @@ class _PostWidget extends StatelessWidget {
             color: Colors.red,
           ),
           const SizedBox(width: 2),
-          MainTitle(
-              title: post.likes.length.toString(), theme: Colors.red, size: 15),
+          MainTitle(title: post.likes.toString(), theme: Colors.red, size: 15),
           Expanded(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -82,7 +80,7 @@ class _PostWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 2),
                   MainTitle(
-                    title: post.comments.length.toString(),
+                    title: post.comments.toString(),
                     theme: Colors.grey,
                     size: 15,
                   ),
@@ -106,7 +104,7 @@ class _PostWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MainTitle(
-              title: post.anonymous ? "익명" : post.user.name,
+              title: post.anonymous ? "익명" : post.userName,
               size: 16,
             ),
             Container(
@@ -133,7 +131,8 @@ class _PostWidget extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PostPage(post, user: user)),
+            MaterialPageRoute(
+                builder: (context) => PostPage(post.id, user: user)),
           );
         },
       ),

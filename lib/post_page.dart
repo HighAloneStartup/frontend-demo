@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:high_alone_startup/models/main_user.dart';
 import './styles/main_title_text.dart';
 import './styles/sub_title_text.dart';
@@ -7,21 +9,97 @@ import './models/comment.dart';
 
 class PostPage extends StatefulWidget {
   final MainUser user;
-  final Post post;
+  final String postId;
 
-  const PostPage(this.post, {Key? key, required this.user}) : super(key: key);
+  const PostPage(this.postId, {Key? key, required this.user}) : super(key: key);
 
   @override
-  State<PostPage> createState() => _PostPageState(post, user: user);
+  State<PostPage> createState() => _PostPageState();
 }
 
 class _PostPageState extends State<PostPage> {
-  final MainUser user;
-  final Post post;
   bool isAnonymous = true;
   final commentController = TextEditingController();
 
-  _PostPageState(this.post, {required this.user});
+  _PostPageState();
+
+  Future<Post> _getPost(String id) async {
+    http.Response response = await http.get(
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/boards/$id',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': widget.user.token,
+      },
+    );
+
+    var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
+    switch (statusCode) {
+      case 200:
+        var parsed = jsonDecode(responseBody);
+        return Post.fromJson(parsed);
+      default:
+        throw Exception('$statusCode');
+    }
+  }
+
+  Future<Post> _modifyPost(String id) async {
+    http.Response response = await http.put(
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/boards/$id',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': widget.user.token,
+      },
+    );
+
+    var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
+    switch (statusCode) {
+      case 200:
+        var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
+        return Post.fromJson(parsed);
+      default:
+        throw Exception('$statusCode');
+    }
+  }
+
+  Future<Post> _deletePost(String id) async {
+    http.Response response = await http.delete(
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/boards/$id',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': widget.user.token,
+      },
+    );
+
+    var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
+    switch (statusCode) {
+      case 200:
+        var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
+        return Post.fromJson(parsed);
+      default:
+        throw Exception('$statusCode');
+    }
+  }
 
   void _addComment(String comment) {
     setState(() {
@@ -54,13 +132,27 @@ class _PostPageState extends State<PostPage> {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: ListView(
-          children: [
-            _PostHead(post: post),
-            const SizedBox(height: 30),
-            _PostBody(post: post),
-          ],
-        ),
+        child: FutureBuilder(
+            future: _getPost(widget.postId),
+            builder: (context, snapshot) {
+              print(snapshot.error);
+              if (!snapshot.hasData) {
+                return const SizedBox(
+                  width: double.infinity,
+                  child: Center(
+                      child: CircularProgressIndicator(
+                    color: Color(0xFF3D5D54),
+                  )),
+                );
+              }
+              return ListView(
+                children: [
+                  _PostHead(post: snapshot.data as Post),
+                  const SizedBox(height: 30),
+                  _PostBody(post: snapshot.data as Post),
+                ],
+              );
+            }),
       ),
     );
   }
@@ -168,7 +260,7 @@ class _PostHead extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MainTitle(
-            title: post.anonymous ? "익명" : post.user.name,
+            title: post.anonymous ? "익명" : post.userName,
             size: 24,
           ),
           const SizedBox(height: 10),
@@ -205,9 +297,7 @@ class _PostHead extends StatelessWidget {
               ),
               const SizedBox(width: 2),
               MainTitle(
-                  title: post.likes.length.toString(),
-                  theme: Colors.red,
-                  size: 15),
+                  title: post.likes.toString(), theme: Colors.red, size: 15),
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -221,9 +311,10 @@ class _PostHead extends StatelessWidget {
                       ),
                       const SizedBox(width: 2),
                       MainTitle(
-                          title: post.comments.length.toString(),
-                          theme: Colors.grey,
-                          size: 15),
+                        title: post.comments.length.toString(),
+                        theme: Colors.grey,
+                        size: 15,
+                      ),
                     ],
                   ),
                 ),

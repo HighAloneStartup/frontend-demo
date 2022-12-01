@@ -6,7 +6,7 @@ import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import 'post_list.dart';
 import 'models/post.dart';
-import 'models/user.dart';
+import 'models/simple_post.dart';
 import 'models/main_user.dart';
 
 class PostListPage extends StatefulWidget {
@@ -21,7 +21,7 @@ class PostListPage extends StatefulWidget {
 }
 
 class _PostListPageState extends State<PostListPage> {
-  List<Post> _postList = [];
+  List<SimplePost> _postList = [];
 
   void _transition(BuildContext context) {
     Navigator.push(
@@ -30,26 +30,26 @@ class _PostListPageState extends State<PostListPage> {
           builder: (context) => NewPostPage(
                 _addNewPost,
                 user: widget.user,
+                post: Post.defaultPost(),
               )),
     );
   }
 
-  void _addNewPost(Post newPost) async {
+  void _addNewPost(SimplePost newPost) async {
     _postPost(newPost);
-    await _getPostList(null);
+    await _getPostList();
     setState(() {
       _postList.add(newPost);
     });
   }
 
-  Future<List<Post>> _getPostList(String? id) async {
-    id ??= "";
+  Future<List<SimplePost>> _getPostList() async {
     http.Response response = await http.get(
       Uri(
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/$id',
+        path: 'api/boards/',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -63,13 +63,13 @@ class _PostListPageState extends State<PostListPage> {
     switch (statusCode) {
       case 200:
         var parsed = jsonDecode(responseBody) as List;
-        return parsed.map((e) => Post.fromJson(e)).toList();
+        return parsed.map((e) => SimplePost.fromJson(e)).toList();
       default:
         throw Exception('$statusCode');
     }
   }
 
-  void _postPost(Post newPost) async {
+  void _postPost(SimplePost newPost) async {
     var data = jsonEncode({
       'title': newPost.title,
       'description': newPost.description,
@@ -127,7 +127,7 @@ class _PostListPageState extends State<PostListPage> {
         alignment: Alignment.center,
         children: [
           FutureBuilder(
-            future: _getPostList(null),
+            future: _getPostList(),
             builder: ((context, snapshot) {
               //print(snapshot.error);
               if (!snapshot.hasData) {
@@ -139,7 +139,7 @@ class _PostListPageState extends State<PostListPage> {
                   )),
                 );
               }
-              _postList = snapshot.data as List<Post>;
+              _postList = snapshot.data as List<SimplePost>;
               return PostList(_postList, user: widget.user);
             }),
           ),
