@@ -67,8 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '795601718124',
     projectId: 'cau-capstone-dm',
     storageBucket: 'cau-capstone-dm.appspot.com',
-    iosClientId:
-        '795601718124-ruf5s18uagvmufds4idfmht94ad2pjke.apps.googleusercontent.com',
+    iosClientId: '795601718124-ruf5s18uagvmufds4idfmht94ad2pjke.apps.googleusercontent.com',
     iosBundleId: 'com.example.highAloneStartup',
   );
 
@@ -78,8 +77,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '795601718124',
     projectId: 'cau-capstone-dm',
     storageBucket: 'cau-capstone-dm.appspot.com',
-    iosClientId:
-        '795601718124-ruf5s18uagvmufds4idfmht94ad2pjke.apps.googleusercontent.com',
+    iosClientId: '795601718124-ruf5s18uagvmufds4idfmht94ad2pjke.apps.googleusercontent.com',
     iosBundleId: 'com.example.highAloneStartup',
   );
 }

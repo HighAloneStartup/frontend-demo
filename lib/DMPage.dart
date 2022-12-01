@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './models/main_user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DMPage extends StatefulWidget {
   final MainUser user;
@@ -32,17 +33,41 @@ class NewMessage extends StatefulWidget {
 }
 
 class _NewMessageState extends State<NewMessage> {
+  String newMessage = '';
+
   final newMessageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: TextField(
-            controller: newMessageController,
-            decoration: InputDecoration(hintText: "New Message"),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: newMessageController,
+              decoration: const InputDecoration(hintText: "New Message"),
+              onChanged: (value) {
+                setState(() {
+                  newMessage = value;
+                });
+              },
+            ),
           ),
-        )
+        ),
+        IconButton(
+            color: Colors.blue,
+            onPressed: newMessage.trim().isEmpty
+                ? null
+                : () {
+                    final currentUser = widget.user;
+                    FirebaseFirestore.instance.collection("chat").add({
+                      'text': newMessage,
+                      'userName': currentUser.name,
+                      'timestamp': Timestamp.now(),
+                      'uid': currentUser.uid,
+                    });
+                  },
+            icon: const Icon(Icons.send)),
       ],
     );
   }

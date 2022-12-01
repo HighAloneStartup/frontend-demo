@@ -7,6 +7,7 @@ import 'models/main_user.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import 'styles/list_block.dart';
+import 'DMPage.dart';
 
 class StudentListPage extends StatefulWidget {
   final MainUser user;
@@ -175,8 +176,15 @@ class _StudentListPageState extends State<StudentListPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: StudentCard(student),
-                onPressed: () {},
+                child: StudentCard(student), ///////////////
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DMPage(user: widget.user),
+                    ),
+                  );
+                }, ////////////////////////////////////////
               ),
             );
           }).toList()),
