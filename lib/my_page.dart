@@ -204,32 +204,6 @@ class _MyPageState extends State<MyPage> {
                 margin: const EdgeInsets.only(left: 10),
                 alignment: const Alignment(-1.0, 0.0),
                 child: const Text(
-                  'PASSWORD',
-                  style: TextStyle(
-                    color: Color(0xff3D5D54),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  bottom: 5,
-                ),
-                child: Text(password),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              Container(
-                height: 15,
-                margin: const EdgeInsets.only(left: 10),
-                alignment: const Alignment(-1.0, 0.0),
-                child: const Text(
                   'ROLES',
                   style: TextStyle(
                     color: Color(0xff3D5D54),

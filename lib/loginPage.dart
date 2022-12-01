@@ -47,9 +47,9 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) {
-      responseValue = jsonDecode(response.body);
-      String token = responseValue["accessToken"];
-      Map<String, dynamic> id = responseValue["id"];
+      responseValue = jsonDecode(utf8.decode(response.bodyBytes));
+      // String token = responseValue["accessToken"];
+      // Map<String, dynamic> id = responseValue["id"];
 
       return MainUser.fromJson(responseValue);
     } else if (response.statusCode == 404) {
@@ -191,6 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                     MainUser user =
                         await _loginRequest(userIdValue, userPwdValue);
                     print(user.token);
+                    print(user);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
