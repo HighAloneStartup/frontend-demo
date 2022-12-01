@@ -44,8 +44,8 @@ class _PostWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var photo = post.images.isEmpty
-        ? Image.asset(
-            'assets/images/default.jpg',
+        ? Image.network(
+            Post.defaultPhotoUrl,
             fit: BoxFit.fill,
           )
         : Image.network(post.images[0]);

@@ -3,7 +3,7 @@ import 'package:high_alone_startup/models/main_user.dart';
 import './styles/main_title_text.dart';
 import './styles/sub_title_text.dart';
 import './models/post.dart';
-import './models/main_user.dart';
+import './models/comment.dart';
 
 class PostPage extends StatefulWidget {
   final MainUser user;
@@ -149,7 +149,16 @@ class _PostPageState extends State<PostPage> {
 class _PostHead extends StatelessWidget {
   final Post post;
 
-  _PostHead({required this.post, Key? key}) : super(key: key);
+  const _PostHead({required this.post, Key? key}) : super(key: key);
+
+  String makeCreatedTime(DateTime time) {
+    bool isToday = (time.year == DateTime.now().year) &&
+        (time.month == DateTime.now().month) &&
+        (time.day == DateTime.now().day);
+    return isToday
+        ? "${time.hour}:${time.minute}"
+        : "${time.month}/${time.day}";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,13 +167,13 @@ class _PostHead extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const MainTitle(
-            title: "익명",
+          MainTitle(
+            title: post.anonymous ? "익명" : post.user.name,
             size: 24,
           ),
           const SizedBox(height: 10),
           SizedBox(
-            height: 300,
+            height: post.images.isEmpty ? 0 : 300,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               physics: const ClampingScrollPhysics(),
@@ -195,26 +204,32 @@ class _PostHead extends StatelessWidget {
                 color: Colors.red,
               ),
               const SizedBox(width: 2),
-              const MainTitle(title: "3", theme: Colors.red, size: 15),
+              MainTitle(
+                  title: post.likes.length.toString(),
+                  theme: Colors.red,
+                  size: 15),
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
                   alignment: Alignment.topLeft,
                   child: Row(
-                    children: const [
-                      Icon(
+                    children: [
+                      const Icon(
                         Icons.comment,
                         size: 15,
                         color: Colors.grey,
                       ),
-                      SizedBox(width: 2),
-                      MainTitle(title: "3", theme: Colors.grey, size: 15),
+                      const SizedBox(width: 2),
+                      MainTitle(
+                          title: post.comments.length.toString(),
+                          theme: Colors.grey,
+                          size: 15),
                     ],
                   ),
                 ),
               ),
-              const SubTitle(
-                title: "방금전",
+              SubTitle(
+                title: makeCreatedTime(post.createdAt),
                 theme: Colors.grey,
               ),
             ],
@@ -227,14 +242,11 @@ class _PostHead extends StatelessWidget {
 
 class _PostBody extends StatelessWidget {
   final Post post;
-  const _PostBody({required this.post, Key? key}) : super(key: key);
+  _PostBody({required this.post, Key? key})
+      : this.comments = post.comments,
+        super(key: key);
 
-  final List<String> comments = const [
-    "헐 저두",
-    "저두 22",
-    "쪽지 보냈습니다!",
-    "와.. 존경.. 저도 후배로 들어가고 싶어요 ㅠㅠ",
-  ];
+  final List<Comment> comments;
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +269,7 @@ class _PostBody extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 SubTitle(
-                  title: comment,
+                  title: comment.description,
                   overflow: TextOverflow.clip,
                 ),
                 const SizedBox(height: 5),

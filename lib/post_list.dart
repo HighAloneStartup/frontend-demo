@@ -45,13 +45,17 @@ class _PostWidget extends StatelessWidget {
   const _PostWidget(this.post, {Key? key, required this.user})
       : super(key: key);
 
+  String makeCreatedTime(DateTime time) {
+    bool isToday = (time.year == DateTime.now().year) &&
+        (time.month == DateTime.now().month) &&
+        (time.day == DateTime.now().day);
+    return isToday
+        ? "${time.hour}:${time.minute}"
+        : "${time.month}/${time.day}";
+  }
+
   @override
   Widget build(BuildContext context) {
-    var contents = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [],
-    );
-
     var activate = Container(
       alignment: Alignment.bottomCenter,
       child: Row(
@@ -63,26 +67,31 @@ class _PostWidget extends StatelessWidget {
             color: Colors.red,
           ),
           const SizedBox(width: 2),
-          const MainTitle(title: "3", theme: Colors.red, size: 15),
+          MainTitle(
+              title: post.likes.length.toString(), theme: Colors.red, size: 15),
           Expanded(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 10),
               alignment: Alignment.topLeft,
               child: Row(
-                children: const [
-                  Icon(
+                children: [
+                  const Icon(
                     Icons.comment,
                     size: 15,
                     color: Colors.grey,
                   ),
-                  SizedBox(width: 2),
-                  MainTitle(title: "3", theme: Colors.grey, size: 15),
+                  const SizedBox(width: 2),
+                  MainTitle(
+                    title: post.comments.length.toString(),
+                    theme: Colors.grey,
+                    size: 15,
+                  ),
                 ],
               ),
             ),
           ),
           SubTitle(
-            title: "방금전",
+            title: makeCreatedTime(post.createdAt),
             theme: Colors.grey,
           ),
         ],
@@ -97,25 +106,25 @@ class _PostWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MainTitle(
-              title: "익명",
+              title: post.anonymous ? "익명" : post.user.name,
               size: 16,
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 3),
+              margin: const EdgeInsets.symmetric(vertical: 3),
               child: SubTitle(
                 title: post.title,
                 size: 16,
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 3),
+              margin: const EdgeInsets.symmetric(vertical: 3),
               child: SubTitle(
                 title: post.description,
                 size: 15,
-                theme: Color.fromARGB(255, 128, 128, 128),
+                theme: const Color.fromARGB(255, 128, 128, 128),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
             activate,

@@ -1,36 +1,50 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import './models/post.dart';
 import './models/main_user.dart';
 
-class NewPostPage extends StatelessWidget {
+class NewPostPage extends StatefulWidget {
   final MainUser user;
   final Function addPost;
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
-
-  bool _published = true;
+  final picker = ImagePicker();
+  final bool published = true;
 
   NewPostPage(this.addPost, {required this.user, Key? key}) : super(key: key);
 
+  @override
+  State<NewPostPage> createState() => _NewPostPageState();
+}
+
+class _NewPostPageState extends State<NewPostPage> {
+  bool isAnonymous = true;
+  List<Image> images = [];
+
   void _transition(BuildContext context) {
-    if (_titleController.text.isEmpty) {
+    if (widget._titleController.text.isEmpty) {
       _showDialog("제목을 입력해주세요", context: context);
       return;
     }
-    if (_contentController.text.isEmpty) {
+    if (widget._contentController.text.isEmpty) {
       _showDialog("내용을 입력해주세요", context: context);
       return;
     }
-    addPost(Post(
-      id: '0000',
-      title: _titleController.text,
-      description: _contentController.text,
-      published: _published,
-      user: user,
+    //print(isAnonymous);
+    widget.addPost(Post(
+      id: 'meaningless id',
+      title: widget._titleController.text,
+      description: widget._contentController.text,
+      published: widget.published,
+      user: widget.user,
+      anonymous: isAnonymous,
       createdAt: DateTime.now(),
+      likes: [],
       images: [],
+      comments: [],
     ));
     Navigator.pop(context);
   }
@@ -51,6 +65,42 @@ class NewPostPage extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  Future getImage() async {
+    final image = await widget.picker.pickImage(source: ImageSource.gallery);
+    //print(image);
+    if (image == null) {
+      return;
+    }
+    setState(() {
+      images.add(Image.file(File(image.path))); // 가져온 이미지를 _image에 저장
+    });
+  }
+
+  Widget imageBlock(Image image) {
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        image,
+        IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(5),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+            child:
+                const Text("X", style: TextStyle(fontWeight: FontWeight.bold)),
+          ),
+          onPressed: () {
+            setState(() {
+              images.remove(image);
+            });
+          },
+        ),
+      ],
     );
   }
 
@@ -78,43 +128,22 @@ class NewPostPage extends StatelessWidget {
       child: Column(
         children: [
           // head
-          _NewPostHead(controller: _titleController, isAnonymous: _published),
+          newPostHead(),
           //textbox
-          SizedBox(height: 10),
-          _NewPostBody(controller: _contentController),
+          const SizedBox(height: 10),
+          newPostBody(),
           //button
-          Container(
-              margin: const EdgeInsets.all(40),
-              child: _TransitionButton(() => _transition(context))),
+          Padding(
+            padding: const EdgeInsets.all(40),
+            child:
+                SizedBox(child: _TransitionButton(() => _transition(context))),
+          ),
         ],
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            _title(),
-            _body(context),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _NewPostHead extends StatelessWidget {
-  final TextEditingController controller;
-  bool isAnonymous;
-
-  _NewPostHead({required this.controller, required this.isAnonymous, Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget newPostHead() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       height: 70,
@@ -123,37 +152,34 @@ class _NewPostHead extends StatelessWidget {
           SizedBox(
             height: 70,
             width: 70,
-            child: Image.network(
-                'https://www.bcm-institute.org/wp-content/uploads/2020/11/No-Image-Icon.png'),
+            child: Image.network(widget.user.photoUrl),
           ),
           const SizedBox(width: 5),
           Expanded(
             child: Column(
               children: [
                 Expanded(
-                  child: Container(
-                    child: TextField(
-                      style: const TextStyle(fontFamily: 'Roboto'),
-                      cursorColor: Colors.black,
-                      decoration: const InputDecoration(
-                        hintText: '제목',
-                        hintStyle: TextStyle(fontFamily: 'Roboto'),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF3D5D54)),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF3D5D54)),
-                        ),
+                  child: TextField(
+                    style: const TextStyle(fontFamily: 'Roboto'),
+                    cursorColor: Colors.black,
+                    decoration: const InputDecoration(
+                      hintText: '제목',
+                      hintStyle: TextStyle(fontFamily: 'Roboto'),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF3D5D54)),
                       ),
-                      controller: controller,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF3D5D54)),
+                      ),
                     ),
+                    controller: widget._titleController,
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: getImage,
                       icon: const Icon(
                         Icons.camera_alt,
                         size: 20,
@@ -163,7 +189,11 @@ class _NewPostHead extends StatelessWidget {
                       value: isAnonymous,
                       activeColor: Colors.white,
                       checkColor: Colors.grey,
-                      onChanged: (bool? value) {},
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isAnonymous = value!;
+                        });
+                      },
                     ),
                     const MainTitle(
                       title: "익명",
@@ -179,30 +209,60 @@ class _NewPostHead extends StatelessWidget {
       ),
     );
   }
-}
 
-class _NewPostBody extends StatelessWidget {
-  final TextEditingController controller;
-  const _NewPostBody({required this.controller, Key? key}) : super(key: key);
+  Widget newPostBody() {
+    return Expanded(
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE4F0ED),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextField(
+                controller: widget._contentController,
+                style:
+                    const TextStyle(color: Colors.black, fontFamily: 'Roboto'),
+                maxLines: null,
+                decoration: const InputDecoration(
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SizedBox(
+              height: images.isEmpty ? 0 : 100,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                physics: const ClampingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return imageBlock(images[index]);
+                },
+                itemCount: images.length,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Color(0xFFE4F0ED),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: TextField(
-          controller: controller,
-          style: const TextStyle(color: Colors.black, fontFamily: 'Roboto'),
-          maxLines: null,
-          decoration: const InputDecoration(
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-          ),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            _title(),
+            _body(context),
+          ],
         ),
       ),
     );

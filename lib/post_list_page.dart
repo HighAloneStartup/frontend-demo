@@ -17,16 +17,11 @@ class PostListPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<PostListPage> createState() =>
-      _PostListPageState(user: user, boardName: boardName);
+  State<PostListPage> createState() => _PostListPageState();
 }
 
 class _PostListPageState extends State<PostListPage> {
-  final MainUser user;
-  final String boardName;
   List<Post> _postList = [];
-
-  _PostListPageState({required this.user, required this.boardName});
 
   void _transition(BuildContext context) {
     Navigator.push(
@@ -34,7 +29,7 @@ class _PostListPageState extends State<PostListPage> {
       MaterialPageRoute(
           builder: (context) => NewPostPage(
                 _addNewPost,
-                user: user,
+                user: widget.user,
               )),
     );
   }
@@ -58,7 +53,7 @@ class _PostListPageState extends State<PostListPage> {
       ),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': user.token,
+        'Authorization': widget.user.token,
       },
     );
 
@@ -68,7 +63,6 @@ class _PostListPageState extends State<PostListPage> {
     switch (statusCode) {
       case 200:
         var parsed = jsonDecode(responseBody) as List;
-        //print('결과 : ${parsed}');
         return parsed.map((e) => Post.fromJson(e)).toList();
       default:
         throw Exception('$statusCode');
@@ -90,12 +84,11 @@ class _PostListPageState extends State<PostListPage> {
         ),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': user.token,
+          'Authorization': widget.user.token,
         },
         body: data);
 
     var statusCode = response.statusCode;
-    var responseBody = utf8.decode(response.bodyBytes);
 
     switch (statusCode) {
       case 200:
@@ -120,7 +113,7 @@ class _PostListPageState extends State<PostListPage> {
             theme: Color(0xFF3D5D54),
           ),
           SubTitle(
-            title: boardName,
+            title: widget.boardName,
           )
         ],
       ),
@@ -129,15 +122,14 @@ class _PostListPageState extends State<PostListPage> {
 
   Widget _body(BuildContext context) {
     return Expanded(
-      //height: double.infinity,
       child: Stack(
         alignment: Alignment.center,
         children: [
           FutureBuilder(
             future: _getPostList(null),
             builder: ((context, snapshot) {
+              //print(snapshot.error);
               if (!snapshot.hasData) {
-                //print(snapshot.error);
                 return const SizedBox(
                   width: double.infinity,
                   child: Center(
@@ -147,7 +139,7 @@ class _PostListPageState extends State<PostListPage> {
                 );
               }
               _postList = snapshot.data as List<Post>;
-              return PostList(_postList, user: user);
+              return PostList(_postList, user: widget.user);
             }),
           ),
           Positioned(

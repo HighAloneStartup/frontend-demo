@@ -3,6 +3,9 @@ class Authority {
   Authority(this.name);
 
   factory Authority.fromJson(Map<String, dynamic> json) {
-    return Authority(json["authority"] as String);
+    String _name = json["authority"] == null
+        ? json["name"] as String
+        : json["authority"] as String;
+    return Authority(_name);
   }
 }

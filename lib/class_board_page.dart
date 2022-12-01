@@ -21,22 +21,17 @@ class ClassBoardPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<ClassBoardPage> createState() => _PostListPageState(
-      user: user, gradeYear: gradeYear, classGroup: classGroup);
+  State<ClassBoardPage> createState() => _PostListPageState();
 }
 
 class _PostListPageState extends State<ClassBoardPage> {
-  final MainUser user;
-  final int gradeYear;
-  final int classGroup;
   List<Post> _postList = [];
-  _PostListPageState(
-      {required this.user, required this.gradeYear, required this.classGroup});
+  _PostListPageState();
 
   void _transition(BuildContext context) => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => NewPostPage(_addNewPost, user: user),
+          builder: (context) => NewPostPage(_addNewPost, user: widget.user),
         ),
       );
 
@@ -59,7 +54,7 @@ class _PostListPageState extends State<ClassBoardPage> {
       ),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': user.token,
+        'Authorization': widget.user.token,
       },
     );
 
@@ -91,12 +86,11 @@ class _PostListPageState extends State<ClassBoardPage> {
         ),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': user.token,
+          'Authorization': widget.user.token,
         },
         body: data);
 
     var statusCode = response.statusCode;
-    var responseBody = utf8.decode(response.bodyBytes);
 
     switch (statusCode) {
       case 200:
@@ -137,7 +131,7 @@ class _PostListPageState extends State<ClassBoardPage> {
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(
-              image: AssetImage('assets/images/default.jpg'),
+              image: NetworkImage(Post.defaultPhotoUrl),
             ),
           ),
         ),
@@ -192,7 +186,7 @@ class _PostListPageState extends State<ClassBoardPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MainTitle(
-            title: "$gradeYear - $classGroup",
+            title: "${widget.gradeYear} - ${widget.classGroup}",
             theme: const Color(0xFF3D5D54),
             size: 30,
           ),
@@ -221,7 +215,7 @@ class _PostListPageState extends State<ClassBoardPage> {
               return Column(
                 children: [
                   _header(),
-                  Expanded(child: ClassPostList(_postList, user: user)),
+                  Expanded(child: ClassPostList(_postList, user: widget.user)),
                 ],
               );
             }),

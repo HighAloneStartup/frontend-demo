@@ -15,15 +15,14 @@ class StudentListPage extends StatefulWidget {
   const StudentListPage({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<StudentListPage> createState() => _StudentListPageState(user: user);
+  State<StudentListPage> createState() => _StudentListPageState();
 }
 
 class _StudentListPageState extends State<StudentListPage> {
-  final MainUser user;
   int choosedGradeYear = -1;
   int choosedClassGroup = -1;
 
-  _StudentListPageState({required this.user});
+  _StudentListPageState();
 
   Widget _title() {
     return Container(
@@ -72,7 +71,7 @@ class _StudentListPageState extends State<StudentListPage> {
       ),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': user.token,
+        'Authorization': widget.user.token,
       },
     );
 

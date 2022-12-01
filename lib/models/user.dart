@@ -32,15 +32,16 @@ class User {
     this.photoUrl = defaultPhotoUrl,
   });
   factory User.fromJson(Map<String, dynamic> json) {
-    String timestamp = json['uid'] as String;
-    List<dynamic> temp1 = json['authorities'] as List<dynamic>;
+    //String uid = json['uid'] as String;
+    List<dynamic> temp1 = json['authorities'] != null
+        ? json['authorities'] as List<dynamic>
+        : json['roles'] as List<dynamic>;
     List<Authority> temp2 = temp1.map((e) => Authority.fromJson(e)).toList();
 
-    var _photoUrl = json['photoUrl'] ?? defaultPhotoUrl;
-    _photoUrl = _photoUrl as String;
+    var _photoUrl = (json['photoUrl'] ?? defaultPhotoUrl) as String;
 
     return User(
-      uid: timestamp,
+      uid: json['email'] as String,
       name: json['name'] as String,
       email: json['email'] as String,
       authorities: temp2,
