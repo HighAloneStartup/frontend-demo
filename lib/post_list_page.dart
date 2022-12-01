@@ -74,6 +74,7 @@ class _PostListPageState extends State<PostListPage> {
       'title': newPost.title,
       'description': newPost.description,
       'published': newPost.published,
+      'anonymous': newPost.anonymous,
     });
     http.Response response = await http.post(
         Uri(
