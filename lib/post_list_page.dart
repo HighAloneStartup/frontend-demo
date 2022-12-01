@@ -30,11 +30,12 @@ class _PostListPageState extends State<PostListPage> {
           builder: (context) => NewPostPage(
                 _addNewPost,
                 user: widget.user,
+                post: Post.defaultPost(),
               )),
     );
   }
 
-  void _addNewPost(Post newPost) async {
+  void _addNewPost(SimplePost newPost) async {
     _postPost(newPost);
     await _getPostList();
     setState(() {
@@ -68,7 +69,7 @@ class _PostListPageState extends State<PostListPage> {
     }
   }
 
-  void _postPost(Post newPost) async {
+  void _postPost(SimplePost newPost) async {
     var data = jsonEncode({
       'title': newPost.title,
       'description': newPost.description,
