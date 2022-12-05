@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'models/user.dart';
 import 'models/main_user.dart';
+import 'models/badges.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import 'DMPage.dart';
@@ -79,6 +80,7 @@ class _StudentListPageState extends State<StudentListPage> {
     switch (statusCode) {
       case 200:
         var parsed = jsonDecode(responseBody) as List;
+        //print(parsed);
         return parsed.map((e) => User.fromJson(e)).toList();
       default:
         throw Exception('$statusCode');
@@ -156,10 +158,14 @@ class _StudentListPageState extends State<StudentListPage> {
     return FutureBuilder(
       future: _getStudentList(),
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
+        //print(snapshot.data);
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SliverToBoxAdapter(
               child: Center(
                   child: CircularProgressIndicator(color: Color(0xFF3D5D54))));
+        }
+        if (snapshot.data == null) {
+          return const SliverToBoxAdapter();
         }
         var students = snapshot.data;
         return SliverList(
@@ -237,7 +243,7 @@ class StudentCard extends StatelessWidget {
 
   Widget _photo() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       width: 60,
       height: 60,
       decoration: BoxDecoration(
@@ -250,13 +256,20 @@ class StudentCard extends StatelessWidget {
 
   Widget _badges() {
     return Row(
-      children: const [
-        Icon(
-          Icons.checkroom,
-          color: Colors.black,
-          size: 12,
-        ),
-      ],
+      children: user.authorities == null
+          ? []
+          : user.authorities!.map((e) {
+              /*
+              return SubTitle(
+                title: Badge.badges[e]!,
+              );
+              */
+              return Container(
+                height: 20,
+                margin: const EdgeInsets.symmetric(horizontal: 1),
+                child: Image.asset(Badge.badges[e]),
+              );
+            }).toList(),
     );
   }
 
