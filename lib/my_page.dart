@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:high_alone_startup/models/authority.dart';
 import 'package:http/http.dart' as http;
+import 'package:cupertino_icons/cupertino_icons.dart';
+
 import 'models/user.dart';
 import 'models/main_user.dart';
+import 'models/badges.dart';
 
 class MyPage extends StatefulWidget {
   final MainUser user;
@@ -22,7 +26,7 @@ class _MyPageState extends State<MyPage> {
   String email = "swiftie1230@naver.com";
   String password = "swiftie1230";
   /* roles 형태 */
-  List<Authority> roles = [];
+  List<String> roles = [];
   /* int 형태 이거 맞나 */
   int gradeYear = 0;
   int classGroup = 0;
@@ -75,6 +79,7 @@ class _MyPageState extends State<MyPage> {
       builder: ((context, snapshot) {
         print("에러 : ${snapshot.error}");
         print("받은 데이터 : ${snapshot.data}");
+        // print(badges["first_grade"]);
         if (!snapshot.hasData) {
           //print(snapshot.error);
           return const Center(child: CircularProgressIndicator());
@@ -220,9 +225,20 @@ class _MyPageState extends State<MyPage> {
                   right: 10,
                   bottom: 5,
                 ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: roles.map((role) => Text(role.name)).toList()),
+                width: 30,
+                height: 30,
+                child:
+                    /*
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(Badge.badges["second"]!),
+                  ),
+                ),
+                */
+                    Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: roles.map((role) => Text(role)).toList(),
+                ),
               ),
               const SizedBox(
                 height: 30.0,

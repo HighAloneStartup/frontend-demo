@@ -192,10 +192,11 @@ class _LoginPageState extends State<LoginPage> {
                         await _loginRequest(userIdValue, userPwdValue);
                     print(user.token);
                     print(user);
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomePage(user: user)));
+                            builder: (context) => HomePage(user: user)),
+                        (route) => false);
                   },
                 ),
               ),

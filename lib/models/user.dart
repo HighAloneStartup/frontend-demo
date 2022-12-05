@@ -4,7 +4,7 @@ class User {
   final String uid;
   final String name;
   final String email;
-  List<Authority>? authorities = [];
+  List<String>? authorities = [];
   int? gradeYear;
   int? classGroup;
   int? attendanceNumber;
@@ -33,10 +33,10 @@ class User {
   });
   factory User.fromJson(Map<String, dynamic> json) {
     //String uid = json['uid'] as String;
-    List<dynamic> temp1 = json['authorities'] != null
-        ? json['authorities'] as List<dynamic>
-        : json['roles'] as List<dynamic>;
-    List<Authority> temp2 = temp1.map((e) => Authority.fromJson(e)).toList();
+    List<String> temp1 = json['authorities'] != null
+        ? json['authorities'] as List<String>
+        : json['roles'] as List<String>;
+    //List<Authority> temp2 = temp1.map((e) => Authority.fromJson(e)).toList();
 
     var _photoUrl = (json['photoUrl'] ?? defaultPhotoUrl) as String;
 
@@ -44,7 +44,7 @@ class User {
       uid: json['email'] as String,
       name: json['name'] as String,
       email: json['email'] as String,
-      authorities: temp2,
+      authorities: temp1,
       gradeYear: json['gradeYear'] as int?,
       classGroup: json['classGroup'] as int?,
       attendanceNumber: json['attendanceNumber'] as int?,

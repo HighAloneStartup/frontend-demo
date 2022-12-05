@@ -37,42 +37,49 @@ class _HomePageState extends State<HomePage> {
       MainPage(
         user: user,
       ),
-      TimeTablePage(),
+      const TimeTablePage(),
       BoardListPage(user: user),
       MyPage(user: user),
     ];
     return Scaffold(
-      body: SafeArea(
+      body: _widgetOptions.elementAt(screenIndex),
+      /*
+      SafeArea(
         child: _widgetOptions.elementAt(screenIndex),
       ),
+      */
       bottomNavigationBar: BottomNavigationBar(
         // backgroundColor: Colors.black,
+        type: BottomNavigationBarType.fixed,
         currentIndex: screenIndex,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        unselectedItemColor: Color.fromARGB(255, 115, 151, 142),
+        selectedItemColor: const Color(0xff3D5D54),
         items: const [
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
-                color: Colors.blue,
+                color: Color(0xff3D5D54),
               ),
-              label: 'home'),
+              label: 'HOME'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.punch_clock_outlined,
-                color: Colors.blue,
+                color: Color(0xff3D5D54),
               ),
-              label: 'timeTable'),
+              label: 'TIME TABLE'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.list,
-                color: Colors.blue,
+                color: Color(0xff3D5D54),
               ),
-              label: 'list'),
+              label: 'BOARDS'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.people,
-                color: Colors.blue,
+                color: Color(0xff3D5D54),
               ),
-              label: 'my')
+              label: 'MY PAGE')
         ],
         onTap: _onItemTapped,
       ),
