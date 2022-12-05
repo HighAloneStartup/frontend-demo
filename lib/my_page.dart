@@ -227,17 +227,22 @@ class _MyPageState extends State<MyPage> {
                 ),
                 width: 30,
                 height: 30,
-                child:
-                    /*
+                /*
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(Badge.badges["second"]!),
+                    image: AssetImage(Badge.badges["GAMECLUB"]!),
                   ),
                 ),
                 */
-                    Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: roles.map((role) => Text(role)).toList(),
+                  children: roles
+                      .map((role) => Image.asset(
+                            Badge.badges[role]!,
+                            height: 30,
+                            width: 30,
+                          ))
+                      .toList(),
                 ),
               ),
               const SizedBox(
@@ -394,7 +399,7 @@ class _MyPageState extends State<MyPage> {
                   right: 10,
                   bottom: 5,
                 ),
-                child: Text("$birthday"),
+                child: Text(birthday),
               ),
               const SizedBox(
                 height: 30.0,
