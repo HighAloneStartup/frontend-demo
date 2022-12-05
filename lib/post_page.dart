@@ -6,6 +6,7 @@ import './styles/main_title_text.dart';
 import './styles/sub_title_text.dart';
 import './models/post.dart';
 import './models/comment.dart';
+import 'edit_post_page.dart';
 
 class PostPage extends StatefulWidget {
   final MainUser user;
@@ -18,6 +19,7 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
+  Post? post;
   bool isAnonymous = true;
   final commentController = TextEditingController();
 
@@ -43,6 +45,7 @@ class _PostPageState extends State<PostPage> {
     switch (statusCode) {
       case 200:
         var parsed = jsonDecode(responseBody);
+        post = Post.fromJson(parsed);
         return Post.fromJson(parsed);
       default:
         throw Exception('$statusCode');
@@ -107,6 +110,16 @@ class _PostPageState extends State<PostPage> {
     });
   }
 
+  void _modifyCallback(Post editedPost) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                EditPostPage(_modifyCallback, user: widget.user, post: post!)));
+  }
+
+  void _deleteCallback() {}
+
   Widget _title() {
     return Container(
       alignment: Alignment.centerLeft,
@@ -135,7 +148,7 @@ class _PostPageState extends State<PostPage> {
         child: FutureBuilder(
             future: _getPost(widget.postId),
             builder: (context, snapshot) {
-              print(snapshot.error);
+              //print(snapshot.error);
               if (!snapshot.hasData) {
                 return const SizedBox(
                   width: double.infinity,
