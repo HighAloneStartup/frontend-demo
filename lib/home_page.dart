@@ -42,12 +42,9 @@ class _HomePageState extends State<HomePage> {
       MyPage(user: user),
     ];
     return Scaffold(
-      body: _widgetOptions.elementAt(screenIndex),
-      /*
-      SafeArea(
+      body: SafeArea(
         child: _widgetOptions.elementAt(screenIndex),
       ),
-      */
       bottomNavigationBar: BottomNavigationBar(
         // backgroundColor: Colors.black,
         type: BottomNavigationBarType.fixed,
