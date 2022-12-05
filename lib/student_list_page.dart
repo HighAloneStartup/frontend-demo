@@ -1,12 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'models/class.dart';
 import 'models/user.dart';
 import 'models/main_user.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
-import 'styles/list_block.dart';
 import 'DMPage.dart';
 
 class StudentListPage extends StatefulWidget {
@@ -158,7 +156,7 @@ class _StudentListPageState extends State<StudentListPage> {
     return FutureBuilder(
       future: _getStudentList(),
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
-        if (!snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const SliverToBoxAdapter(
               child: Center(
                   child: CircularProgressIndicator(color: Color(0xFF3D5D54))));
