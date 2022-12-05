@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:high_alone_startup/models/main_user.dart';
 import './styles/main_title_text.dart';
 import './styles/sub_title_text.dart';
@@ -8,22 +10,25 @@ import './models/post.dart';
 import './models/comment.dart';
 import 'edit_post_page.dart';
 
-class PostPage extends StatefulWidget {
+class NoticePage extends StatefulWidget {
   final MainUser user;
   final String postId;
 
-  const PostPage(this.postId, {Key? key, required this.user}) : super(key: key);
+  const NoticePage(this.postId, {Key? key, required this.user})
+      : super(key: key);
 
   @override
-  State<PostPage> createState() => _PostPageState();
+  State<NoticePage> createState() => _NoticePageState();
 }
 
-class _PostPageState extends State<PostPage> {
+class _NoticePageState extends State<NoticePage> {
   Post? post;
   bool isAnonymous = true;
+  String? fileName;
+  String? fileLink;
   final commentController = TextEditingController();
 
-  _PostPageState();
+  _NoticePageState();
 
   Future<Post> _getPost(String id) async {
     http.Response response = await http.get(
@@ -31,7 +36,7 @@ class _PostPageState extends State<PostPage> {
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/$id',
+        path: 'api/notices/$id',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -45,59 +50,12 @@ class _PostPageState extends State<PostPage> {
     switch (statusCode) {
       case 200:
         var parsed = jsonDecode(responseBody);
+        parsed['uid'] = "";
+        parsed['userName'] = "관리자";
+        parsed['anonymous'] = false;
+        fileLink = parsed['fileLink'] as String?;
+        fileName = parsed['fileName'] as String?;
         post = Post.fromJson(parsed);
-        return Post.fromJson(parsed);
-      default:
-        throw Exception('$statusCode');
-    }
-  }
-
-  Future<Post> _modifyPost(String id) async {
-    http.Response response = await http.put(
-      Uri(
-        scheme: 'http',
-        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
-        port: 9090,
-        path: 'api/boards/$id',
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': widget.user.token,
-      },
-    );
-
-    var statusCode = response.statusCode;
-    var responseBody = utf8.decode(response.bodyBytes);
-
-    switch (statusCode) {
-      case 200:
-        var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
-        return Post.fromJson(parsed);
-      default:
-        throw Exception('$statusCode');
-    }
-  }
-
-  Future<Post> _deletePost(String id) async {
-    http.Response response = await http.delete(
-      Uri(
-        scheme: 'http',
-        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
-        port: 9090,
-        path: 'api/boards/$id',
-      ),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': widget.user.token,
-      },
-    );
-
-    var statusCode = response.statusCode;
-    var responseBody = utf8.decode(response.bodyBytes);
-
-    switch (statusCode) {
-      case 200:
-        var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
         return Post.fromJson(parsed);
       default:
         throw Exception('$statusCode');
@@ -129,11 +87,11 @@ class _PostPageState extends State<PostPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
           MainTitle(
-            title: "FREE BOARD",
+            title: "NOTICE",
             theme: Color(0xFF3D5D54),
           ),
           SubTitle(
-            title: "전체 게시판",
+            title: "공지사항",
           )
         ],
       ),
@@ -160,7 +118,11 @@ class _PostPageState extends State<PostPage> {
               }
               return ListView(
                 children: [
-                  _PostHead(post: snapshot.data as Post),
+                  _PostHead(
+                    post: snapshot.data as Post,
+                    fileName: fileName,
+                    fileLink: fileLink,
+                  ),
                   const SizedBox(height: 30),
                   _PostBody(post: snapshot.data as Post),
                 ],
@@ -253,8 +215,11 @@ class _PostPageState extends State<PostPage> {
 
 class _PostHead extends StatelessWidget {
   final Post post;
+  final String? fileLink;
+  final String? fileName;
 
-  const _PostHead({required this.post, Key? key}) : super(key: key);
+  const _PostHead({required this.post, this.fileName, this.fileLink, Key? key})
+      : super(key: key);
 
   String makeCreatedTime(DateTime time) {
     return "${time.year % 100}/${time.month}/${time.day} ${time.hour}:${time.minute}";
@@ -271,18 +236,6 @@ class _PostHead extends StatelessWidget {
             title: post.anonymous ? "익명" : post.userName,
             size: 24,
           ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: post.images.isEmpty ? 0 : 300,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              physics: const ClampingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return Image.network(post.images[index]);
-              },
-              itemCount: post.images.length,
-            ),
-          ),
           const SizedBox(height: 5),
           SubTitle(
             title: post.title,
@@ -295,38 +248,16 @@ class _PostHead extends StatelessWidget {
             overflow: TextOverflow.clip,
           ),
           const SizedBox(height: 50),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Icon(
-                Icons.favorite,
-                size: 15,
-                color: Colors.red,
-              ),
-              const SizedBox(width: 2),
-              MainTitle(
-                  title: post.likes.toString(), theme: Colors.red, size: 15),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.comment,
-                        size: 15,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(width: 2),
-                      MainTitle(
-                        title: post.comments.length.toString(),
-                        theme: Colors.grey,
-                        size: 15,
-                      ),
-                    ],
-                  ),
+          fileLink == null
+              ? const SizedBox()
+              : DownloadButton(
+                  fileLink: fileLink!,
+                  fileName: fileName!,
                 ),
-              ),
+          const SizedBox(height: 50),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
               SubTitle(
                 title: makeCreatedTime(post.createdAt),
                 theme: Colors.grey,
@@ -379,5 +310,74 @@ class _PostBody extends StatelessWidget {
         const SizedBox(height: 50),
       ],
     );
+  }
+}
+
+class DownloadButton extends StatefulWidget {
+  final String fileName;
+  final String fileLink;
+  const DownloadButton(
+      {super.key, required this.fileName, required this.fileLink});
+
+  @override
+  State<DownloadButton> createState() => _DownloadButtonState();
+}
+
+class _DownloadButtonState extends State<DownloadButton> {
+  bool isDownloading = false;
+  String progressString = "";
+
+  Future<void> downloadFile() async {
+    var dio = Dio();
+    try {
+      var dir = await getLibraryDirectory();
+      if (dir == null) {
+        throw ("dir is null");
+      }
+      var response = await dio.download(
+        widget.fileLink,
+        '${dir.path}/${widget.fileName}',
+        onReceiveProgress: (rec, total) {
+          setState(() {
+            isDownloading = true;
+            progressString = ((rec / total) * 100).toStringAsFixed(0) + '%';
+          });
+        },
+        options: Options(sendTimeout: 30000, receiveTimeout: 30000),
+      );
+      print(response.headers);
+      print(dir.path);
+    } catch (e) {
+      print("error: $e");
+    }
+
+    setState(() {
+      isDownloading = false;
+      progressString = 'Completed';
+    });
+  }
+
+  Widget build(BuildContext context) {
+    return isDownloading
+        ? Container(
+            padding: const EdgeInsets.all(10),
+            color: const Color(0xFFE4F0ED),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                SubTitle(title: 'Downloading File: $progressString')
+              ],
+            ),
+          )
+        : ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE4F0ED),
+            ),
+            onPressed: downloadFile,
+            child: SubTitle(title: widget.fileName));
   }
 }

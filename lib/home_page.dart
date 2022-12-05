@@ -6,7 +6,7 @@ import 'models/main_user.dart';
 import 'time_table_page.dart';
 import 'my_page.dart';
 import 'board_list_page.dart';
-
+import 'notice_board_page.dart';
 import 'DMPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -105,7 +105,7 @@ class _MainPageState extends State<MainPage> {
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: TextButton(
-              child: Text("학생부"),
+              child: const Text("학생부"),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -119,12 +119,26 @@ class _MainPageState extends State<MainPage> {
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: TextButton(
-              child: Text("DM"),
+              child: const Text("DM"),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => DMPage(user: widget.user),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: TextButton(
+              child: const Text("공지사항"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NoticePage(user: widget.user),
                   ),
                 );
               },

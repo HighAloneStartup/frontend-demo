@@ -75,11 +75,21 @@ class _NewPostPageState extends State<NewPostPage> {
   }
 
   Future getImage() async {
-    final image = await widget.picker.pickImage(source: ImageSource.gallery);
+    XFile? image = await widget.picker.pickImage(source: ImageSource.gallery);
     //print(image);
     if (image == null) {
       return;
     }
+    /*
+    final filePath = image.path;
+
+    var dio = Dio();
+    var formData =
+        FormData.fromMap({'file': await MultipartFile.fromFile(filePath)});
+
+    // 업로드 요청
+    final response = await dio.post('/upload', data: formData);
+    */
     setState(() {
       images.add(Image.file(File(image.path))); // 가져온 이미지를 _image에 저장
     });
