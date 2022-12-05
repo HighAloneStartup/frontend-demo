@@ -275,13 +275,6 @@ class _NewPostPageState extends State<NewPostPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.post != Post.defaultPost()) {
-      widget._titleController.text = widget.post.title;
-      widget._contentController.text = widget.post.description;
-      published = widget.post.published;
-      isAnonymous = widget.post.anonymous;
-      images = widget.post.images.map((url) => Image.network(url)).toList();
-    }
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -297,10 +290,8 @@ class _NewPostPageState extends State<NewPostPage> {
 
 class _TransitionButton extends StatelessWidget {
   final VoidCallback _callback;
-  final bool isModify;
 
-  const _TransitionButton(this._callback, {Key? key, required this.isModify})
-      : super(key: key);
+  const _TransitionButton(this._callback, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -314,8 +305,8 @@ class _TransitionButton extends StatelessWidget {
         ),
       ),
       onPressed: _callback,
-      child: MainTitle(
-        title: isModify ? "수정하기" : "글쓰기",
+      child: const MainTitle(
+        title: "글쓰기",
         size: 15,
         theme: Colors.white,
       ),
