@@ -35,7 +35,6 @@ class _PostListPageState extends State<ClassBoardPage> {
           builder: (context) => NewPostPage(
             _addNewPost,
             user: widget.user,
-            post: Post.defaultPost(),
           ),
         ),
       );

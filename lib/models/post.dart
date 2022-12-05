@@ -67,7 +67,7 @@ class Post {
       uid: "",
       userName: "",
       userPhotoUrl: null,
-      anonymous: false,
+      anonymous: true,
       createdAt: DateTime(9999),
       likes: 0,
       liked: false,

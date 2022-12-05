@@ -12,10 +12,8 @@ class NewPostPage extends StatefulWidget {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final picker = ImagePicker();
-  final Post post;
 
-  NewPostPage(this.callback, {required this.user, required this.post, Key? key})
-      : super(key: key);
+  NewPostPage(this.callback, {required this.user, Key? key}) : super(key: key);
 
   @override
   State<NewPostPage> createState() => _NewPostPageState();
@@ -25,6 +23,7 @@ class _NewPostPageState extends State<NewPostPage> {
   bool isAnonymous = true;
   bool published = true;
   List<Image> images = [];
+  List<String> imageLinks = [];
 
   void _transition(BuildContext context) {
     if (widget._titleController.text.isEmpty) {
@@ -38,19 +37,19 @@ class _NewPostPageState extends State<NewPostPage> {
 
     widget.callback(
       Post(
-        id: widget.post.id,
+        id: "",
         title: widget._titleController.text,
         description: widget._contentController.text,
         published: published,
-        uid: widget.user.uid,
-        userName: widget.user.name,
-        userPhotoUrl: widget.user.photoUrl,
+        uid: "",
+        userName: "",
+        userPhotoUrl: "",
         anonymous: isAnonymous,
         createdAt: DateTime.now(),
-        likes: widget.post.likes,
-        liked: widget.post.liked,
-        images: widget.post.images,
-        comments: widget.post.comments,
+        likes: 0,
+        liked: false,
+        images: imageLinks,
+        comments: [],
       ),
     );
     Navigator.pop(context);
@@ -145,7 +144,6 @@ class _NewPostPageState extends State<NewPostPage> {
             child: SizedBox(
               child: _TransitionButton(
                 () => _transition(context),
-                isModify: widget.post != null,
               ),
             ),
           ),
@@ -267,13 +265,6 @@ class _NewPostPageState extends State<NewPostPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.post != Post.defaultPost()) {
-      widget._titleController.text = widget.post.title;
-      widget._contentController.text = widget.post.description;
-      published = widget.post.published;
-      isAnonymous = widget.post.anonymous;
-      images = widget.post.images.map((url) => Image.network(url)).toList();
-    }
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -289,10 +280,8 @@ class _NewPostPageState extends State<NewPostPage> {
 
 class _TransitionButton extends StatelessWidget {
   final VoidCallback _callback;
-  final bool isModify;
 
-  const _TransitionButton(this._callback, {Key? key, required this.isModify})
-      : super(key: key);
+  const _TransitionButton(this._callback, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -306,8 +295,8 @@ class _TransitionButton extends StatelessWidget {
         ),
       ),
       onPressed: _callback,
-      child: MainTitle(
-        title: isModify ? "수정하기" : "글쓰기",
+      child: const MainTitle(
+        title: "글쓰기",
         size: 15,
         theme: Colors.white,
       ),
