@@ -82,7 +82,14 @@ class _MyPageState extends State<MyPage> {
         // print(badges["first_grade"]);
         if (!snapshot.hasData) {
           //print(snapshot.error);
-          return const Center(child: CircularProgressIndicator());
+          return const SizedBox(
+            width: double.infinity,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFF3D5D54),
+              ),
+            ),
+          );
         }
 
         User currentUser = snapshot.data as User;
@@ -450,6 +457,9 @@ class _MyPageState extends State<MyPage> {
                   // name instead of the actual result! : without parentheses
                   onPressed: () {},
                 ),
+              ),
+              const SizedBox(
+                height: 10,
               ),
             ],
           ),

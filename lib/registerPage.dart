@@ -52,6 +52,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    FocusNode myFocusNode1 = new FocusNode();
+    FocusNode myFocusNode2 = new FocusNode();
+    FocusNode myFocusNode3 = new FocusNode();
     return MaterialApp(
       home: Scaffold(
         body: Container(
@@ -105,11 +108,15 @@ class _RegisterPageState extends State<RegisterPage> {
                       userIdValue = text;
                     });
                   },
+                  focusNode: myFocusNode1,
                   decoration: InputDecoration(
                     labelText: 'ID / Nickname',
                     labelStyle: TextStyle(
-                      fontSize: 14,
-                    ),
+                        fontSize: 14,
+                        color: myFocusNode1.hasFocus
+                            ? Colors.grey
+                            : Colors.grey //Color.fromARGB(255, 122, 173, 159),
+                        ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -118,6 +125,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         width: 2,
                         color: const Color(0xff3D5D54),
                       ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color:
+                              Colors.grey, //Color.fromARGB(255, 122, 173, 159),
+                          /*Color(0xFFE4F0ED),*/ width: 2.0),
                     ),
                   ),
                 ),
@@ -139,12 +152,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       userEmailValue = text;
                     });
                   },
+                  focusNode: myFocusNode2,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email address',
                     labelStyle: TextStyle(
-                      fontSize: 14,
-                    ),
+                        fontSize: 14,
+                        color: myFocusNode2.hasFocus
+                            ? Colors.grey
+                            : Colors.grey //Color.fromARGB(255, 122, 173, 159),
+                        ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -153,6 +170,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         width: 2,
                         color: const Color(0xff3D5D54),
                       ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color:
+                              Colors.grey, //Color.fromARGB(255, 122, 173, 159),
+                          width: 2.0),
                     ),
                   ),
                 ),
@@ -171,14 +194,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       userPwdValue = text;
                     });
                   },
+                  focusNode: myFocusNode3,
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
                     labelText: 'Create Password',
                     labelStyle: TextStyle(
-                      fontSize: 14,
-                    ),
+                        fontSize: 14,
+                        color: myFocusNode3.hasFocus
+                            ? Colors.grey
+                            : Colors.grey //Color.fromARGB(255, 122, 173, 159),
+                        ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -187,6 +214,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         width: 2,
                         color: const Color(0xff3D5D54),
                       ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color:
+                              Colors.grey, //Color.fromARGB(255, 122, 173, 159),
+                          width: 2.0),
                     ),
                   ),
                 ),
@@ -227,7 +260,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Text(
                       '로그인',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.lightBlue),
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 122, 173, 159),
+                      ),
                     ),
                     // name instead of the actual result! : without parentheses
                     onPressed: () {

@@ -19,7 +19,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // const LoginPage({Key? key}) : super(key: key);
   String userIdValue = "";
   String userPwdValue = "";
   var responseValue;
@@ -61,6 +60,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    FocusNode myFocusNode1 = FocusNode();
+    FocusNode myFocusNode2 = FocusNode();
     return MaterialApp(
       home: Scaffold(
         body: Container(
@@ -114,11 +115,15 @@ class _LoginPageState extends State<LoginPage> {
                       userIdValue = text;
                     });
                   },
+                  focusNode: myFocusNode1,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email Address',
                     labelStyle: TextStyle(
                       fontSize: 14,
+                      color: myFocusNode1.hasFocus
+                          ? Colors.grey
+                          : Colors.grey, //Color.fromARGB(255, 122, 173, 159),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -128,6 +133,12 @@ class _LoginPageState extends State<LoginPage> {
                         width: 2,
                         color: const Color(0xff3D5D54),
                       ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color:
+                              Colors.grey, //Color.fromARGB(255, 122, 173, 159),
+                          /*Color(0xFFE4F0ED),*/ width: 2.0),
                     ),
                   ),
                 ),
@@ -149,14 +160,18 @@ class _LoginPageState extends State<LoginPage> {
                       userPwdValue = text;
                     });
                   },
+                  focusNode: myFocusNode2,
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: TextStyle(
-                      fontSize: 14,
-                    ),
+                        fontSize: 14,
+                        color: myFocusNode2.hasFocus
+                            ? Colors.grey
+                            : Colors.grey //Color.fromARGB(255, 122, 173, 159),
+                        ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -165,6 +180,12 @@ class _LoginPageState extends State<LoginPage> {
                         width: 2,
                         color: const Color(0xff3D5D54),
                       ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color:
+                              Colors.grey, //Color.fromARGB(255, 122, 173, 159),
+                          width: 2.0),
                     ),
                   ),
                 ),
@@ -190,8 +211,6 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     MainUser user =
                         await _loginRequest(userIdValue, userPwdValue);
-                    print(user.token);
-                    print(user);
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -200,37 +219,22 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    child: Text(
-                      '회원가입',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.lightBlue,
-                      ),
-                    ),
-                    // name instead of the actual result! : without parentheses
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RegisterPage()),
-                      );
-                    },
+              TextButton(
+                child: Text(
+                  '회원가입',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color:
+                        Color.fromARGB(255, 122, 173, 159), //Colors.lightBlue,
                   ),
-                  TextButton(
-                    child: Text(
-                      '비밀번호 찾기',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.lightBlue,
-                      ),
-                    ),
-                    // name instead of the actual result! : without parentheses
-                    onPressed: () => {print('Clicked FIND PASSWORD')},
-                  ),
-                ],
+                ),
+                // name instead of the actual result! : without parentheses
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterPage()),
+                  );
+                },
               ),
             ],
           ),
