@@ -7,7 +7,6 @@ import 'time_table_page.dart';
 import 'my_page.dart';
 import 'board_list_page.dart';
 import 'notice_board_page.dart';
-import 'DMPage.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -191,36 +190,6 @@ class _MainPageState extends State<MainPage> {
             Notice(user: widget.user),
             ..._makeSection("TODAY'S LUNCH"),
             const Lunch(),
-            /*
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: TextButton(
-                child: const Text("학생부"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StudentListPage(user: widget.user),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: TextButton(
-                child: const Text("DM"),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DMPage(user: widget.user),
-                    ),
-                  );
-                },
-              ),
-            ),
-            */
           ],
         ),
       ),
