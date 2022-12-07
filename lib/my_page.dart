@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:high_alone_startup/models/authority.dart';
 import 'package:http/http.dart' as http;
-import 'package:cupertino_icons/cupertino_icons.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import 'models/user.dart';
 import 'models/main_user.dart';
@@ -11,7 +11,8 @@ import 'models/badges.dart';
 
 class MyPage extends StatefulWidget {
   final MainUser user;
-  const MyPage({super.key, required this.user});
+  MyPage({super.key, required this.user});
+  final picker = ImagePicker();
 
   @override
   State<MyPage> createState() => _MyPageState(user: user);
@@ -21,6 +22,10 @@ class _MyPageState extends State<MyPage> {
   _MyPageState({required this.user});
 
   final MainUser user;
+  /*
+  List<Image> images = [];
+  List<String> imageLinks = [];
+  */
 
   String name = "seo jin";
   String email = "swiftie1230@naver.com";
@@ -37,6 +42,8 @@ class _MyPageState extends State<MyPage> {
   String birthday = "";
   String phoneNumber = "010-8891-2306";
   String photoUrl = "";
+
+  XFile? _pickedFile;
 
   Future<User> _getUserData() async {
     http.Response response = await http.get(
@@ -69,6 +76,80 @@ class _MyPageState extends State<MyPage> {
         return User.fromJson(parsed);
       default:
         throw Exception('$statusCode');
+    }
+  }
+
+  _showBottomSheet() {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+              onPressed: () => _getCameraImage(),
+              style: ElevatedButton.styleFrom(
+                primary: const Color(0xff3D5D54),
+              ),
+              child: const Text('사진찍기'),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            const Divider(
+              thickness: 1,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            ElevatedButton(
+              onPressed: () => _getPhotoLibraryImage(),
+              style: ElevatedButton.styleFrom(
+                primary: const Color(0xff3D5D54),
+              ),
+              child: const Text('라이브러리에서 불러오기'),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _getCameraImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _pickedFile = pickedFile;
+      });
+    } else {
+      if (kDebugMode) {
+        print('이미지 선택안함');
+      }
+    }
+  }
+
+  _getPhotoLibraryImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 200,
+      maxWidth: 200,
+      imageQuality: 100,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        _pickedFile = pickedFile;
+      });
+    } else {
+      if (kDebugMode) {
+        print('이미지 선택안함');
+      }
     }
   }
 
@@ -124,12 +205,38 @@ class _MyPageState extends State<MyPage> {
               const SizedBox(
                 height: 20.0,
               ),
-              // Image.file(userImage),
-              Image.asset(
-                'assets/images/default.jpg',
-                width: 200,
-                height: 200,
-              ),
+              if (_pickedFile == null)
+                Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 2,
+                      color: const Color(0xff3D5D54),
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.account_circle,
+                    size: 200,
+                  ),
+                )
+              else
+                Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 2,
+                      color: const Color(0xff3D5D54),
+                    ),
+                    image: DecorationImage(
+                      image: FileImage(File(_pickedFile!.path)),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
               const SizedBox(
                 height: 20.0,
               ),
@@ -137,7 +244,7 @@ class _MyPageState extends State<MyPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: _showBottomSheet,
                     style: ElevatedButton.styleFrom(
                       primary: const Color(0xff3D5D54),
                       // textColor: Colors.white,
@@ -148,7 +255,11 @@ class _MyPageState extends State<MyPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        _pickedFile = null;
+                      });
+                    },
                     child: const Text(
                       "이미지 삭제",
                       style: TextStyle(color: Colors.black),
@@ -234,13 +345,6 @@ class _MyPageState extends State<MyPage> {
                 ),
                 width: 30,
                 height: 30,
-                /*
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(Badge.badges["GAMECLUB"]!),
-                  ),
-                ),
-                */
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: roles
