@@ -14,7 +14,7 @@ class MainUser extends User {
 
   factory MainUser.fromJson(Map<String, dynamic> json) {
     List<dynamic> temp = json['roles'] as List<dynamic>;
-    List<String> roles = temp.map((e) => e as String).toList();
+    List<String> roles = temp.map((e) => e.split('_')[1] as String).toList();
     return MainUser(
       uid: json['email'] as String, //json["uid"] as String,
       name: json['name'] as String,

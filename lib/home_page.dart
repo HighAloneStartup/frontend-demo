@@ -176,8 +176,8 @@ class _MainPageState extends State<MainPage> {
                           MaterialPageRoute(
                             builder: (context) =>
                                 User.checkGraduate(widget.user.authorities!)
-                                    ? StudentListPage(user: widget.user)
-                                    : GraduateListPage(user: widget.user),
+                                    ? GraduateListPage(user: widget.user)
+                                    : StudentListPage(user: widget.user),
                           ),
                         ),
                         icon: const Icon(
