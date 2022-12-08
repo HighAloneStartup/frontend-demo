@@ -29,8 +29,6 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   Post? post;
-  bool isAnonymous = true;
-  final commentController = TextEditingController();
 
   _PostPageState();
 
@@ -116,11 +114,7 @@ class _PostPageState extends State<PostPage> {
     }
   }
 
-  void _addComment(String comment) {
-    setState(() {
-      commentController.clear();
-    });
-  }
+  void _addComment(String comment) {}
 
   void _modifyCallback(Post editedPost) {
     Navigator.push(
@@ -185,61 +179,6 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  Widget _commentTextLine() {
-    return Container(
-      margin: const EdgeInsets.all(5),
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 208, 208, 208),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          Checkbox(
-            value: isAnonymous,
-            activeColor: Colors.white,
-            checkColor: Colors.grey,
-            onChanged: ((bool? value) {
-              setState(() {
-                isAnonymous = value!;
-              });
-            }),
-          ),
-          const MainTitle(
-            title: "익명",
-            size: 15,
-            theme: Color(0xFF3D5D54),
-          ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: TextField(
-              controller: commentController,
-              style: const TextStyle(color: Colors.black, fontFamily: "Roboto"),
-              cursorColor: Colors.black,
-              maxLines: 1,
-              decoration: const InputDecoration(
-                hintText: "Write a comment",
-                hintStyle: TextStyle(color: Colors.grey, fontFamily: "Roboto"),
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF3D5D54)),
-            onPressed: () => _addComment(commentController.text),
-            child: const MainTitle(
-              title: "작성",
-              size: 15,
-              theme: Colors.white,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,7 +196,9 @@ class _PostPageState extends State<PostPage> {
               left: 0,
               right: 0,
               bottom: 0,
-              child: _commentTextLine(),
+              child: _CommentTextLine(
+                addComment: _addComment,
+              ),
             ),
           ],
         ),
@@ -358,11 +299,11 @@ class _PostHead extends StatelessWidget {
 
 class _PostBody extends StatelessWidget {
   final Post post;
-  _PostBody({required this.post, Key? key})
-      : this.comments = post.comments,
-        super(key: key);
-
   final List<Comment> comments;
+
+  _PostBody({required this.post, Key? key})
+      : comments = post.comments,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -395,6 +336,81 @@ class _PostBody extends StatelessWidget {
         ),
         const SizedBox(height: 50),
       ],
+    );
+  }
+}
+
+class _CommentTextLine extends StatefulWidget {
+  final Function addComment;
+  const _CommentTextLine({super.key, required this.addComment});
+
+  @override
+  State<_CommentTextLine> createState() => __CommentTextLineState();
+}
+
+class __CommentTextLineState extends State<_CommentTextLine> {
+  bool isAnonymous = true;
+  final commentController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(5),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 208, 208, 208),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Checkbox(
+            value: isAnonymous,
+            activeColor: Colors.white,
+            checkColor: Colors.grey,
+            onChanged: ((bool? value) {
+              setState(() {
+                isAnonymous = value!;
+              });
+            }),
+          ),
+          const MainTitle(
+            title: "익명",
+            size: 15,
+            theme: Color(0xFF3D5D54),
+          ),
+          const SizedBox(width: 6),
+          Expanded(
+            child: TextField(
+              controller: commentController,
+              style: const TextStyle(color: Colors.black, fontFamily: "Roboto"),
+              cursorColor: Colors.black,
+              maxLines: 1,
+              decoration: const InputDecoration(
+                hintText: "Write a comment",
+                hintStyle: TextStyle(color: Colors.grey, fontFamily: "Roboto"),
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF3D5D54),
+            ),
+            onPressed: () {
+              setState(() {
+                commentController.clear();
+                widget.addComment(commentController.text);
+              });
+            },
+            child: const MainTitle(
+              title: "작성",
+              size: 15,
+              theme: Colors.white,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

@@ -20,6 +20,7 @@ class StudentListPage extends StatefulWidget {
 class _StudentListPageState extends State<StudentListPage> {
   int choosedGradeYear = -1;
   int choosedClassGroup = -1;
+  final int classNum = 3;
 
   _StudentListPageState();
 
@@ -219,7 +220,7 @@ class _StudentListPageState extends State<StudentListPage> {
   }
 
   List<Widget> _makeSection(String title, int grade) {
-    var buttons = _makeButtons(grade, 13);
+    var buttons = _makeButtons(grade, classNum);
     int divider = (((choosedClassGroup - 1) ~/ 2 + 1) * 2).clamp(0, 13);
     return [
       SliverToBoxAdapter(
