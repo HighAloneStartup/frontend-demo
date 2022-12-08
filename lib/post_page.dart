@@ -137,19 +137,39 @@ class _PostPageState extends State<PostPage> {
 
   Widget _title() {
     return Container(
-      alignment: Alignment.centerLeft,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      child: Column(
+      alignment: Alignment.topCenter,
+      padding: const EdgeInsets.symmetric(
+        vertical: 20,
+      ),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const MainTitle(
-            title: "BOARD",
-            theme: Color(0xFF3D5D54),
+          IconButton(
+            alignment: Alignment.topCenter,
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 20,
+              color: Color(0xFF3D5D54),
+            ),
           ),
-          SubTitle(
-            title: widget.boardName,
-          )
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const MainTitle(
+                title: "BOARD",
+                theme: Color(0xFF3D5D54),
+              ),
+              SubTitle(
+                title: widget.boardName,
+              )
+            ],
+          ),
         ],
       ),
     );

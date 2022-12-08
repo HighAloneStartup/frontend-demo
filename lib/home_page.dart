@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
       MainPage(
         user: user,
       ),
-      const TimeTablePage(),
+      TimeTablePage(user: user),
       BoardListPage(user: user),
       MyPage(user: user),
     ];

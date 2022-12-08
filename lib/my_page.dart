@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:path_provider/path_provider.dart';
 
 import 'styles/sub_title_text.dart';
 import 'models/user.dart';
@@ -23,10 +26,7 @@ class _MyPageState extends State<MyPage> {
   _MyPageState({required this.user});
 
   final MainUser user;
-  /*
-  List<Image> images = [];
-  List<String> imageLinks = [];
-  */
+  Map<String, dynamic> change = {};
 
   String name = "seo jin";
   String email = "swiftie1230@naver.com";
@@ -43,8 +43,12 @@ class _MyPageState extends State<MyPage> {
   String birthday = "";
   String phoneNumber = "010-8891-2306";
   String photoUrl = "";
+  bool isRemove = false;
+  bool whetherDelete = false;
 
   XFile? _pickedFile;
+  NetworkImage _downloadedImg = const NetworkImage(
+      'https://www.bcm-institute.org/wp-content/uploads/2020/11/No-Image-Icon.png');
 
   Future<User> _getUserData() async {
     http.Response response = await http.get(
@@ -83,43 +87,61 @@ class _MyPageState extends State<MyPage> {
   /* 유저 데이터를 저장하는 함수*/
   /* 파리미터 수정 필요*/
   Future _uploadUserData() async {
-    http.Response response = await http.post(
+    change['roles'] = roles.map((e) => "ROLE_$e").toList();
+    http.Response response = await http.put(
       Uri(
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
         path: 'api/members/mine',
-        /*
-        queryParameters: {
-          'gradeYear': '$gradeYear',
-          'classGroup': '$classGroup',
-        },
-        */
       ),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': user.token,
       },
+      body: json.encoder.convert(change),
     );
 
     var statusCode = response.statusCode;
-    var responseBody = utf8.decode(response.bodyBytes);
 
     switch (statusCode) {
       case 200:
-        /*
-        var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
-        print('결과 : ${parsed}');
-        print('결과타입 : ${parsed.runtimeType}');
-        return User.fromJson(parsed);
-        */
         return;
       default:
         throw Exception('$statusCode');
     }
   }
 
+  Future<List<String>> postImage(String path) async {
+    var dio = Dio();
+    dio.options.contentType = 'multipart/form-data';
+    dio.options.headers = {
+      'Authorization': widget.user.token,
+    };
+
+    var formData = FormData.fromMap({
+      'images': [MultipartFile.fromFileSync(path)],
+    });
+
+    // 업로드 요청
+    final response = await dio.post(
+        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/upload/',
+        data: formData);
+
+    var statusCode = response.statusCode;
+    var responseBody = response.data;
+
+    switch (statusCode) {
+      case 200:
+        var parsed = responseBody;
+        return parsed.map<String>((e) => e as String).toList();
+      default:
+        throw Exception('$statusCode');
+    }
+  }
+
   _showBottomSheet() {
+    isRemove = false;
     return showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -218,6 +240,7 @@ class _MyPageState extends State<MyPage> {
         }
 
         User currentUser = snapshot.data as User;
+        photoUrl = isRemove ? User.defaultPhotoUrl : currentUser.photoUrl;
 
         name = currentUser.name;
         email = currentUser.email;
@@ -239,7 +262,7 @@ class _MyPageState extends State<MyPage> {
         birthday = currentUser.birthday != null ? currentUser.birthday! : "";
         phoneNumber =
             currentUser.phoneNumber != null ? currentUser.phoneNumber! : "";
-        photoUrl = currentUser.photoUrl != null ? currentUser.photoUrl! : "";
+        _downloadedImg = NetworkImage(photoUrl);
 
         return Padding(
           padding: const EdgeInsets.only(right: 30.0, left: 30.0),
@@ -249,7 +272,7 @@ class _MyPageState extends State<MyPage> {
               const SizedBox(
                 height: 20.0,
               ),
-              if (_pickedFile == null)
+              if (_pickedFile != null)
                 Container(
                   width: 200,
                   height: 200,
@@ -259,10 +282,10 @@ class _MyPageState extends State<MyPage> {
                       width: 2,
                       color: const Color(0xff3D5D54),
                     ),
-                  ),
-                  child: const Icon(
-                    Icons.account_circle,
-                    size: 200,
+                    image: DecorationImage(
+                      image: FileImage(File(_pickedFile!.path)),
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 )
               else
@@ -276,7 +299,7 @@ class _MyPageState extends State<MyPage> {
                       color: const Color(0xff3D5D54),
                     ),
                     image: DecorationImage(
-                      image: FileImage(File(_pickedFile!.path)),
+                      image: _downloadedImg,
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -302,6 +325,7 @@ class _MyPageState extends State<MyPage> {
                     onPressed: () {
                       setState(() {
                         _pickedFile = null;
+                        isRemove = true;
                       });
                     },
                     child: const Text(
@@ -389,7 +413,7 @@ class _MyPageState extends State<MyPage> {
                 ),
                 width: 30,
                 height: 30,
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: roles
                       .map((role) => Image.asset(
@@ -604,7 +628,16 @@ class _MyPageState extends State<MyPage> {
                   ),
                   // name instead of the actual result! : without parentheses
                   onPressed: () async {
-                    await _uploadUserData();
+                    if (_pickedFile != null) {
+                      change['photoUrl'] =
+                          (await postImage(_pickedFile!.path)).first;
+                      print(change['photoUrl']);
+                    }
+                    if (change.isNotEmpty) {
+                      await _uploadUserData();
+                    }
+                    change = {};
+                    isRemove = false;
                   },
                 ),
               ),

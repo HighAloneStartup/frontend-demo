@@ -1,23 +1,76 @@
 // ignore_for_file: avoid_print
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
+import 'styles/sub_title_text.dart';
 
-List week = ['Mon', 'Tue', 'Wed', 'Thur', 'Fri'];
+import 'package:high_alone_startup/models/main_user.dart';
+
+List week = ['mon', 'tue', 'wed', 'thu', 'fri'];
 var kColumnLength = 22;
 double kFirstColumnHeight = 20;
 double kBoxSize = 52;
 
 // 시간표 메인 화면
 class TimeTablePage extends StatefulWidget {
-  const TimeTablePage({Key? key}) : super(key: key);
+  const TimeTablePage({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+  final MainUser user;
 
   @override
   State<TimeTablePage> createState() => _TimeTablePageState();
 }
 
 class _TimeTablePageState extends State<TimeTablePage> {
-  List<Widget> buildDayColumn(int index) {
+  final Map<String, Color> colorMapping = {
+    "국어": Color.fromARGB(255, 199, 164, 112),
+    "수학": Color.fromARGB(255, 105, 156, 180),
+    "영어": Color.fromARGB(255, 216, 213, 179),
+    "물리": Color.fromARGB(255, 173, 145, 177),
+    "화학": Color.fromARGB(255, 242, 170, 165),
+    "체육": Color.fromARGB(255, 83, 96, 173),
+    "기술가정": Color.fromARGB(255, 112, 86, 76),
+    "생물": Color.fromARGB(255, 112, 161, 114),
+  };
+
+  Map<String, dynamic> timeTableMap = {};
+
+  Future<Map<String, dynamic>> _getTimeTable() async {
+    http.Response response = await http.get(
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/timetable',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': widget.user.token,
+      },
+    );
+
+    var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
+    switch (statusCode) {
+      case 200:
+        var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
+        //print(parsed);
+        return parsed; //.remove("name");
+      default:
+        throw Exception('$statusCode');
+    }
+  }
+
+  List<Color> colorTimeTable(List dayClass) {
+    return dayClass.map((e) => colorMapping[e as String]!).toList();
+  }
+
+  List<Widget> buildDayColumn(int index, List dayClass) {
+    List dayColors = colorTimeTable(dayClass);
     return [
       const VerticalDivider(
         color: Colors.grey,
@@ -44,9 +97,17 @@ class _TimeTablePageState extends State<TimeTablePage> {
                         height: 0,
                       );
                     }
-                    return SizedBox(
+                    return Container(
                       height: kBoxSize,
-                      child: Container(),
+                      width: 66, //kColumnLength as double,
+                      color:
+                          index ~/ 2 < 8 ? dayColors[index ~/ 2] : Colors.white,
+                      child: index ~/ 2 < 8
+                          ? Text(dayClass[index ~/ 2],
+                              style: const TextStyle(
+                                fontSize: 10,
+                              ))
+                          : Container(),
                     );
                   },
                 ),
@@ -85,6 +146,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
     );
   }
 
+  /*
   _navigateAndDisplaySelection(BuildContext context) async {
     // Navigator.push는 Future를 반환합니다. Future는 선택 창에서
     // Navigator.pop이 호출된 이후 완료될 것입니다.
@@ -97,6 +159,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
     //Scaffold.of(context)
     print(result.toString());
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +169,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
@@ -122,19 +186,17 @@ class _TimeTablePageState extends State<TimeTablePage> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      '시간표',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Colors.black,
-                      ),
-                    ),
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  '시간표',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    color: Colors.black,
+                  ),
+                ),
+                /*
                     Row(
                       children: [
                         IconButton(
@@ -151,28 +213,62 @@ class _TimeTablePageState extends State<TimeTablePage> {
                         ),
                       ],
                     ),
-                  ],
-                ),
+                    */
               ),
               const SizedBox(
                 height: 20,
               ),
-              Container(
-                height: kColumnLength / 2 * kBoxSize + kColumnLength,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    buildTimeColumn(),
-                    ...buildDayColumn(0),
-                    ...buildDayColumn(1),
-                    ...buildDayColumn(2),
-                    ...buildDayColumn(3),
-                    ...buildDayColumn(4),
-                  ],
-                ),
+              FutureBuilder(
+                future: _getTimeTable(),
+                builder: ((context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                          child: CircularProgressIndicator(
+                        color: Color(0xFF3D5D54),
+                      )),
+                    );
+                  }
+                  if (snapshot.data == null) {
+                    return const SubTitle(title: "데이터를 불러오는데 실패하였습니다.");
+                  }
+
+                  timeTableMap = snapshot.data as Map<String, dynamic>;
+
+                  return Container(
+                    height: kColumnLength / 2 * kBoxSize + kColumnLength,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        buildTimeColumn(),
+                        ...buildDayColumn(
+                          0,
+                          timeTableMap[week[0]],
+                        ),
+                        ...buildDayColumn(
+                          1,
+                          timeTableMap[week[1]],
+                        ),
+                        ...buildDayColumn(
+                          2,
+                          timeTableMap[week[2]],
+                        ),
+                        ...buildDayColumn(
+                          3,
+                          timeTableMap[week[3]],
+                        ),
+                        ...buildDayColumn(
+                          4,
+                          timeTableMap[week[4]],
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ),
             ],
           ),
