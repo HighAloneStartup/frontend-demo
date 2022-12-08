@@ -1,6 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-
-import '';
+import 'package:http/http.dart' as http;
+import 'main_user.dart';
 
 class DB {
   static void errorCode(int code, BuildContext context) {
@@ -44,5 +45,35 @@ class DB {
         );
       },
     );
+  }
+
+  static void putLike({
+    required String postId,
+    required String boardUrl,
+    required MainUser user,
+    required BuildContext context,
+  }) async {
+    http.Response response = await http.put(
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/boards/$boardUrl/$postId/like',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user.token,
+      },
+    );
+
+    var statusCode = response.statusCode;
+
+    switch (statusCode) {
+      case 200:
+        break;
+      default:
+        DB.errorCode(statusCode, context);
+        throw Exception('$statusCode');
+    }
   }
 }
