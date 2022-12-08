@@ -6,11 +6,17 @@ import 'post_page.dart';
 
 class ClassPostList extends StatelessWidget {
   final MainUser user;
+  final String boardName;
+  final String boardUrl;
 
   /// 테스트용 데이터
   final List<SimpleClassPost> postList;
 
-  const ClassPostList(this.postList, {Key? key, required this.user})
+  const ClassPostList(this.postList,
+      {Key? key,
+      required this.user,
+      required this.boardName,
+      required this.boardUrl})
       : super(key: key);
 
   @override
@@ -22,6 +28,8 @@ class ClassPostList extends StatelessWidget {
             (context, index) => _PostWidget(
               postList[index],
               user: user,
+              boardName: boardName,
+              boardUrl: boardUrl,
             ),
             childCount: postList.length,
           ),
@@ -37,9 +45,16 @@ class ClassPostList extends StatelessWidget {
 class _PostWidget extends StatelessWidget {
   final MainUser user;
   final SimpleClassPost post;
+  final String boardName;
+  final String boardUrl;
 
-  const _PostWidget(this.post, {Key? key, required this.user})
-      : super(key: key);
+  const _PostWidget(
+    this.post, {
+    Key? key,
+    required this.user,
+    required this.boardName,
+    required this.boardUrl,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +74,12 @@ class _PostWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => PostPage(post.id, user: user)),
+              builder: (context) => PostPage(
+                    postId: post.id,
+                    user: user,
+                    boardUrl: boardUrl,
+                    boardName: boardName,
+                  )),
         );
       },
       child: photo,

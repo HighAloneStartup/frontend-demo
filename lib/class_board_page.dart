@@ -227,7 +227,13 @@ class _PostListPageState extends State<ClassBoardPage> {
               return Column(
                 children: [
                   _header(),
-                  Expanded(child: ClassPostList(_postList, user: widget.user)),
+                  Expanded(
+                      child: ClassPostList(
+                    _postList,
+                    user: widget.user,
+                    boardName: "${widget.gradeYear}-${widget.classGroup}",
+                    boardUrl: "",
+                  )),
                 ],
               );
             }),

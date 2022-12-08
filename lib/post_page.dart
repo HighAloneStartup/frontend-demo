@@ -10,9 +10,17 @@ import 'edit_post_page.dart';
 
 class PostPage extends StatefulWidget {
   final MainUser user;
+  final String boardName;
+  final String boardUrl;
   final String postId;
 
-  const PostPage(this.postId, {Key? key, required this.user}) : super(key: key);
+  const PostPage({
+    Key? key,
+    required this.user,
+    required this.boardUrl,
+    required this.postId,
+    required this.boardName,
+  }) : super(key: key);
 
   @override
   State<PostPage> createState() => _PostPageState();
@@ -31,7 +39,7 @@ class _PostPageState extends State<PostPage> {
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/$id',
+        path: 'api/boards/${widget.boardUrl}/$id',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -58,7 +66,7 @@ class _PostPageState extends State<PostPage> {
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/$id',
+        path: 'api/boards/${widget.boardUrl}/$id',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -127,13 +135,13 @@ class _PostPageState extends State<PostPage> {
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          MainTitle(
-            title: "FREE BOARD",
+        children: [
+          const MainTitle(
+            title: "BOARD",
             theme: Color(0xFF3D5D54),
           ),
           SubTitle(
-            title: "전체 게시판",
+            title: widget.boardName,
           )
         ],
       ),
@@ -275,10 +283,12 @@ class _PostHead extends StatelessWidget {
             size: 24,
           ),
           const SizedBox(height: 10),
-          SizedBox(
+          Container(
+            alignment: Alignment.center,
             height: post.images.isEmpty ? 0 : 300,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
               itemBuilder: (context, index) {
                 return Image.network(post.images[index]);

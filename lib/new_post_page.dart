@@ -35,8 +35,10 @@ class _NewPostPageState extends State<NewPostPage> {
       _showDialog("내용을 입력해주세요", context: context);
       return;
     }
-
-    List<String> imageLinks = await postImage();
+    List<String> imageLinks = [];
+    if (imagePaths.isNotEmpty) {
+      imageLinks = await postImage();
+    }
     widget.callback(
       Post(
         id: "",
@@ -188,63 +190,51 @@ class _NewPostPageState extends State<NewPostPage> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       height: 70,
-      child: Row(
+      child: Column(
         children: [
-          SizedBox(
-            height: 70,
-            width: 70,
-            child: Image.network(widget.user.photoUrl),
-          ),
-          const SizedBox(width: 5),
           Expanded(
-            child: Column(
-              children: [
-                Expanded(
-                  child: TextField(
-                    style: const TextStyle(fontFamily: 'Roboto'),
-                    cursorColor: Colors.black,
-                    decoration: const InputDecoration(
-                      hintText: '제목',
-                      hintStyle: TextStyle(fontFamily: 'Roboto'),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF3D5D54)),
-                      ),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF3D5D54)),
-                      ),
-                    ),
-                    controller: widget._titleController,
-                  ),
+            child: TextField(
+              style: const TextStyle(fontFamily: 'Roboto'),
+              cursorColor: Colors.black,
+              decoration: const InputDecoration(
+                hintText: '제목',
+                hintStyle: TextStyle(fontFamily: 'Roboto'),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF3D5D54)),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      onPressed: getImage,
-                      icon: const Icon(
-                        Icons.camera_alt,
-                        size: 20,
-                      ),
-                    ),
-                    Checkbox(
-                      value: isAnonymous,
-                      activeColor: Colors.white,
-                      checkColor: Colors.grey,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          isAnonymous = value!;
-                        });
-                      },
-                    ),
-                    const MainTitle(
-                      title: "익명",
-                      size: 15,
-                      theme: Color(0xFF3D5D54),
-                    ),
-                  ],
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF3D5D54)),
                 ),
-              ],
+              ),
+              controller: widget._titleController,
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: getImage,
+                icon: const Icon(
+                  Icons.camera_alt,
+                  size: 20,
+                ),
+              ),
+              Checkbox(
+                value: isAnonymous,
+                activeColor: Colors.white,
+                checkColor: Colors.grey,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isAnonymous = value!;
+                  });
+                },
+              ),
+              const MainTitle(
+                title: "익명",
+                size: 15,
+                theme: Color(0xFF3D5D54),
+              ),
+            ],
           ),
         ],
       ),
