@@ -58,12 +58,8 @@ class _PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var photo = post.image == null
-        ? Image.network(
-            Post.defaultPhotoUrl,
-            fit: BoxFit.fill,
-          )
-        : Image.network(post.image!);
+    print(post.image);
+    var photo = Image.network(post.image!);
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
