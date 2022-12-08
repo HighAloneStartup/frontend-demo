@@ -8,21 +8,17 @@ import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import 'DMPage.dart';
 
-class StudentListPage extends StatefulWidget {
+class GraduateListPage extends StatefulWidget {
   final MainUser user;
 
-  const StudentListPage({Key? key, required this.user}) : super(key: key);
+  const GraduateListPage({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<StudentListPage> createState() => _StudentListPageState();
+  State<GraduateListPage> createState() => _GraduateListPageState();
 }
 
-class _StudentListPageState extends State<StudentListPage> {
-  int choosedGradeYear = -1;
-  int choosedClassGroup = -1;
-  final int classNum = 3;
-
-  _StudentListPageState();
+class _GraduateListPageState extends State<GraduateListPage> {
+  final int yearNum = 3;
 
   Widget _title() {
     return Container(
@@ -69,16 +65,14 @@ class _StudentListPageState extends State<StudentListPage> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: CustomScrollView(
           slivers: <Widget>[
-            ..._makeSection("FIRST GRADE", 1),
-            ..._makeSection("SECOND GRADE", 2),
-            ..._makeSection("THIRD GRADE", 3),
+            ..._makeSection("졸업생 목록"),
           ],
         ),
       ),
     );
   }
 
-  Future<List<User>> _getStudentList() async {
+  Future<List<User>> _getStudentList(int year) async {
     http.Response response = await http.get(
       Uri(
         scheme: 'http',
@@ -86,8 +80,8 @@ class _StudentListPageState extends State<StudentListPage> {
         port: 9090,
         path: 'api/members/',
         queryParameters: {
-          'gradeYear': '$choosedGradeYear',
-          'classGroup': '$choosedClassGroup',
+          'gradeYear': '$year',
+          'classGroup': '$year',
         },
       ),
       headers: {
@@ -109,76 +103,10 @@ class _StudentListPageState extends State<StudentListPage> {
     }
   }
 
-  List<Widget> _makeButtons(int gradeYear, int classGroup) {
-    List<Widget> result = [];
-    for (int i = 1; i <= classGroup; i++) {
-      bool isclicked =
-          (gradeYear == choosedGradeYear) && (i == choosedClassGroup);
-      result.add(
-        Container(
-          margin: const EdgeInsets.all(5),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isclicked
-                  ? const Color.fromARGB(255, 208, 208, 208)
-                  : Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SubTitle(
-                  title: "$gradeYear학년 $i반",
-                  size: 15,
-                ),
-                isclicked
-                    ? const Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 15,
-                        color: Colors.black,
-                      )
-                    : const Icon(
-                        Icons.keyboard_arrow_right,
-                        size: 15,
-                        color: Colors.black,
-                      ),
-              ],
-            ),
-            onPressed: () {
-              setState(() {
-                choosedGradeYear = gradeYear;
-                choosedClassGroup = i;
-              });
-            },
-          ),
-        ),
-      );
-    }
-
-    return result;
-  }
-
-  SliverGrid _makeGrid(List<Widget> buttons) {
-    return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        childAspectRatio: 3,
-      ),
-      delegate: SliverChildBuilderDelegate(
-        (context, index) => buttons[index],
-        childCount: buttons.length,
-      ),
-    );
-  }
-
-  Widget _makeList() {
+  Widget _makeList(int year) {
     //return SliverToBoxAdapter(child: Text("나 여기있고, 너 거기있지"));
     return FutureBuilder(
-      future: _getStudentList(),
+      future: _getStudentList(year),
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
         //print(snapshot.data);
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -219,9 +147,11 @@ class _StudentListPageState extends State<StudentListPage> {
     );
   }
 
-  List<Widget> _makeSection(String title, int grade) {
-    var buttons = _makeButtons(grade, classNum);
-    int divider = (((choosedClassGroup - 1) ~/ 2 + 1) * 2).clamp(0, classNum);
+  List<Widget> _makeSection(String title) {
+    List<Widget> graduates = [];
+    for (int i = 1; i < yearNum; i++) {
+      graduates.add(_makeList((-1) * i));
+    }
     return [
       SliverToBoxAdapter(
         child: Container(
@@ -238,9 +168,6 @@ class _StudentListPageState extends State<StudentListPage> {
         ),
       ),
       const SliverToBoxAdapter(child: SizedBox(height: 10)),
-      _makeGrid(buttons.sublist(0, divider)),
-      choosedGradeYear == grade ? _makeList() : const SliverToBoxAdapter(),
-      _makeGrid(buttons.sublist(divider)),
       const SliverToBoxAdapter(child: SizedBox(height: 10)),
     ];
   }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:high_alone_startup/student_list_page.dart';
 import 'package:high_alone_startup/styles/main_title_text.dart';
 import 'models/main_user.dart';
+import 'models/user.dart';
 import 'styles/sub_title_text.dart';
 import 'time_table_page.dart';
 import 'my_page.dart';
 import 'board_list_page.dart';
 import 'notice_board_page.dart';
+import 'student_list_page.dart';
+import 'graduate_list_page.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -173,7 +175,9 @@ class _MainPageState extends State<MainPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                StudentListPage(user: widget.user),
+                                User.checkGraduate(widget.user.authorities!)
+                                    ? StudentListPage(user: widget.user)
+                                    : GraduateListPage(user: widget.user),
                           ),
                         ),
                         icon: const Icon(

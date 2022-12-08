@@ -53,4 +53,8 @@ class User {
       photoUrl: _photoUrl,
     );
   }
+
+  static bool checkGraduate(List<String> authorities) {
+    return authorities.where((element) => element == "GRADUATE").isNotEmpty;
+  }
 }

@@ -49,11 +49,12 @@ class BoardListPage extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => PostListPage(
-                    user: user,
-                    boardName: boardName,
-                    boardUrl: url,
-                  )),
+            builder: (context) => PostListPage(
+              user: user,
+              boardName: boardName,
+              boardUrl: url,
+            ),
+          ),
         );
       }
     }
@@ -119,6 +120,11 @@ class _BoardList extends StatelessWidget {
     {
       "name": "독서 게시판",
       "url": "bookclub",
+      "isGrid": false,
+    },
+    {
+      "name": "졸업생 게시판",
+      "url": "graduate",
       "isGrid": false,
     },
   ];

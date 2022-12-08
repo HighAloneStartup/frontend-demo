@@ -220,10 +220,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   List<Widget> _showGraduateClasses() {
-    bool isGraduate =
-        roles.where((element) => element == "GRADUATE").isNotEmpty;
-    print(roles.where((element) => element == "GRADUATE"));
-    print(isGraduate);
+    bool isGraduate = User.checkGraduate(roles);
     if (!isGraduate) {
       return [
         Container(

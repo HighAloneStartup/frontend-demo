@@ -13,14 +13,14 @@ class MainUser extends User {
       super.classGroup});
 
   factory MainUser.fromJson(Map<String, dynamic> json) {
+    List<dynamic> temp = json['roles'] as List<dynamic>;
+    List<String> roles = temp.map((e) => e as String).toList();
     return MainUser(
       uid: json['email'] as String, //json["uid"] as String,
       name: json['name'] as String,
       email: json['email'] as String,
       token: "${json['tokenType']} ${json['accessToken']}",
-      //authorities: json['authorities']?.cast<List<String>>(),
-      //gradeYear: json['gradeYear'] as int?,
-      //classGroup: json['classGroup'] as int?,
+      authorities: roles,
     );
   }
 }
