@@ -79,6 +79,45 @@ class _MyPageState extends State<MyPage> {
     }
   }
 
+  /* 유저 데이터를 저장하는 함수*/
+  /* 파리미터 수정 필요*/
+  Future _uploadUserData() async {
+    http.Response response = await http.post(
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/members/mine',
+        /*
+        queryParameters: {
+          'gradeYear': '$gradeYear',
+          'classGroup': '$classGroup',
+        },
+        */
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user.token,
+      },
+    );
+
+    var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
+    switch (statusCode) {
+      case 200:
+        /*
+        var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
+        print('결과 : ${parsed}');
+        print('결과타입 : ${parsed.runtimeType}');
+        return User.fromJson(parsed);
+        */
+        return;
+      default:
+        throw Exception('$statusCode');
+    }
+  }
+
   _showBottomSheet() {
     return showModalBottomSheet(
       context: context,
@@ -559,7 +598,9 @@ class _MyPageState extends State<MyPage> {
                     style: TextStyle(color: Colors.white),
                   ),
                   // name instead of the actual result! : without parentheses
-                  onPressed: () {},
+                  onPressed: () async {
+                    await _uploadUserData();
+                  },
                 ),
               ),
               const SizedBox(
