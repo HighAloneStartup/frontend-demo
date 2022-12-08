@@ -18,13 +18,14 @@ class SimpleClassPost {
   });
 
   factory SimpleClassPost.fromJson(Map<String, dynamic> json) {
-    String image = json['image'] ?? defaultPhotoUrl;
-    image = image == "" ? defaultPhotoUrl : image;
+    String temp =
+        json['image'] == "null" ? defaultPhotoUrl : json['image'] as String;
+    print(temp);
     return SimpleClassPost(
       id: json['id'] as String,
       published: json['published'] as bool,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
-      image: image,
+      image: temp,
       manyimages: json['manyimages'] as bool,
     );
   }
@@ -34,7 +35,7 @@ class SimpleClassPost {
     return SimpleClassPost(
       id: post.id,
       published: post.published,
-      image: imageNum == 0 ? null : post.images.first,
+      image: imageNum == 0 ? defaultPhotoUrl : post.images.first,
       createdAt: post.createdAt,
       manyimages: imageNum > 1,
     );

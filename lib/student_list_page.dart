@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'models/user.dart';
@@ -262,6 +263,31 @@ class _StudentListPageState extends State<StudentListPage> {
 
 class StudentCard extends StatelessWidget {
   final User user;
+  final Map<int, String> message = const {
+    0: "미친건가 수능 일주일 밖에 안남았네...",
+    1: "팀플은 지옥이다.",
+    2: "오늘 저녁 뭐먹지?",
+    3: "즐거운 하루~",
+    4: "^^",
+    5: "손흥민 최고다!",
+    6: "이",
+    7: "글을",
+    8: "읽고",
+    9: "계신다니",
+    10: "당신은",
+    11: "눈썰미가",
+    12: "참",
+    13: "뛰어나시군요?",
+    14: "민간인",
+    15: "급한 일은 전화로",
+    16: "성공한 삶",
+    17: "썸 바리 핼미",
+    18: "S",
+    19: "O",
+    20: "Butter",
+    21: "두 사람",
+  };
+
   const StudentCard(this.user, {super.key});
 
   Widget _photo() {
@@ -287,16 +313,21 @@ class StudentCard extends StatelessWidget {
                 title: Badge.badges[e]!,
               );
               */
+              print(Badge.badges[e]);
               return Container(
                 height: 20,
                 margin: const EdgeInsets.symmetric(horizontal: 1),
-                child: Image.asset(Badge.badges[e]),
+                child: Badge.badges[e] == null
+                    ? const SizedBox()
+                    : Image.asset(Badge.badges[e]),
               );
             }).toList(),
     );
   }
 
   Widget _profile() {
+    var rnd = Random();
+    int index = rnd.nextInt(message.length);
     return Row(
       children: [
         MainTitle(
@@ -314,8 +345,8 @@ class StudentCard extends StatelessWidget {
                 border: Border.all(color: const Color(0xFF3D5D54)),
                 color: const Color.fromARGB(40, 97, 97, 97),
               ),
-              child: const SubTitle(
-                title: "미친건가 수능 일주일 밖에 안남았네...",
+              child: SubTitle(
+                title: message[index]!,
                 size: 13,
                 overflow: TextOverflow.ellipsis,
               ),
