@@ -8,6 +8,7 @@ import './styles/main_title_text.dart';
 import './styles/sub_title_text.dart';
 import './models/post.dart';
 import './models/comment.dart';
+import 'models/DB.dart';
 import 'edit_post_page.dart';
 
 class NoticePage extends StatefulWidget {
@@ -58,6 +59,7 @@ class _NoticePageState extends State<NoticePage> {
         post = Post.fromJson(parsed);
         return Post.fromJson(parsed);
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }

@@ -9,6 +9,7 @@ import 'class_post_list.dart';
 import 'models/post.dart';
 import 'models/simple_class_post.dart';
 import 'models/main_user.dart';
+import 'models/DB.dart';
 
 class ClassBoardPage extends StatefulWidget {
   final MainUser user;
@@ -70,6 +71,7 @@ class _PostListPageState extends State<ClassBoardPage> {
         //print('결과 : ${parsed}');
         return parsed.map((e) => SimpleClassPost.fromJson(e)).toList();
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }
@@ -98,10 +100,10 @@ class _PostListPageState extends State<ClassBoardPage> {
 
     switch (statusCode) {
       case 200:
-        break;
       case 201:
         break;
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }
