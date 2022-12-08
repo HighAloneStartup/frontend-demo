@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import './models/post.dart';
@@ -23,9 +24,9 @@ class _NewPostPageState extends State<NewPostPage> {
   bool isAnonymous = true;
   bool published = true;
   List<Image> images = [];
-  List<String> imageLinks = [];
+  List<String> imagePaths = [];
 
-  void _transition(BuildContext context) {
+  void _transition(BuildContext context) async {
     if (widget._titleController.text.isEmpty) {
       _showDialog("제목을 입력해주세요", context: context);
       return;
@@ -35,6 +36,7 @@ class _NewPostPageState extends State<NewPostPage> {
       return;
     }
 
+    List<String> imageLinks = await postImage();
     widget.callback(
       Post(
         id: "",
@@ -80,22 +82,41 @@ class _NewPostPageState extends State<NewPostPage> {
     if (image == null) {
       return;
     }
-    /*
-    final filePath = image.path;
 
-    var dio = Dio();
-    var formData =
-        FormData.fromMap({'file': await MultipartFile.fromFile(filePath)});
-
-    // 업로드 요청
-    final response = await dio.post('/upload', data: formData);
-    */
     setState(() {
       images.add(Image.file(File(image.path))); // 가져온 이미지를 _image에 저장
+      imagePaths.add(image.path);
     });
   }
 
-  Widget imageBlock(Image image) {
+  Future<List<String>> postImage() async {
+    var dio = Dio();
+    dio.options.contentType = 'multipart/form-data';
+    dio.options.headers = {
+      'Authorization': widget.user.token,
+    };
+    var formData = FormData.fromMap({
+      'images': imagePaths.map((e) => MultipartFile.fromFileSync(e)).toList(),
+    });
+
+    // 업로드 요청
+    final response = await dio.post(
+        'http://ec2-44-242-141-79.us-west-2.compute.amazonaws.com:9090/api/upload/',
+        data: formData);
+
+    var statusCode = response.statusCode;
+    var responseBody = response.data;
+
+    switch (statusCode) {
+      case 200:
+        var parsed = responseBody;
+        return parsed.map<String>((e) => e as String).toList();
+      default:
+        throw Exception('$statusCode');
+    }
+  }
+
+  Widget imageBlock(Image image, String imagePath) {
     return Stack(
       alignment: Alignment.topRight,
       children: [
@@ -113,6 +134,7 @@ class _NewPostPageState extends State<NewPostPage> {
           onPressed: () {
             setState(() {
               images.remove(image);
+              imagePaths.remove(imagePath);
             });
           },
         ),
@@ -262,7 +284,7 @@ class _NewPostPageState extends State<NewPostPage> {
                 scrollDirection: Axis.horizontal,
                 physics: const ClampingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return imageBlock(images[index]);
+                  return imageBlock(images[index], imagePaths[index]);
                 },
                 itemCount: images.length,
               ),
