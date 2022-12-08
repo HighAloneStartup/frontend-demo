@@ -33,13 +33,17 @@ class BoardListPage extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    void onChooseBoard(bool isClassBoard, String boardName, String url) {
+    void onChooseBoard(bool isClassBoard, String boardName, String url,
+        int? gradeYear, int? classGroup) {
       if (isClassBoard) {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  ClassBoardPage(user: user, gradeYear: 2, classGroup: 10)),
+              builder: (context) => ClassBoardPage(
+                  user: user,
+                  year: 22,
+                  gradeYear: gradeYear!,
+                  classGroup: classGroup!)),
         );
       } else {
         Navigator.push(
@@ -112,17 +116,75 @@ class _BoardList extends StatelessWidget {
       "url": "foodclub",
       "isGrid": false,
     },
+    {
+      "name": "독서 게시판",
+      "url": "bookclub",
+      "isGrid": false,
+    },
   ];
   final List<Map<String, dynamic>> _closedBoard = [
     {
-      "name": "2학년 10반",
-      "url": "21",
+      "name": "1학년 1반",
+      "url": "20101",
       "isGrid": true,
+      "gradeYear": 1,
+      "classGroup": 1
     },
     {
-      "name": "독서 동아리",
-      "url": "bookclub",
-      "isGrid": false,
+      "name": "1학년 2반",
+      "url": "20102",
+      "isGrid": true,
+      "gradeYear": 1,
+      "classGroup": 2
+    },
+    {
+      "name": "1학년 3반",
+      "url": "20103",
+      "isGrid": true,
+      "gradeYear": 1,
+      "classGroup": 3
+    },
+    {
+      "name": "2학년 1반",
+      "url": "20201",
+      "isGrid": true,
+      "gradeYear": 2,
+      "classGroup": 1
+    },
+    {
+      "name": "2학년 2반",
+      "url": "20202",
+      "isGrid": true,
+      "gradeYear": 2,
+      "classGroup": 2
+    },
+    {
+      "name": "2학년 3반",
+      "url": "20203",
+      "isGrid": true,
+      "gradeYear": 2,
+      "classGroup": 3
+    },
+    {
+      "name": "3학년 1반",
+      "url": "20301",
+      "isGrid": true,
+      "gradeYear": 3,
+      "classGroup": 1
+    },
+    {
+      "name": "3학년 2반",
+      "url": "20302",
+      "isGrid": true,
+      "gradeYear": 3,
+      "classGroup": 2
+    },
+    {
+      "name": "3학년 3반",
+      "url": "20303",
+      "isGrid": true,
+      "gradeYear": 3,
+      "classGroup": 3
     },
   ];
 
@@ -154,17 +216,24 @@ class _BoardList extends StatelessWidget {
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) => _makeBoardButton(
-            boardlist[index]["name"] as String,
-            boardlist[index]["isGrid"] as bool,
-            boardlist[index]['url'] as String,
-          ),
+              boardlist[index]["name"] as String,
+              boardlist[index]["isGrid"] as bool,
+              boardlist[index]['url'] as String,
+              boardlist[index]['gradeYear'] as int?,
+              boardlist[index]['classGroup'] as int?),
           childCount: boardlist.length,
         ),
       ),
     ];
   }
 
-  Widget _makeBoardButton(String title, bool isClassBoard, String url) {
+  Widget _makeBoardButton(
+    String title,
+    bool isClassBoard,
+    String url,
+    int? gradeYear,
+    int? classGroup,
+  ) {
     return Container(
       alignment: Alignment.center,
       child: ElevatedButton(
@@ -187,7 +256,8 @@ class _BoardList extends StatelessWidget {
             ],
           ),
         ),
-        onPressed: () => onChooseBoard(isClassBoard, title, url),
+        onPressed: () =>
+            onChooseBoard(isClassBoard, title, url, gradeYear, classGroup),
       ),
     );
   }

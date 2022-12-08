@@ -76,8 +76,6 @@ class _MyPageState extends State<MyPage> {
     switch (statusCode) {
       case 200:
         var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
-        print('결과 : ${parsed}');
-        print('결과타입 : ${parsed.runtimeType}');
         return User.fromJson(parsed);
       default:
         throw Exception('$statusCode');
@@ -221,6 +219,117 @@ class _MyPageState extends State<MyPage> {
     }
   }
 
+  List<Widget> _showGraduateClasses() {
+    bool isGraduate =
+        roles.where((element) => element == "GRADUATE").isNotEmpty;
+    print(roles.where((element) => element == "GRADUATE"));
+    print(isGraduate);
+    if (!isGraduate) {
+      return [
+        Container(
+          height: 15,
+          margin: const EdgeInsets.only(left: 10),
+          alignment: const Alignment(-1.0, 0.0),
+          child: const Text(
+            'GRADE',
+            style: TextStyle(
+              color: Color(0xff3D5D54),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10.0,
+        ),
+        Container(
+          margin: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+            bottom: 5,
+          ),
+          child: Text("$gradeYear"),
+        ),
+        const SizedBox(
+          height: 30.0,
+        ),
+        Container(
+          height: 15,
+          margin: const EdgeInsets.only(left: 10),
+          alignment: const Alignment(-1.0, 0.0),
+          child: const Text(
+            'CLASS',
+            style: TextStyle(
+              color: Color(0xff3D5D54),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 10.0,
+        ),
+        Container(
+          margin: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+            bottom: 5,
+          ),
+          child: Text("$classGroup"),
+        ),
+      ];
+    }
+
+    return [
+      Container(
+        height: 15,
+        margin: const EdgeInsets.only(left: 10),
+        alignment: const Alignment(-1.0, 0.0),
+        child: const Text(
+          'GRADUATE CLASSES',
+          style: TextStyle(
+            color: Color(0xff3D5D54),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      const SizedBox(
+        height: 10.0,
+      ),
+      TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ClassBoardPage(
+                    user: user, year: 17, gradeYear: 1, classGroup: 1)),
+          );
+        },
+        child: const Text("17년도 1학년 1반"),
+      ),
+      TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ClassBoardPage(
+                    user: user, year: 18, gradeYear: 2, classGroup: 2)),
+          );
+        },
+        child: const Text("18년도 2학년 2반"),
+      ),
+      TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ClassBoardPage(
+                    user: user, year: 19, gradeYear: 3, classGroup: 3)),
+          );
+        },
+        child: const Text("19년도 3학년 3반"),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -267,7 +376,6 @@ class _MyPageState extends State<MyPage> {
         return Padding(
           padding: const EdgeInsets.only(right: 30.0, left: 30.0),
           child: ListView(
-            //mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(
                 height: 20.0,
@@ -427,55 +535,7 @@ class _MyPageState extends State<MyPage> {
               const SizedBox(
                 height: 30.0,
               ),
-              Container(
-                height: 15,
-                margin: const EdgeInsets.only(left: 10),
-                alignment: const Alignment(-1.0, 0.0),
-                child: const Text(
-                  'GRADE',
-                  style: TextStyle(
-                    color: Color(0xff3D5D54),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  bottom: 5,
-                ),
-                child: Text("$gradeYear"),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              Container(
-                height: 15,
-                margin: const EdgeInsets.only(left: 10),
-                alignment: const Alignment(-1.0, 0.0),
-                child: const Text(
-                  'CLASS',
-                  style: TextStyle(
-                    color: Color(0xff3D5D54),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  bottom: 5,
-                ),
-                child: Text("$classGroup"),
-              ),
+              ..._showGraduateClasses(),
               const SizedBox(
                 height: 30.0,
               ),

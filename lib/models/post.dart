@@ -52,7 +52,7 @@ class Post {
       userPhotoUrl: json['userPhotoUrl'] as String?,
       anonymous: json['anonymous'] as bool,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
-      likes: 0, //json['likes'] as int,
+      likes: json['likes'] as int,
       liked: json['liked'] as bool,
       images: _images,
       comments: _comments,

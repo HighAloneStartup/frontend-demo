@@ -152,7 +152,7 @@ class _PostWidget extends StatelessWidget {
                       postId: post.id,
                       user: user,
                       boardName: boardName,
-                      boardUrl: boardUrl,
+                      boardUrl: "boards/$boardUrl",
                     )),
           );
         },

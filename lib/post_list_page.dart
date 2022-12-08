@@ -68,9 +68,10 @@ class _PostListPageState extends State<PostListPage> {
 
     switch (statusCode) {
       case 200:
-      case 204:
         var parsed = jsonDecode(responseBody) as List;
         return parsed.map((e) => SimplePost.fromJson(e)).toList();
+      case 204:
+        return <SimplePost>[];
       default:
         DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
@@ -137,7 +138,7 @@ class _PostListPageState extends State<PostListPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const MainTitle(
-                title: "FREE BOARD",
+                title: "BOARD",
                 theme: Color(0xFF3D5D54),
               ),
               SubTitle(

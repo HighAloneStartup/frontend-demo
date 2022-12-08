@@ -29,8 +29,7 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   Post? post;
-
-  _PostPageState();
+  List<Comment> comments = [];
 
   Future<Post> _getPost(String id) async {
     http.Response response = await http.get(
@@ -38,7 +37,7 @@ class _PostPageState extends State<PostPage> {
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/${widget.boardUrl}/$id',
+        path: 'api/${widget.boardUrl}/$id',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -66,7 +65,7 @@ class _PostPageState extends State<PostPage> {
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/${widget.boardUrl}/$id',
+        path: 'api/${widget.boardUrl}/$id',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -93,7 +92,7 @@ class _PostPageState extends State<PostPage> {
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/$id',
+        path: 'api/${widget.boardUrl}/$id',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -114,7 +113,18 @@ class _PostPageState extends State<PostPage> {
     }
   }
 
-  void _addComment(String comment) {}
+  void _addComment(String comment) {
+    DB.putComment(
+      postId: widget.postId,
+      boardUrl: widget.boardUrl,
+      description: comment,
+      user: widget.user,
+      context: context,
+    );
+    setState(() {
+      comments.add(Comment(description: comment));
+    });
+  }
 
   void _modifyCallback(Post editedPost) {
     Navigator.push(
@@ -196,14 +206,19 @@ class _PostPageState extends State<PostPage> {
               if (snapshot.data == null) {
                 return const SubTitle(title: "데이터를 불러오는데 실패하였습니다.");
               }
+              post = snapshot.data as Post;
+              comments = post!.comments;
               return ListView(
                 children: [
                   _PostHead(
-                    post: snapshot.data as Post,
+                    post: post!,
                     callback: pubLike,
                   ),
                   const SizedBox(height: 30),
-                  _PostBody(post: snapshot.data as Post),
+                  _PostBody(
+                    post: post!,
+                    comments: comments,
+                  ),
                 ],
               );
             }),
@@ -247,12 +262,14 @@ class _PostHead extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<_PostHead> createState() => _PostHeadState(liked: post.liked);
+  State<_PostHead> createState() =>
+      _PostHeadState(liked: post.liked, likes: post.likes);
 }
 
 class _PostHeadState extends State<_PostHead> {
   bool liked;
-  _PostHeadState({required this.liked});
+  int likes;
+  _PostHeadState({required this.liked, required this.likes});
   String makeCreatedTime(DateTime time) {
     return "${time.year % 100}/${time.month}/${time.day} ${time.hour}:${time.minute}";
   }
@@ -301,6 +318,11 @@ class _PostHeadState extends State<_PostHead> {
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   setState(() {
+                    if (liked) {
+                      likes--;
+                    } else {
+                      likes++;
+                    }
                     liked = !liked;
                     widget.callback();
                   });
@@ -315,7 +337,9 @@ class _PostHeadState extends State<_PostHead> {
                     ),
                     const SizedBox(width: 2),
                     MainTitle(
-                      title: (widget.post.likes + (liked ? 1 : 0)).toString(),
+                      title: widget.post.liked == liked
+                          ? widget.post.likes.toString()
+                          : likes.toString(),
                       theme: liked ? Colors.red : Colors.grey,
                       size: 15,
                     ),
@@ -358,9 +382,8 @@ class _PostBody extends StatelessWidget {
   final Post post;
   final List<Comment> comments;
 
-  _PostBody({required this.post, Key? key})
-      : comments = post.comments,
-        super(key: key);
+  const _PostBody({required this.post, required this.comments, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -369,7 +392,7 @@ class _PostBody extends StatelessWidget {
         ...comments.map(
           (comment) => Container(
             margin: const EdgeInsets.symmetric(vertical: 5),
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(15),
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
                 color: const Color(0xFFE4F0ED),
@@ -398,7 +421,7 @@ class _PostBody extends StatelessWidget {
 }
 
 class _CommentTextLine extends StatefulWidget {
-  final Function addComment;
+  final void Function(String) addComment;
   const _CommentTextLine({super.key, required this.addComment});
 
   @override
@@ -456,8 +479,8 @@ class __CommentTextLineState extends State<_CommentTextLine> {
             ),
             onPressed: () {
               setState(() {
-                commentController.clear();
                 widget.addComment(commentController.text);
+                commentController.clear();
               });
             },
             child: const MainTitle(

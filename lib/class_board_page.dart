@@ -12,14 +12,16 @@ import 'models/DB.dart';
 
 class ClassBoardPage extends StatefulWidget {
   final MainUser user;
+  final int year;
   final int gradeYear;
   final int classGroup;
-  const ClassBoardPage(
-      {Key? key,
-      required this.user,
-      required this.gradeYear,
-      required this.classGroup})
-      : super(key: key);
+  const ClassBoardPage({
+    Key? key,
+    required this.year,
+    required this.user,
+    required this.gradeYear,
+    required this.classGroup,
+  }) : super(key: key);
 
   @override
   State<ClassBoardPage> createState() => _PostListPageState();
@@ -27,6 +29,7 @@ class ClassBoardPage extends StatefulWidget {
 
 class _PostListPageState extends State<ClassBoardPage> {
   List<SimpleClassPost> _postList = [];
+  String boardUrl = "";
   _PostListPageState();
 
   void _transition(BuildContext context) => Navigator.push(
@@ -48,12 +51,14 @@ class _PostListPageState extends State<ClassBoardPage> {
   }
 
   Future<List<SimpleClassPost>> _getPostList() async {
+    boardUrl =
+        '${widget.year}${widget.gradeYear}${widget.classGroup.toString().padLeft(2, '0')}';
     http.Response response = await http.get(
       Uri(
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/',
+        path: 'api/classes/$boardUrl',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -67,8 +72,9 @@ class _PostListPageState extends State<ClassBoardPage> {
     switch (statusCode) {
       case 200:
         var parsed = jsonDecode(responseBody) as List;
-        //print('결과 : ${parsed}');
         return parsed.map((e) => SimpleClassPost.fromJson(e)).toList();
+      case 204:
+        return <SimpleClassPost>[];
       default:
         DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
@@ -81,13 +87,14 @@ class _PostListPageState extends State<ClassBoardPage> {
       'description': newPost.description,
       'published': newPost.published,
       'anonymous': newPost.anonymous,
+      'images': newPost.images,
     });
     http.Response response = await http.post(
         Uri(
           scheme: 'http',
           host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
           port: 9090,
-          path: 'api/boards/',
+          path: 'api/classes/$boardUrl',
         ),
         headers: {
           'Content-Type': 'application/json',
@@ -109,10 +116,6 @@ class _PostListPageState extends State<ClassBoardPage> {
 
   Widget _title() {
     return Container(
-      /*
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.fromLTRB(20, 35, 20, 0),
-      */
       alignment: Alignment.topCenter,
       padding: const EdgeInsets.symmetric(
         vertical: 20,
@@ -258,7 +261,7 @@ class _PostListPageState extends State<ClassBoardPage> {
                     _postList,
                     user: widget.user,
                     boardName: "${widget.gradeYear}-${widget.classGroup}",
-                    boardUrl: "",
+                    boardUrl: boardUrl,
                   )),
                 ],
               );

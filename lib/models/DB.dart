@@ -58,12 +58,45 @@ class DB {
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/$boardUrl/$postId/like',
+        path: 'api/$boardUrl/$postId/like',
       ),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': user.token,
       },
+    );
+
+    var statusCode = response.statusCode;
+
+    switch (statusCode) {
+      case 200:
+        break;
+      default:
+        DB.errorCode(statusCode, context);
+        throw Exception('$statusCode');
+    }
+  }
+
+  static void putComment({
+    required String postId,
+    required String boardUrl,
+    required String description,
+    required MainUser user,
+    required BuildContext context,
+  }) async {
+    var data = jsonEncode({'description': description});
+    http.Response response = await http.put(
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/$boardUrl/$postId/comment',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': user.token,
+      },
+      body: data,
     );
 
     var statusCode = response.statusCode;

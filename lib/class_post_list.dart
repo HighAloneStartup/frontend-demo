@@ -58,12 +58,12 @@ class _PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var photo = post.repPhotoUrl == null
+    var photo = post.image == null
         ? Image.network(
             Post.defaultPhotoUrl,
             fit: BoxFit.fill,
           )
-        : Image.network(post.repPhotoUrl!);
+        : Image.network(post.image!);
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -77,7 +77,7 @@ class _PostWidget extends StatelessWidget {
               builder: (context) => PostPage(
                     postId: post.id,
                     user: user,
-                    boardUrl: boardUrl,
+                    boardUrl: 'classes/$boardUrl',
                     boardName: boardName,
                   )),
         );

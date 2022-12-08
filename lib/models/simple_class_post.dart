@@ -5,25 +5,27 @@ class SimpleClassPost {
       'https://www.bcm-institute.org/wp-content/uploads/2020/11/No-Image-Icon.png';
   final String id;
   final bool published;
-  final String? repPhotoUrl;
+  final String? image;
   final DateTime createdAt;
-  final bool isMultiPhoto;
+  final bool manyimages;
 
   SimpleClassPost({
     required this.id,
     required this.published,
-    required this.repPhotoUrl,
+    required this.image,
     required this.createdAt,
-    required this.isMultiPhoto,
+    required this.manyimages,
   });
 
   factory SimpleClassPost.fromJson(Map<String, dynamic> json) {
+    String image = json['image'] ?? defaultPhotoUrl;
+    image = image == "" ? defaultPhotoUrl : image;
     return SimpleClassPost(
       id: json['id'] as String,
       published: json['published'] as bool,
-      repPhotoUrl: json['repPhotoUrl'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
-      isMultiPhoto: json['isMultiPhoto'] as bool,
+      image: image,
+      manyimages: json['manyimages'] as bool,
     );
   }
 
@@ -32,9 +34,9 @@ class SimpleClassPost {
     return SimpleClassPost(
       id: post.id,
       published: post.published,
-      repPhotoUrl: imageNum == 0 ? null : post.images.first,
+      image: imageNum == 0 ? null : post.images.first,
       createdAt: post.createdAt,
-      isMultiPhoto: imageNum > 1,
+      manyimages: imageNum > 1,
     );
   }
 }
