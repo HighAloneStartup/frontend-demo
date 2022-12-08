@@ -53,7 +53,7 @@ class _PostListPageState extends State<PostListPage> {
         scheme: 'http',
         host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
         port: 9090,
-        path: 'api/boards/all',
+        path: 'api/boards/${widget.boardUrl}',
       ),
       headers: {
         'Content-Type': 'application/json',
@@ -66,8 +66,10 @@ class _PostListPageState extends State<PostListPage> {
 
     switch (statusCode) {
       case 200:
+      case 204:
         var parsed = jsonDecode(responseBody) as List;
         return parsed.map((e) => SimplePost.fromJson(e)).toList();
+      case 401:
       default:
         throw Exception('$statusCode');
     }
@@ -79,13 +81,14 @@ class _PostListPageState extends State<PostListPage> {
       'description': newPost.description,
       'published': newPost.published,
       'anonymous': newPost.anonymous,
+      'images': newPost.images,
     });
     http.Response response = await http.post(
         Uri(
           scheme: 'http',
           host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
           port: 9090,
-          path: 'api/boards/',
+          path: 'api/boards/${widget.boardUrl}',
         ),
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +100,6 @@ class _PostListPageState extends State<PostListPage> {
 
     switch (statusCode) {
       case 200:
-        break;
       case 201:
         break;
       default:
@@ -164,10 +166,16 @@ class _PostListPageState extends State<PostListPage> {
                 );
               }
               if (snapshot.data == null) {
-                return const SubTitle(title: "데이터를 불러오는데 실패하였습니다.");
+                return const Center(
+                    child: SubTitle(title: "데이터를 불러오는데 실패하였습니다."));
               }
               _postList = snapshot.data as List<SimplePost>;
-              return PostList(_postList, user: widget.user);
+              return PostList(
+                _postList,
+                user: widget.user,
+                boardName: widget.boardName,
+                boardUrl: widget.boardUrl,
+              );
             }),
           ),
           Positioned(

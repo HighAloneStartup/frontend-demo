@@ -11,9 +11,16 @@ class PostList extends StatelessWidget {
 
   /// 테스트용 데이터
   final List<SimplePost> postList;
+  final String boardName;
+  final String boardUrl;
 
-  const PostList(this.postList, {Key? key, required this.user})
-      : super(key: key);
+  const PostList(
+    this.postList, {
+    Key? key,
+    required this.user,
+    required this.boardName,
+    required this.boardUrl,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +31,8 @@ class PostList extends StatelessWidget {
         return _PostWidget(
           postList[index],
           user: user,
+          boardName: boardName,
+          boardUrl: boardUrl,
         );
       },
       separatorBuilder: (BuildContext context, int index) {
@@ -40,9 +49,16 @@ class PostList extends StatelessWidget {
 class _PostWidget extends StatelessWidget {
   final MainUser user;
   final SimplePost post;
+  final String boardName;
+  final String boardUrl;
 
-  const _PostWidget(this.post, {Key? key, required this.user})
-      : super(key: key);
+  const _PostWidget(
+    this.post, {
+    Key? key,
+    required this.user,
+    required this.boardName,
+    required this.boardUrl,
+  }) : super(key: key);
 
   String makeCreatedTime(DateTime time) {
     bool isToday = (time.year == DateTime.now().year) &&
@@ -132,7 +148,12 @@ class _PostWidget extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => PostPage(post.id, user: user)),
+                builder: (context) => PostPage(
+                      postId: post.id,
+                      user: user,
+                      boardName: boardName,
+                      boardUrl: boardUrl,
+                    )),
           );
         },
       ),
