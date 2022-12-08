@@ -153,7 +153,7 @@ class _NoticePageState extends State<NoticePage> {
             future: _getPostList(),
             builder: ((context, snapshot) {
               //print(snapshot.error);
-              if (!snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox(
                   width: double.infinity,
                   child: Center(
@@ -161,6 +161,9 @@ class _NoticePageState extends State<NoticePage> {
                     color: Color(0xFF3D5D54),
                   )),
                 );
+              }
+              if (snapshot.data == null) {
+                return const SubTitle(title: "데이터를 불러오는데 실패하였습니다.");
               }
               _postList = snapshot.data as List<SimplePost>;
               return NoticeList(_postList, user: widget.user);

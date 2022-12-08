@@ -33,7 +33,7 @@ class BoardListPage extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    void onChooseBoard(bool isClassBoard, String boardName) {
+    void onChooseBoard(bool isClassBoard, String boardName, String url) {
       if (isClassBoard) {
         Navigator.push(
           context,
@@ -48,6 +48,7 @@ class BoardListPage extends StatelessWidget {
               builder: (context) => PostListPage(
                     user: user,
                     boardName: boardName,
+                    boardUrl: url,
                   )),
         );
       }
@@ -83,32 +84,44 @@ class _BoardList extends StatelessWidget {
   final List<Map<String, dynamic>> _openBorad = [
     {
       "name": "전체 게시판",
+      "url": "all",
       "isGrid": false,
     },
     {
-      "name": "학년별 게시판",
+      "name": "1학년 게시판",
+      "url": "firstgrade",
       "isGrid": false,
     },
     {
-      "name": "반별 게시판",
+      "name": "2학년 게시판",
+      "url": "secondgrade",
+      "isGrid": false,
+    },
+    {
+      "name": "3학년 게시판",
+      "url": "thirdgrade",
       "isGrid": false,
     },
     {
       "name": "게임 게시판",
+      "url": "gameclub",
       "isGrid": false,
     },
     {
       "name": "푸드 게시판",
+      "url": "foodclub",
       "isGrid": false,
     },
   ];
   final List<Map<String, dynamic>> _closedBoard = [
     {
       "name": "2학년 10반",
+      "url": "21",
       "isGrid": true,
     },
     {
       "name": "독서 동아리",
+      "url": "bookclub",
       "isGrid": false,
     },
   ];
@@ -143,6 +156,7 @@ class _BoardList extends StatelessWidget {
           (context, index) => _makeBoardButton(
             boardlist[index]["name"] as String,
             boardlist[index]["isGrid"] as bool,
+            boardlist[index]['url'] as String,
           ),
           childCount: boardlist.length,
         ),
@@ -150,7 +164,7 @@ class _BoardList extends StatelessWidget {
     ];
   }
 
-  Widget _makeBoardButton(String title, bool isClassBoard) {
+  Widget _makeBoardButton(String title, bool isClassBoard, String url) {
     return Container(
       alignment: Alignment.center,
       child: ElevatedButton(
@@ -173,7 +187,7 @@ class _BoardList extends StatelessWidget {
             ],
           ),
         ),
-        onPressed: () => onChooseBoard(isClassBoard, title),
+        onPressed: () => onChooseBoard(isClassBoard, title, url),
       ),
     );
   }

@@ -12,8 +12,13 @@ import 'models/main_user.dart';
 class PostListPage extends StatefulWidget {
   final MainUser user;
   final String boardName;
+  final String boardUrl;
 
-  const PostListPage({Key? key, required this.user, required this.boardName})
+  const PostListPage(
+      {Key? key,
+      required this.user,
+      required this.boardName,
+      required this.boardUrl})
       : super(key: key);
 
   @override
@@ -149,7 +154,7 @@ class _PostListPageState extends State<PostListPage> {
             future: _getPostList(),
             builder: ((context, snapshot) {
               //print(snapshot.error);
-              if (!snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox(
                   width: double.infinity,
                   child: Center(
@@ -157,6 +162,9 @@ class _PostListPageState extends State<PostListPage> {
                     color: Color(0xFF3D5D54),
                   )),
                 );
+              }
+              if (snapshot.data == null) {
+                return const SubTitle(title: "데이터를 불러오는데 실패하였습니다.");
               }
               _postList = snapshot.data as List<SimplePost>;
               return PostList(_postList, user: widget.user);

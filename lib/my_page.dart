@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 
+import 'styles/sub_title_text.dart';
 import 'models/user.dart';
 import 'models/main_user.dart';
 import 'models/badges.dart';
@@ -203,19 +204,17 @@ class _MyPageState extends State<MyPage> {
     return FutureBuilder(
       future: _getUserData(),
       builder: ((context, snapshot) {
-        print("에러 : ${snapshot.error}");
-        print("받은 데이터 : ${snapshot.data}");
-        // print(badges["first_grade"]);
-        if (!snapshot.hasData) {
-          //print(snapshot.error);
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
             width: double.infinity,
             child: Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFF3D5D54),
-              ),
-            ),
+                child: CircularProgressIndicator(
+              color: Color(0xFF3D5D54),
+            )),
           );
+        }
+        if (snapshot.data == null) {
+          return const SubTitle(title: "데이터를 불러오는데 실패하였습니다.");
         }
 
         User currentUser = snapshot.data as User;
