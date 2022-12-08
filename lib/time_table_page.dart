@@ -146,21 +146,6 @@ class _TimeTablePageState extends State<TimeTablePage> {
     );
   }
 
-  /*
-  _navigateAndDisplaySelection(BuildContext context) async {
-    // Navigator.push는 Future를 반환합니다. Future는 선택 창에서
-    // Navigator.pop이 호출된 이후 완료될 것입니다.
-    final result = await Navigator.push(
-      context,
-      // 다음 단계에서 SelectionScreen를 만들 것입니다.
-      MaterialPageRoute(builder: (context) => const AddSchedulePage()),
-    );
-
-    //Scaffold.of(context)
-    print(result.toString());
-  }
-  */
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,7 +165,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
                       '2022년 2학기',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Colors.blue[600],
+                        color: Color.fromARGB(255, 115, 151, 142),
                       ),
                     ),
                   ],
@@ -192,28 +177,10 @@ class _TimeTablePageState extends State<TimeTablePage> {
                   '시간표',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                    color: Colors.black,
+                    fontSize: 30,
+                    color: Color(0xff3D5D54),
                   ),
                 ),
-                /*
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            _navigateAndDisplaySelection(context);
-                          },
-                          icon: const Icon(Icons.add_box_outlined),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            print('SEE SCHEDULE LIST BUTTON CLICKED!');
-                          },
-                          icon: const Icon(Icons.list),
-                        ),
-                      ],
-                    ),
-                    */
               ),
               const SizedBox(
                 height: 20,
