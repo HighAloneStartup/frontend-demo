@@ -299,13 +299,13 @@ class _PostHeadState extends State<_PostHead> {
               itemCount: widget.post.images.length,
             ),
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 15),
           SubTitle(
             title: widget.post.title,
             overflow: TextOverflow.clip,
             size: 18,
           ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 15),
           SubTitle(
             title: widget.post.description,
             overflow: TextOverflow.clip,

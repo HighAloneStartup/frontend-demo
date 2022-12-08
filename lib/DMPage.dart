@@ -32,7 +32,10 @@ class _DMPageState extends State<DMPage> {
           Expanded(
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection(widget.opponent.uid)
+                  .collection(
+                      (widget.opponent.uid).compareTo(widget.user.uid) == -1
+                          ? widget.opponent.uid + widget.user.uid
+                          : widget.user.uid + widget.opponent.uid)
                   .orderBy('timestamp')
                   .snapshots(),
               builder: (context, AsyncSnapshot snapshot) {
@@ -64,12 +67,17 @@ class _DMPageState extends State<DMPage> {
 }
 
 class ChatElement extends StatelessWidget {
-  const ChatElement(
-      {super.key, this.isMe, this.userName, this.text, this.opponentName});
+  const ChatElement({
+    super.key,
+    this.isMe,
+    this.userName,
+    this.text,
+    /*this.opponentName*/
+  });
   final bool? isMe;
   final String? userName;
   final String? text;
-  final String? opponentName;
+  // final String? opponentName;
 
   @override
   Widget build(BuildContext context) {
@@ -188,14 +196,19 @@ class _NewMessageState extends State<NewMessage> {
                 onPressed: newMessage.trim().isEmpty
                     ? null
                     : () {
+                        var newCollectionId =
+                            (widget.opponent.uid).compareTo(widget.user.uid) ==
+                                    -1
+                                ? widget.opponent.uid + widget.user.uid
+                                : widget.user.uid + widget.opponent.uid;
                         FirebaseFirestore.instance
-                            .collection(widget.opponent.uid)
+                            .collection(newCollectionId)
                             .add({
                           'text': newMessage,
                           'userName': widget.user.name,
                           'timestamp': Timestamp.now(),
                           'uid': widget.user.uid,
-                          //'opponentId': widget.opponent.uid,
+                          'opponentId': widget.opponent.uid,
                         });
                         newMessageController.clear();
                       },
