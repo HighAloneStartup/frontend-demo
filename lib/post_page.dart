@@ -126,6 +126,15 @@ class _PostPageState extends State<PostPage> {
 
   void _deleteCallback() {}
 
+  void pubLike() {
+    DB.putLike(
+      postId: widget.postId,
+      boardUrl: widget.boardUrl,
+      user: widget.user,
+      context: context,
+    );
+  }
+
   Widget _title() {
     return Container(
       alignment: Alignment.centerLeft,
@@ -169,7 +178,10 @@ class _PostPageState extends State<PostPage> {
               }
               return ListView(
                 children: [
-                  _PostHead(post: snapshot.data as Post),
+                  _PostHead(
+                    post: snapshot.data as Post,
+                    callback: pubLike,
+                  ),
                   const SizedBox(height: 30),
                   _PostBody(post: snapshot.data as Post),
                 ],
@@ -207,11 +219,20 @@ class _PostPageState extends State<PostPage> {
   }
 }
 
-class _PostHead extends StatelessWidget {
+class _PostHead extends StatefulWidget {
   final Post post;
+  final Function callback;
 
-  const _PostHead({required this.post, Key? key}) : super(key: key);
+  const _PostHead({required this.post, required this.callback, Key? key})
+      : super(key: key);
 
+  @override
+  State<_PostHead> createState() => _PostHeadState(liked: post.liked);
+}
+
+class _PostHeadState extends State<_PostHead> {
+  bool liked;
+  _PostHeadState({required this.liked});
   String makeCreatedTime(DateTime time) {
     return "${time.year % 100}/${time.month}/${time.day} ${time.hour}:${time.minute}";
   }
@@ -224,49 +245,65 @@ class _PostHead extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MainTitle(
-            title: post.anonymous ? "익명" : post.userName,
+            title: widget.post.anonymous ? "익명" : widget.post.userName,
             size: 24,
           ),
           const SizedBox(height: 10),
           Container(
             alignment: Alignment.center,
-            height: post.images.isEmpty ? 0 : 300,
+            height: widget.post.images.isEmpty ? 0 : 300,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
               itemBuilder: (context, index) {
-                return Image.network(post.images[index]);
+                return Image.network(widget.post.images[index]);
               },
-              itemCount: post.images.length,
+              itemCount: widget.post.images.length,
             ),
           ),
           const SizedBox(height: 5),
           SubTitle(
-            title: post.title,
+            title: widget.post.title,
             overflow: TextOverflow.clip,
             size: 18,
           ),
           const SizedBox(height: 5),
           SubTitle(
-            title: post.description,
+            title: widget.post.description,
             overflow: TextOverflow.clip,
           ),
           const SizedBox(height: 50),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(
-                Icons.favorite,
-                size: 15,
-                color: Colors.red,
+              IconButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  setState(() {
+                    liked = !liked;
+                    widget.callback();
+                  });
+                },
+                icon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.favorite,
+                      size: 15,
+                      color: liked ? Colors.red : Colors.grey,
+                    ),
+                    const SizedBox(width: 2),
+                    MainTitle(
+                      title: (widget.post.likes + (liked ? 1 : 0)).toString(),
+                      theme: liked ? Colors.red : Colors.grey,
+                      size: 15,
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(width: 2),
-              MainTitle(
-                  title: post.likes.toString(), theme: Colors.red, size: 15),
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
                   alignment: Alignment.topLeft,
                   child: Row(
                     children: [
@@ -277,7 +314,7 @@ class _PostHead extends StatelessWidget {
                       ),
                       const SizedBox(width: 2),
                       MainTitle(
-                        title: post.comments.length.toString(),
+                        title: widget.post.comments.length.toString(),
                         theme: Colors.grey,
                         size: 15,
                       ),
@@ -286,7 +323,7 @@ class _PostHead extends StatelessWidget {
                 ),
               ),
               SubTitle(
-                title: makeCreatedTime(post.createdAt),
+                title: makeCreatedTime(widget.post.createdAt),
                 theme: Colors.grey,
               ),
             ],

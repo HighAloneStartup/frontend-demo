@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:high_alone_startup/models/simple_post.dart';
 import 'package:http/http.dart' as http;
 import 'new_post_page.dart';
 import 'styles/main_title_text.dart';

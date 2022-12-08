@@ -33,10 +33,11 @@ class _PostListPageState extends State<PostListPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => NewPostPage(
-                _addNewPost,
-                user: widget.user,
-              )),
+        builder: (context) => NewPostPage(
+          _addNewPost,
+          user: widget.user,
+        ),
+      ),
     );
   }
 
