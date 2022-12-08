@@ -8,6 +8,7 @@ import 'notice_list.dart';
 import 'models/post.dart';
 import 'models/simple_post.dart';
 import 'models/main_user.dart';
+import 'models/DB.dart';
 
 class NoticePage extends StatefulWidget {
   final MainUser user;
@@ -68,6 +69,7 @@ class _NoticePageState extends State<NoticePage> {
           return SimplePost.fromJson(e);
         }).toList();
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }
@@ -96,10 +98,10 @@ class _NoticePageState extends State<NoticePage> {
 
     switch (statusCode) {
       case 200:
-        break;
       case 201:
         break;
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }

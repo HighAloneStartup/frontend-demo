@@ -6,6 +6,7 @@ import './styles/main_title_text.dart';
 import './styles/sub_title_text.dart';
 import './models/post.dart';
 import './models/comment.dart';
+import 'models/DB.dart';
 import 'edit_post_page.dart';
 
 class PostPage extends StatefulWidget {
@@ -56,6 +57,7 @@ class _PostPageState extends State<PostPage> {
         post = Post.fromJson(parsed);
         return Post.fromJson(parsed);
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }
@@ -82,6 +84,7 @@ class _PostPageState extends State<PostPage> {
         var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
         return Post.fromJson(parsed);
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }
@@ -108,6 +111,7 @@ class _PostPageState extends State<PostPage> {
         var parsed = jsonDecode(responseBody) as Map<String, dynamic>;
         return Post.fromJson(parsed);
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }

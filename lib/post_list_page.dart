@@ -5,6 +5,7 @@ import 'new_post_page.dart';
 import 'styles/main_title_text.dart';
 import 'styles/sub_title_text.dart';
 import 'post_list.dart';
+import 'models/DB.dart';
 import 'models/post.dart';
 import 'models/simple_post.dart';
 import 'models/main_user.dart';
@@ -69,8 +70,8 @@ class _PostListPageState extends State<PostListPage> {
       case 204:
         var parsed = jsonDecode(responseBody) as List;
         return parsed.map((e) => SimplePost.fromJson(e)).toList();
-      case 401:
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }
@@ -103,6 +104,7 @@ class _PostListPageState extends State<PostListPage> {
       case 201:
         break;
       default:
+        DB.errorCode(statusCode, context);
         throw Exception('$statusCode');
     }
   }
