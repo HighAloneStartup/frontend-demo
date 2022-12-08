@@ -7,10 +7,12 @@ import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
 import 'dart:convert';
 
 import './models/main_user.dart';
+import './models/user.dart';
 
 class DMPage extends StatefulWidget {
   final MainUser user;
-  const DMPage({super.key, required this.user});
+  final User opponent;
+  const DMPage({super.key, required this.user, required this.opponent});
 
   @override
   State<DMPage> createState() => _DMPageState();
@@ -22,7 +24,7 @@ class _DMPageState extends State<DMPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff3D5D54), // const Color(0xFFE4F0ED), //
-        title: const Text("Chat"),
+        title: Text(widget.opponent.name),
         foregroundColor: Colors.white,
       ),
       body: Column(
@@ -30,7 +32,7 @@ class _DMPageState extends State<DMPage> {
           Expanded(
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('chat')
+                  .collection(widget.opponent.uid)
                   .orderBy('timestamp')
                   .snapshots(),
               builder: (context, AsyncSnapshot snapshot) {
@@ -51,7 +53,10 @@ class _DMPageState extends State<DMPage> {
               },
             ),
           ),
-          NewMessage(user: widget.user),
+          NewMessage(
+            user: widget.user,
+            opponent: widget.opponent,
+          ),
         ],
       ),
     );
@@ -59,10 +64,12 @@ class _DMPageState extends State<DMPage> {
 }
 
 class ChatElement extends StatelessWidget {
-  const ChatElement({super.key, this.isMe, this.userName, this.text});
+  const ChatElement(
+      {super.key, this.isMe, this.userName, this.text, this.opponentName});
   final bool? isMe;
   final String? userName;
   final String? text;
+  final String? opponentName;
 
   @override
   Widget build(BuildContext context) {
@@ -144,8 +151,9 @@ class ChatElement extends StatelessWidget {
 
 class NewMessage extends StatefulWidget {
   final MainUser user;
+  final User opponent;
 
-  const NewMessage({super.key, required this.user});
+  const NewMessage({super.key, required this.user, required this.opponent});
 
   @override
   State<NewMessage> createState() => _NewMessageState();
@@ -180,11 +188,14 @@ class _NewMessageState extends State<NewMessage> {
                 onPressed: newMessage.trim().isEmpty
                     ? null
                     : () {
-                        FirebaseFirestore.instance.collection("chat").add({
+                        FirebaseFirestore.instance
+                            .collection(widget.opponent.uid)
+                            .add({
                           'text': newMessage,
                           'userName': widget.user.name,
                           'timestamp': Timestamp.now(),
                           'uid': widget.user.uid,
+                          //'opponentId': widget.opponent.uid,
                         });
                         newMessageController.clear();
                       },

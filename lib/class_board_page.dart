@@ -108,17 +108,42 @@ class _PostListPageState extends State<ClassBoardPage> {
 
   Widget _title() {
     return Container(
+      /*
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.fromLTRB(20, 35, 20, 0),
-      child: Column(
+      */
+      alignment: Alignment.topCenter,
+      padding: const EdgeInsets.symmetric(
+        vertical: 20,
+      ),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          MainTitle(
-            title: "CLASS BOARD",
-            theme: Color(0xFF3D5D54),
+        children: [
+          IconButton(
+            alignment: Alignment.topCenter,
+            padding: const EdgeInsets.symmetric(
+              vertical: 10,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 20,
+              color: Color(0xFF3D5D54),
+            ),
           ),
-          SubTitle(
-            title: "반 게시판",
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              MainTitle(
+                title: "CLASS BOARD",
+                theme: Color(0xFF3D5D54),
+              ),
+              SubTitle(
+                title: "반 게시판",
+              ),
+            ],
           ),
         ],
       ),

@@ -186,10 +186,10 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
             ),
-            ..._makeSection("NOTICE"),
+            ..._makeSection("📢  NOTICE"),
             Notice(user: widget.user),
-            ..._makeSection("TODAY'S LUNCH"),
-            const Lunch(),
+            ..._makeSection("🔥 WHAT'S NEW TODAY"),
+            NewPosts(user: widget.user),
           ],
         ),
       ),
@@ -331,7 +331,7 @@ class NoticeList extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 16.0),
       child: Container(
-        height: 200,
+        height: 230,
         child: ListView.separated(
           itemCount: postList.length,
           itemBuilder: (BuildContext context, int index) {
@@ -385,7 +385,7 @@ class _PostWidget extends StatelessWidget {
     );
 
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(5),
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -419,18 +419,197 @@ class _PostWidget extends StatelessWidget {
   }
 }
 
-class Lunch extends StatefulWidget {
-  const Lunch({super.key});
+class NewPosts extends StatefulWidget {
+  final MainUser user;
+
+  const NewPosts({super.key, required this.user});
 
   @override
-  State<Lunch> createState() => _LunchState();
+  State<NewPosts> createState() => _NewPostsState(user: user);
 }
 
-class _LunchState extends State<Lunch> {
+class _NewPostsState extends State<NewPosts> {
+  final MainUser user;
+  List<SimplePost> _postList = [];
+
+  _NewPostsState({required this.user});
+
+  Future<List<SimplePost>> _getPostList() async {
+    http.Response response = await http.get(
+      Uri(
+        scheme: 'http',
+        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        port: 9090,
+        path: 'api/boards/all',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': widget.user.token,
+      },
+    );
+
+    var statusCode = response.statusCode;
+    var responseBody = utf8.decode(response.bodyBytes);
+
+    switch (statusCode) {
+      case 200:
+        var parsed = jsonDecode(responseBody) as List;
+        return parsed.map((e) => SimplePost.fromJson(e)).toList();
+      default:
+        throw Exception('$statusCode');
+    }
+  }
+
+  Widget _body(BuildContext context) {
+    return Expanded(
+      child: Stack(
+        alignment: Alignment.topCenter,
+        //alignment: Alignment.center,
+        children: [
+          FutureBuilder(
+            future: _getPostList(),
+            builder: ((context, snapshot) {
+              //print(snapshot.error);
+              if (!snapshot.hasData) {
+                return const SizedBox(
+                  width: double.infinity,
+                  child: Center(
+                      child: CircularProgressIndicator(
+                    color: Color(0xFF3D5D54),
+                  )),
+                );
+              }
+              _postList = snapshot.data as List<SimplePost>;
+              return PostList(_postList, user: widget.user);
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    return _body(context);
+  }
+}
+
+class PostList extends StatelessWidget {
+  final MainUser user;
+
+  /// 테스트용 데이터
+  final List<SimplePost> postList;
+
+  const PostList(this.postList, {Key? key, required this.user})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    postList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: Container(
+        height: 200,
+        child: _newPostWidget(
+          postList[0],
+          user: user,
+        ),
+      ),
+    );
+  }
+}
+
+class _newPostWidget extends StatelessWidget {
+  final MainUser user;
+  final SimplePost post;
+
+  const _newPostWidget(this.post, {Key? key, required this.user})
+      : super(key: key);
+
+  String makeCreatedTime(DateTime time) {
+    bool isToday = (time.year == DateTime.now().year) &&
+        (time.month == DateTime.now().month) &&
+        (time.day == DateTime.now().day);
+    return isToday
+        ? "${time.hour}:${time.minute}"
+        : "${time.month}/${time.day}";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var activate = Container(
+      alignment: Alignment.bottomCenter,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Icon(
+            Icons.favorite,
+            size: 15,
+            color: Colors.red,
+          ),
+          const SizedBox(width: 2),
+          MainTitle(title: post.likes.toString(), theme: Colors.red, size: 15),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              alignment: Alignment.topLeft,
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.comment,
+                    size: 15,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(width: 2),
+                  MainTitle(
+                    title: post.comments.toString(),
+                    theme: Colors.grey,
+                    size: 15,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SubTitle(
+            title: makeCreatedTime(post.createdAt),
+            theme: Colors.grey,
+          ),
+        ],
+      ),
+    );
+
     return Container(
-      height: 230,
+      padding: const EdgeInsets.all(15),
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          MainTitle(
+            title: post.anonymous ? "익명" : post.userName,
+            size: 16,
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 3),
+            child: SubTitle(
+              title: post.title,
+              size: 16,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 3),
+            child: SubTitle(
+              title: post.description,
+              size: 15,
+              theme: const Color.fromARGB(255, 128, 128, 128),
+            ),
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+          activate,
+        ],
+      ),
     );
   }
 }
