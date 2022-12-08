@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:path_provider/path_provider.dart';
 
+import 'class_board_page.dart';
 import 'styles/sub_title_text.dart';
 import 'models/user.dart';
 import 'models/main_user.dart';
