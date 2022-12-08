@@ -203,9 +203,6 @@ class _PostPageState extends State<PostPage> {
                   )),
                 );
               }
-              if (snapshot.data == null) {
-                return const SubTitle(title: "데이터를 불러오는데 실패하였습니다.");
-              }
               post = snapshot.data as Post;
               comments = post!.comments;
               return ListView(
