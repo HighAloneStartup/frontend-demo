@@ -72,6 +72,18 @@ class _GraduateListPageState extends State<GraduateListPage> {
     );
   }
 
+  Future<List<User>> allStudents() async {
+    List<User> graduates = [];
+    for (int i = 1; i <= yearNum; i++) {
+      var temp = await _getStudentList(-1 * i);
+      for (int j = 0; j < temp.length; i++) {
+        graduates.add(temp[j]);
+      }
+    }
+    print(graduates);
+    return graduates;
+  }
+
   Future<List<User>> _getStudentList(int year) async {
     http.Response response = await http.get(
       Uri(
@@ -92,7 +104,7 @@ class _GraduateListPageState extends State<GraduateListPage> {
 
     var statusCode = response.statusCode;
     var responseBody = utf8.decode(response.bodyBytes);
-
+    print(responseBody);
     switch (statusCode) {
       case 200:
         var parsed = jsonDecode(responseBody) as List;
@@ -103,17 +115,17 @@ class _GraduateListPageState extends State<GraduateListPage> {
     }
   }
 
-  Widget _makeList(int year) {
+  Widget _makeList() {
     //return SliverToBoxAdapter(child: Text("나 여기있고, 너 거기있지"));
     return FutureBuilder(
-      future: _getStudentList(year),
+      future: allStudents(),
       builder: (context, AsyncSnapshot<List<User>> snapshot) {
-        //print(snapshot.data);
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SliverToBoxAdapter(
               child: Center(
                   child: CircularProgressIndicator(color: Color(0xFF3D5D54))));
         }
+        print(snapshot.data);
         if (snapshot.data == null) {
           return const SliverToBoxAdapter();
         }
@@ -148,10 +160,6 @@ class _GraduateListPageState extends State<GraduateListPage> {
   }
 
   List<Widget> _makeSection(String title) {
-    List<Widget> graduates = [];
-    for (int i = 1; i < yearNum; i++) {
-      graduates.add(_makeList((-1) * i));
-    }
     return [
       SliverToBoxAdapter(
         child: Container(
@@ -167,8 +175,7 @@ class _GraduateListPageState extends State<GraduateListPage> {
           ),
         ),
       ),
-      const SliverToBoxAdapter(child: SizedBox(height: 10)),
-      const SliverToBoxAdapter(child: SizedBox(height: 10)),
+      _makeList(),
     ];
   }
 
