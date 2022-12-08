@@ -161,8 +161,13 @@ class _MyPageState extends State<MyPage> {
   }
 
   _getCameraImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.camera);
+    Navigator.pop(context);
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      maxHeight: 200,
+      maxWidth: 200,
+      imageQuality: 100,
+    );
     if (pickedFile != null) {
       setState(() {
         _pickedFile = pickedFile;
@@ -175,6 +180,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   _getPhotoLibraryImage() async {
+    Navigator.pop(context);
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxHeight: 200,
