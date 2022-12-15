@@ -522,11 +522,13 @@ class _MyPageState extends State<MyPage> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: roles
-                      .map((role) => Image.asset(
-                            Badge.badges[role]!,
-                            height: 30,
-                            width: 30,
-                          ))
+                      .map((role) => Badge.badges[role] == null
+                          ? const SizedBox()
+                          : Image.asset(
+                              Badge.badges[role]!,
+                              height: 30,
+                              width: 30,
+                            ))
                       .toList(),
                 ),
               ),

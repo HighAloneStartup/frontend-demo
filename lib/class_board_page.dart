@@ -201,7 +201,7 @@ class _PostListPageState extends State<ClassBoardPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: const [
               MainTitle(
-                title: "30",
+                title: "10",
                 size: 20,
                 theme: Color(0xFF3D5D54),
               ),

@@ -169,10 +169,7 @@ class _PostListPageState extends State<PostListPage> {
                   )),
                 );
               }
-              if (snapshot.data == null) {
-                return const Center(
-                    child: SubTitle(title: "데이터를 불러오는데 실패하였습니다."));
-              }
+
               _postList = snapshot.data as List<SimplePost>;
               return PostList(
                 _postList,
