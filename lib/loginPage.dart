@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
     http.Response response = await http.post(
       Uri(
         scheme: 'http',
-        host: 'ec2-44-242-141-79.us-west-2.compute.amazonaws.com',
+        host: 'ec2-35-80-12-9.us-west-2.compute.amazonaws.com',
         port: 9090,
         path: 'api/auth/signin',
       ),
